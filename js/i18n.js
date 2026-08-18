@@ -1,5 +1,15 @@
 const I18N = {
   en: {
+    "meta.title": "Simply Andy — UGC Content Creator | TikTok & Instagram Reels",
+    "meta.description": "Simply Andy (@__simplyandy), a UGC content creator specializing in lifestyle, wellness, beauty, tech and food content in Spanish. Content that doesn't feel like an ad.",
+
+    "a11y.skip": "Skip to content",
+    "a11y.mainNav": "Main navigation",
+    "a11y.langToggle": "Switch language",
+    "a11y.openMenu": "Open menu",
+    "a11y.closeMenu": "Close menu",
+    "a11y.filterLabel": "Filter reels by pillar",
+
     "nav.about": "About",
     "nav.pillars": "Content",
     "nav.portfolio": "Reels",
@@ -68,6 +78,16 @@ const I18N = {
   },
 
   es: {
+    "meta.title": "Simply Andy — Creadora de contenido UGC | TikTok e Instagram Reels",
+    "meta.description": "Simply Andy (@__simplyandy), creadora de contenido UGC especializada en lifestyle, wellness, beauty, tech y comida. Contenido que no parece publicidad.",
+
+    "a11y.skip": "Saltar al contenido",
+    "a11y.mainNav": "Navegación principal",
+    "a11y.langToggle": "Cambiar idioma",
+    "a11y.openMenu": "Abrir menú",
+    "a11y.closeMenu": "Cerrar menú",
+    "a11y.filterLabel": "Filtrar reels por pilar",
+
     "nav.about": "Sobre mí",
     "nav.pillars": "Contenido",
     "nav.portfolio": "Reels",
@@ -134,9 +154,4 @@ const I18N = {
 
     "footer.rights": "Todos los derechos reservados."
   }
-};
-
-const PILLAR_LABELS = {
-  en: { lifestyle: "Lifestyle", wellness: "Wellness", beauty: "Beauty", tech: "Tech", foodie: "Foodie" },
-  es: { lifestyle: "Lifestyle", wellness: "Wellness", beauty: "Beauty", tech: "Tech", foodie: "Foodie" }
 };

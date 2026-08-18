@@ -1,27 +1,17 @@
 (function () {
-  const PILLARS = ["lifestyle", "wellness", "beauty", "tech", "foodie"];
-  const grid = document.getElementById("portfolio-grid");
-  const state = { lang: localStorage.getItem("sa-lang") || "en" };
+  const LANGS = ["en", "es"];
+  // The inline <head> script resolves saved/browser language before first paint.
+  const state = { lang: LANGS.includes(document.documentElement.lang) ? document.documentElement.lang : "en" };
 
-  const playIconSVG = `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
+  const nav = document.getElementById("main-nav");
+  const burger = document.getElementById("nav-burger");
 
-  function buildPortfolioCards() {
-    grid.innerHTML = "";
-    PILLARS.forEach((pillar) => {
-      for (let i = 0; i < 2; i++) {
-        const card = document.createElement("div");
-        card.className = "video-card";
-        card.dataset.cat = pillar;
-        card.innerHTML = `
-          <div class="video-card-fill">
-            <span class="video-badge" data-pillar-label="${pillar}"></span>
-            <span class="play-icon">${playIconSVG}</span>
-            <span class="pending-badge" data-i18n="portfolio.soon"></span>
-          </div>
-          <span class="caption-bar"></span>`;
-        grid.appendChild(card);
-      }
-    });
+  function saveLang(lang) {
+    try {
+      localStorage.setItem("sa-lang", lang);
+    } catch (e) {
+      /* storage unavailable (private mode / blocked cookies) — language just won't persist */
+    }
   }
 
   function applyFilter(filter) {
@@ -35,48 +25,67 @@
     bar.addEventListener("click", (e) => {
       const btn = e.target.closest(".filter-btn");
       if (!btn) return;
-      bar.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("is-active"));
-      btn.classList.add("is-active");
+      bar.querySelectorAll(".filter-btn").forEach((b) => {
+        b.classList.toggle("is-active", b === btn);
+        b.setAttribute("aria-pressed", String(b === btn));
+      });
       applyFilter(btn.dataset.filter);
     });
   }
 
+  function syncBurger() {
+    const open = nav.classList.contains("is-open");
+    burger.setAttribute("aria-expanded", String(open));
+    burger.setAttribute("aria-label", I18N[state.lang][open ? "a11y.closeMenu" : "a11y.openMenu"]);
+  }
+
+  function closeNav() {
+    nav.classList.remove("is-open");
+    syncBurger();
+  }
+
   function initNav() {
-    const burger = document.getElementById("nav-burger");
-    const nav = document.getElementById("main-nav");
     burger.addEventListener("click", () => {
-      const open = nav.classList.toggle("is-open");
-      burger.setAttribute("aria-expanded", String(open));
+      nav.classList.toggle("is-open");
+      syncBurger();
     });
-    nav.querySelectorAll("a").forEach((a) =>
-      a.addEventListener("click", () => {
-        nav.classList.remove("is-open");
-        burger.setAttribute("aria-expanded", "false");
-      })
-    );
+    nav.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeNav));
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && nav.classList.contains("is-open")) {
+        closeNav();
+        burger.focus();
+      }
+    });
+    document.addEventListener("click", (e) => {
+      if (nav.classList.contains("is-open") && !e.target.closest(".site-header")) closeNav();
+    });
   }
 
   function applyLang(lang) {
     state.lang = lang;
-    localStorage.setItem("sa-lang", lang);
+    saveLang(lang);
     document.documentElement.lang = lang;
 
+    document.title = I18N[lang]["meta.title"];
+    document.querySelector('meta[name="description"]').setAttribute("content", I18N[lang]["meta.description"]);
+
     document.querySelectorAll("[data-i18n]").forEach((el) => {
-      const key = el.getAttribute("data-i18n");
-      const value = I18N[lang][key];
+      const value = I18N[lang][el.getAttribute("data-i18n")];
       if (value) el.textContent = value;
     });
 
-    document.querySelectorAll("[data-pillar-label]").forEach((el) => {
-      const pillar = el.getAttribute("data-pillar-label");
-      el.textContent = PILLAR_LABELS[lang][pillar];
+    document.querySelectorAll("[data-i18n-attr]").forEach((el) => {
+      const [attr, key] = el.getAttribute("data-i18n-attr").split(":");
+      const value = I18N[lang][key];
+      if (value) el.setAttribute(attr, value);
     });
 
     document.querySelectorAll(".lang-opt").forEach((el) => {
       el.classList.toggle("is-active", el.dataset.lang === lang);
     });
-
     document.getElementById("lang-toggle").classList.toggle("is-es", lang === "es");
+
+    syncBurger();
   }
 
   function initLangToggle() {
@@ -87,7 +96,6 @@
 
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  buildPortfolioCards();
   initFilters();
   initNav();
   initLangToggle();
