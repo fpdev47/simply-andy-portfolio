@@ -162,6 +162,39 @@
       onFirstIntersect(el, function () { reveal(el, { duration: 500 }); });
     });
 
+    // Contact CTA: same pop entrance as the stat pill (CSS keyframes, see styles)
+    var contactCta = document.querySelector(".section--dark .btn-primary");
+    if (contactCta) {
+      onFirstIntersect(contactCta, function () {
+        contactCta.classList.add("is-animated");
+      });
+    }
+
+    // About stat card: the entrance itself is CSS keyframes gated on .is-animated
+    // (so no inline transform lingers and the CSS hover scales keep working);
+    // JS adds the class and drives the count-up (0 → final, 1.5s, ease-out).
+    var statCard = document.getElementById("stat-card");
+    if (statCard) {
+      onFirstIntersect(statCard, function () {
+        statCard.classList.add("is-animated");
+        statCard.querySelectorAll(".stat-num").forEach(function (el) {
+          var target = parseInt(el.getAttribute("data-count"), 10);
+          if (isNaN(target)) return;
+          el.textContent = "0";
+          var obj = { v: 0 };
+          animate(obj, {
+            v: target,
+            duration: 1500,
+            delay: 500,
+            ease: "out(3)",
+            onUpdate: function () {
+              el.textContent = Math.floor(obj.v).toLocaleString(document.documentElement.lang || "en");
+            }
+          });
+        });
+      });
+    }
+
     // Process stepper (design 3a): auto-advances with a linear "fill" during each
     // step's dwell, brief reset pass at the end of the cycle, hover pauses, click jumps.
     var stepper = document.getElementById("process-stepper");
@@ -228,9 +261,28 @@
     }
   }
 
+  function boot() {
+    // With the curtain loader present, hold every entrance until it starts
+    // opening ("sa:curtain-open", dispatched by main.js at 1.4s) so the hero
+    // animation plays as the panels part instead of hidden behind them.
+    // The timeout is a safety net in case the loader script never ran.
+    if (document.getElementById("page-loader")) {
+      var started = false;
+      var start = function () {
+        if (started) return;
+        started = true;
+        init();
+      };
+      document.addEventListener("sa:curtain-open", start, { once: true });
+      setTimeout(start, 3000);
+    } else {
+      init();
+    }
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("DOMContentLoaded", boot);
   } else {
-    init();
+    boot();
   }
 })();

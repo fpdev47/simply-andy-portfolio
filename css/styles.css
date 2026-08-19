@@ -25,6 +25,11 @@
   --social-instagram: #C1367F;
   --social-tiktok: #7C5AA6;
 
+  /* --accent-lifestyle (#F6E7B2, hue ~47°) at full saturation: the accent for
+     dark surfaces, where the pale lifestyle washes out and the caramel primary
+     muddies. Signature trio: loader arc, stat-pill border, contact CTA. */
+  --accent-gold: #F5D061;
+
   --font-display: "Poppins", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
 
@@ -290,6 +295,25 @@ button { font-family: inherit; cursor: pointer; }
 }
 .btn-ghost:hover { border-color: var(--color-text); }
 
+/* Hero secondary CTA: the gold echo. A quiet hint of the contact CTA's
+   signature, a gold dot after the label (like the wordmark's period) and a
+   border that warms to gold with a soft halo on hover. Same action as the
+   page's closing CTA, which plays it at full strength. */
+.hero-cta .btn-ghost::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  margin-left: 9px;
+  transition: transform 0.2s ease;
+}
+.hero-cta .btn-ghost:hover {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 4px rgba(245, 208, 97, 0.28);
+}
+.hero-cta .btn-ghost:hover::after { transform: scale(1.35); }
+
 /* ===== Hero ===== */
 .hero { padding: 64px 0 76px; overflow: hidden; }
 
@@ -359,11 +383,12 @@ button { font-family: inherit; cursor: pointer; }
   padding: 20px;
 }
 
-.portrait-placeholder--sm {
-  aspect-ratio: 1 / 1;
-  border-radius: var(--radius-md);
-  background: linear-gradient(160deg, var(--color-bg-soft), #fff 70%);
-  box-shadow: var(--shadow-soft);
+.stat-card-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .dot {
@@ -424,7 +449,7 @@ p.pending-badge { display: inline-flex; margin-top: 20px; white-space: normal; }
   gap: 32px;
   align-items: flex-start;
 }
-.about-photo { width: 160px; flex-shrink: 0; }
+.about-photo { width: min(320px, 100%); flex-shrink: 0; }
 .about-copy h2 { font-size: clamp(1.8rem, 4.2vw, 2.3rem); margin-bottom: 20px; }
 .about-copy p { margin-bottom: 14px; color: var(--color-text-soft); max-width: 62ch; }
 
@@ -801,7 +826,51 @@ p.pending-badge { display: inline-flex; margin-top: 20px; white-space: normal; }
   margin: 0 auto 30px;
 }
 .contact-actions { margin-bottom: 26px; }
-.section--dark .btn-primary { background: var(--color-primary); }
+
+/* Contact CTA: the site's dark+gold signature (loader arc, stat-pill border,
+   wordmark dot) applied to the one action the whole page funnels into.
+   Dark text on gold: ~10.6:1 contrast. rgba(245, 208, 97, …) = --accent-gold
+   with alpha (box-shadow can't take a var + alpha without color-mix). */
+.section--dark .btn-primary {
+  position: relative;
+  overflow: hidden;
+  background: var(--accent-gold);
+  color: var(--color-dark);
+  font-weight: 700;
+  font-size: 1.02rem;
+  padding: 16px 34px;
+  box-shadow:
+    0 0 24px -4px rgba(245, 208, 97, 0.45),
+    0 14px 34px -14px rgba(0, 0, 0, 0.55);
+}
+.section--dark .btn-primary:hover {
+  background: var(--accent-gold);
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 36px -2px rgba(245, 208, 97, 0.62),
+    0 18px 38px -14px rgba(0, 0, 0, 0.55);
+}
+.section--dark .btn-primary:focus-visible { outline-color: #fff; }
+
+/* Shine sweep on hover, same motif as .stat-card-shine. The transition lives
+   only on the hover state, so on mouseleave it snaps back invisibly instead
+   of sliding in reverse. */
+.section--dark .btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.55) 50%, transparent 70%);
+  transform: translateX(-120%);
+}
+.section--dark .btn-primary:hover::after {
+  transform: translateX(120%);
+  transition: transform 0.55s ease;
+}
+
+/* Entrance: the stat-pill pop, re-used verbatim (class added by motion.js) */
+.section--dark .btn-primary.is-animated {
+  animation: stat-pill-pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s backwards;
+}
 .section--dark ::selection { background: var(--accent-lifestyle); color: var(--color-dark); }
 .socials--contact { display: flex; justify-content: center; gap: 28px; }
 .socials--contact a {
@@ -848,7 +917,192 @@ p.pending-badge { display: inline-flex; margin-top: 20px; white-space: normal; }
   .hero-copy { flex: 1 1 480px; }
   .hero-portrait { flex: 1 1 380px; }
   .about-inner { flex-direction: row; }
-  .about-photo { width: 220px; }
+  .about-photo { width: 280px; }
+}
+
+/* ===== Page loader (split curtain) =====
+   Two dark panels slide apart at 1.4s (class .is-split, added by main.js);
+   the whole overlay is removed from the DOM at 2.2s. pointer-events: none
+   keeps the page usable underneath even if JS never removes it. */
+.page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  pointer-events: none;
+}
+.page-loader-panel {
+  height: 100%;
+  width: 50%;
+  background: var(--color-dark);
+  transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.page-loader.is-split .page-loader-panel--left { transform: translateX(-100%); }
+.page-loader.is-split .page-loader-panel--right { transform: translateX(100%); }
+
+.page-loader-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  transition: opacity 0.5s ease;
+}
+.page-loader.is-split .page-loader-center { opacity: 0; }
+
+/* Pendulum loader (css-loaders.com #14) in the site's dark-surface roles:
+   gold ball swinging over a translucent white arc. The extreme cubic-bezier
+   amplifies the 0.5deg keyframe into the full oscillation. */
+.page-loader-spinner {
+  width: 80px;
+  aspect-ratio: 1;
+  position: relative;
+  background:
+    radial-gradient(farthest-side at top, #0000 calc(100% - 21px), rgba(255, 255, 255, 0.2) calc(100% - 20px) 99%, #0000) bottom / 100% 50%,
+    radial-gradient(farthest-side, rgba(255, 255, 255, 0.2) 94%, #0000) left / 20px 20px,
+    radial-gradient(farthest-side, rgba(255, 255, 255, 0.2) 94%, #0000) right / 20px 20px;
+  background-repeat: no-repeat;
+}
+.page-loader-spinner::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  inset: auto 0 0;
+  margin: auto;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  transform-origin: 50% -20px;
+  animation: loader-swing 1s infinite cubic-bezier(0.5, 623, 0.5, -623);
+}
+@keyframes loader-swing {
+  100% { transform: rotate(0.5deg); }
+}
+
+.page-loader-brand {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+.page-loader-brand span { color: var(--accent-gold); }
+
+/* ===== About stat card =====
+   Photo frame with a rotating conic-gradient ring, a breathing glow, a periodic
+   shine sweep and a stats pill. Entrances run via the .is-animated class that
+   motion.js adds on first scroll into view; without JS everything is simply
+   visible in its final state. */
+@property --ring-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.stat-card { position: relative; width: 100%; }
+
+.stat-card-ring {
+  position: absolute;
+  inset: -9px;
+  border-radius: calc(var(--radius-lg) + 9px);
+  background: conic-gradient(
+    from var(--ring-angle),
+    var(--accent-gold),
+    var(--accent-foodie),
+    var(--accent-gold),
+    var(--accent-wellness),
+    var(--accent-gold)
+  );
+  filter: blur(8px);
+  animation: stat-ring-spin 8s linear infinite;
+}
+@keyframes stat-ring-spin { to { --ring-angle: 360deg; } }
+
+.stat-card-glow {
+  position: absolute;
+  inset: -20px;
+  border-radius: var(--radius-lg);
+  background: var(--accent-gold);
+  filter: blur(35px);
+  animation: stat-glow-pulse 3s ease-in-out infinite;
+}
+@keyframes stat-glow-pulse {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(1.08); }
+}
+
+.stat-card-frame {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-soft);
+  box-shadow: 0 25px 50px -12px rgba(42, 27, 61, 0.28);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stat-card-frame:hover { transform: scale(1.04); }
+
+.stat-card-shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.5) 50%, transparent 70%);
+  transform: translateX(-100%);
+  animation: stat-shine 6.5s ease-in-out infinite;
+}
+@keyframes stat-shine {
+  0% { transform: translateX(-100%); }
+  38%, 100% { transform: translateX(200%); }
+}
+
+.stat-pill {
+  position: absolute;
+  bottom: 18px;
+  inset-inline: 0;
+  margin-inline: auto;
+  width: max-content;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: var(--color-dark);
+  border: 1.5px solid var(--accent-gold);
+  box-shadow: 0 18px 34px -14px rgba(42, 27, 61, 0.5);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.stat-pill:hover { transform: scale(1.08); }
+
+.stat-num {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.stat-sep {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Entrances: keyframes (not transitions) so no inline transform lingers and the
+   hover scales above keep working after the animation ends. `backwards` holds
+   the hidden state during each delay. */
+.stat-card.is-animated { animation: stat-card-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
+@keyframes stat-card-in {
+  from { opacity: 0; transform: translateX(120px) rotate(6deg); }
+  to { opacity: 1; transform: none; }
+}
+.stat-card.is-animated .stat-pill {
+  animation: stat-pill-pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s backwards;
+}
+@keyframes stat-pill-pop {
+  from { opacity: 0; transform: translateY(60px) scale(0.5); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* ===== Motion (progressive enhancement; anime.js sets initial state via JS) ===== */

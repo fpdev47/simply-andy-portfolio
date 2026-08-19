@@ -196,8 +196,22 @@
 
   document.getElementById("year").textContent = new Date().getFullYear();
 
+  // Split-curtain loader: panels open at 1.4s, overlay removed at 2.2s.
+  // "sa:curtain-open" tells motion.js to start the hero entrance right as the
+  // curtains part, so the animation isn't wasted behind them.
+  function initLoader() {
+    const loader = document.getElementById("page-loader");
+    if (!loader) return;
+    setTimeout(() => {
+      loader.classList.add("is-split");
+      document.dispatchEvent(new Event("sa:curtain-open"));
+    }, 1400);
+    setTimeout(() => loader.remove(), 2200);
+  }
+
   initFilters();
   initNav();
   initLangToggle();
   applyLang(state.lang);
+  initLoader();
 })();

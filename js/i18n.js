@@ -28,6 +28,8 @@ const I18N = {
     "about.p1": "I don't know if this happens to you too, but I have a hard time recommending something I haven't actually tried. That's why every video I make is like this: direct, no fluff, with the face I make when something actually works (or doesn't).",
     "about.p2": "I'm 35, I create Spanish-language content for TikTok and Instagram Reels, and what sets me apart isn't high-end production. It's that what I make doesn't feel like an ad. It feels like a trusted friend.",
     "about.placeholderNote": "Final bio & photo coming soon",
+    "about.statsLabel": "Profile stats: posts, followers, following",
+    "about.photoAlt": "Andy, UGC content creator, in a black and white portrait",
 
     "pillars.title": "What I create",
     "pillars.lifestyle.title": "Lifestyle",
@@ -122,6 +124,8 @@ const I18N = {
     "about.p1": "No sé si les pasa, pero a mí me cuesta recomendar algo que no probé de verdad. Por eso cada video que hago es así: directo, sin vueltas, y con la cara que pongo cuando algo realmente funciona (o no).",
     "about.p2": "Tengo 35 años, hago contenido en español para TikTok e Instagram Reels, y mi diferencial no es la producción de alta gama. Es que lo que hago no parece publicidad. Parece una amiga de confianza.",
     "about.placeholderNote": "Bio final y foto en camino",
+    "about.statsLabel": "Estadísticas del perfil: publicaciones, seguidores, seguidos",
+    "about.photoAlt": "Andy, creadora de contenido UGC, en un retrato en blanco y negro",
 
     "pillars.title": "Lo que creo",
     "pillars.lifestyle.title": "Lifestyle",
