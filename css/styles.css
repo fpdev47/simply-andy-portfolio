@@ -494,6 +494,7 @@ p.pending-badge { display: inline-flex; margin-top: 20px; white-space: normal; }
 }
 
 .portfolio-grid {
+  position: relative; /* anchor for leaving cards during the filter FLIP animation */
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
@@ -594,74 +595,198 @@ p.pending-badge { display: inline-flex; margin-top: 20px; white-space: normal; }
 }
 .text-link:hover { color: var(--color-primary-dark); }
 
-/* ===== How I work ===== */
-.how-inner {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 36px;
-}
-@media (min-width: 900px) { .how-inner { grid-template-columns: 1fr 1fr; } }
-
-.how-subtitle { font-size: 1.05rem; margin-bottom: 18px; color: var(--color-text-soft); font-weight: 600; }
-
-.check-list li {
-  list-style: none;
-  padding-left: 30px;
-  position: relative;
-  margin-bottom: 14px;
-  color: var(--color-text-soft);
-  font-size: 0.95rem;
-}
-.check-list li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 6px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--color-primary);
-}
-
-.process-card {
+/* ===== How I work (design 3a: spec sheet + animated stepper) ===== */
+.method-card {
+  --method-line: #F0E9F7;
+  --step-todo-ring: #E7DCF5;
+  --step-todo-text: #9C8D87;
+  --step-done-dot: #B9A0DC;
   background: var(--color-surface);
-  border-radius: var(--radius-md);
-  padding: 28px 26px;
-  box-shadow: var(--shadow-soft);
-  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: clamp(28px, 6vw, 76px);
 }
-.process-card h3 { font-size: 1.2rem; margin-bottom: 18px; }
-.process-list { counter-reset: step; }
-.process-list li {
-  list-style: none;
-  counter-increment: step;
-  display: flex;
-  gap: 12px;
+
+.method-head {
+  display: grid;
+  gap: 32px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--method-line);
+}
+@media (min-width: 900px) {
+  .method-head { grid-template-columns: 1fr auto; align-items: end; gap: 48px; }
+}
+.method-kicker {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-primary);
   margin-bottom: 14px;
-  font-size: 0.92rem;
-  color: var(--color-text-soft);
 }
-.process-list li::before {
-  content: counter(step);
-  flex-shrink: 0;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--color-bg-soft);
-  color: var(--color-text);
-  font-size: 0.78rem;
+.method-title {
+  font-size: clamp(2.2rem, 5vw, 3.25rem);
+  line-height: 1.02;
   font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.025em;
+  margin-bottom: 16px;
 }
-.process-note {
-  margin-top: 18px;
-  font-size: 0.88rem;
+.method-lede {
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: var(--color-text-soft);
+  max-width: 560px;
+  text-wrap: pretty;
+}
+.method-quote {
+  max-width: 300px;
+  padding-left: 32px;
+  border-left: 2px solid var(--color-primary);
+  font-size: 1.06rem;
+  line-height: 1.42;
   font-weight: 500;
   color: var(--color-accent-purple);
+  text-wrap: pretty;
 }
+
+.spec-block {
+  padding: 44px 0 48px;
+  border-bottom: 1px solid var(--method-line);
+}
+.spec-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 26px;
+}
+.spec-kicker {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+}
+.spec-tag { font-size: 0.8rem; color: var(--color-text-soft); }
+
+.spec-grid { display: grid; margin: 0; }
+@media (min-width: 720px) {
+  .spec-grid { grid-template-columns: 1fr 1fr; column-gap: 56px; }
+}
+.spec-row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 24px;
+  padding: 15px 0;
+  border-top: 1px solid var(--method-line);
+}
+.spec-row dt {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  padding-top: 3px;
+}
+.spec-row dd { margin: 0; font-size: 0.97rem; line-height: 1.45; color: var(--color-text); }
+
+.process-block { padding-top: 52px; }
+.process-head { margin-bottom: 38px; }
+
+/* Stepper. Static default is the fully-visible state; motion.js adds .is-animated
+   and cycles .is-active / .is-done. --stepper-dwell is set from JS. */
+.stepper {
+  list-style: none;
+  display: grid;
+  gap: 22px;
+}
+@media (min-width: 900px) {
+  .stepper { grid-template-columns: repeat(5, 1fr); gap: 28px; }
+}
+.step {
+  position: relative;
+  display: flex;
+  gap: 18px;
+}
+@media (min-width: 900px) {
+  .step { flex-direction: column; gap: 20px; cursor: pointer; }
+}
+
+.step-ring {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--color-accent-purple);
+  background: var(--color-surface);
+  box-sizing: border-box;
+  flex: none;
+  transition: border-color .32s ease;
+}
+.step-dot {
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--color-accent-purple);
+  transform: scale(1);
+  transition: transform .32s ease, background-color .32s ease;
+}
+.step-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  transform-origin: left center;
+  transition: transform .52s cubic-bezier(0.2, 0.85, 0.2, 1), color .32s ease;
+}
+.step-desc {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--color-text-soft);
+  text-wrap: pretty;
+  transform-origin: left top;
+  transition: opacity .42s ease, transform .52s cubic-bezier(0.2, 0.85, 0.2, 1);
+}
+
+.step-rail {
+  position: absolute;
+  left: 12px;
+  top: 30px;
+  bottom: -26px;
+  width: 2px;
+  background: var(--method-line);
+  overflow: hidden;
+}
+.step-rail-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 0;
+  background: var(--color-accent-purple);
+  transition: height .32s ease, width .32s ease;
+}
+@media (min-width: 900px) {
+  .step-rail { left: 28px; right: -28px; top: 13px; bottom: auto; width: auto; height: 2px; }
+  .step-rail-fill { width: 0; height: 100%; }
+}
+
+/* Animated states (only once JS is driving the cycle) */
+.stepper.is-animated .step:not(.is-active):not(.is-done) .step-ring { border-color: var(--step-todo-ring); }
+.stepper.is-animated .step:not(.is-active):not(.is-done) .step-dot { transform: scale(0); }
+.stepper.is-animated .step:not(.is-active):not(.is-done) .step-title { color: var(--step-todo-text); }
+.stepper.is-animated .step:not(.is-active):not(.is-done) .step-desc { opacity: 0.45; }
+.stepper.is-animated .step.is-done .step-dot { background: var(--step-done-dot); }
+.stepper.is-animated .step:not(.is-active):not(.is-done) .step-rail-fill { height: 0; }
+.stepper.is-animated .step.is-active .step-rail-fill,
+.stepper.is-animated .step.is-done .step-rail-fill { height: 100%; }
+@media (min-width: 900px) {
+  .stepper.is-animated .step:not(.is-active):not(.is-done) .step-rail-fill { width: 0; height: 100%; }
+  .stepper.is-animated .step.is-active .step-rail-fill,
+  .stepper.is-animated .step.is-done .step-rail-fill { width: 100%; }
+}
+.step.is-active .step-dot { transition: transform var(--stepper-dwell, 2600ms) linear, background-color .32s ease; }
+.step.is-active .step-rail-fill { transition: height var(--stepper-dwell, 2600ms) linear, width var(--stepper-dwell, 2600ms) linear; }
+.step.is-active .step-title { transform: scale(1.09); }
+.step.is-active .step-desc { transform: scale(1.03); }
 
 /* ===== Contact ===== */
 .section--dark {

@@ -14,10 +14,110 @@
     }
   }
 
+  // Filter with a FLIP reorder animation: staying cards glide to their new grid
+  // position, entering cards fade/scale in, leaving cards fade out in place.
+  const grid = document.getElementById("portfolio-grid");
+  const FLIP_MS = 380;
+  let flipTimer = null;
+  let flipFinalize = null;
+
+  function shouldHide(card, filter) {
+    return filter !== "all" && card.dataset.cat !== filter;
+  }
+
   function applyFilter(filter) {
-    document.querySelectorAll(".video-card").forEach((card) => {
-      card.classList.toggle("is-hidden", filter !== "all" && card.dataset.cat !== filter);
+    const cards = Array.from(grid.querySelectorAll(".video-card"));
+    if (flipFinalize) flipFinalize();
+
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      cards.forEach((card) => card.classList.toggle("is-hidden", shouldHide(card, filter)));
+      return;
+    }
+
+    const firstRects = new Map();
+    cards.forEach((card) => {
+      if (!card.classList.contains("is-hidden")) firstRects.set(card, card.getBoundingClientRect());
     });
+    const gridRect = grid.getBoundingClientRect();
+
+    const staying = [];
+    const entering = [];
+    const leaving = [];
+    cards.forEach((card) => {
+      const wasVisible = firstRects.has(card);
+      const hide = shouldHide(card, filter);
+      if (wasVisible && !hide) staying.push(card);
+      else if (!wasVisible && !hide) entering.push(card);
+      else if (wasVisible && hide) leaving.push(card);
+    });
+
+    // Take leaving cards out of the flow at their current spot so the rest reflows.
+    leaving.forEach((card) => {
+      const r = firstRects.get(card);
+      card.style.position = "absolute";
+      card.style.left = r.left - gridRect.left + "px";
+      card.style.top = r.top - gridRect.top + "px";
+      card.style.width = r.width + "px";
+      card.style.height = r.height + "px";
+      card.style.transition = "none";
+    });
+    entering.forEach((card) => card.classList.remove("is-hidden"));
+
+    // Invert: freeze staying cards at their old position, entering cards at their start state.
+    const moves = staying
+      .map((card) => {
+        const f = firstRects.get(card);
+        const l = card.getBoundingClientRect();
+        return { card, dx: f.left - l.left, dy: f.top - l.top };
+      })
+      .filter((m) => m.dx || m.dy);
+    moves.forEach((m) => {
+      m.card.style.transition = "none";
+      m.card.style.transform = "translate(" + m.dx + "px, " + m.dy + "px)";
+    });
+    entering.forEach((card) => {
+      card.style.transition = "none";
+      card.style.opacity = "0";
+      card.style.transform = "scale(0.92)";
+    });
+
+    void grid.offsetWidth;
+
+    // Play.
+    const ease = "cubic-bezier(0.16, 1, 0.3, 1)";
+    moves.forEach((m) => {
+      m.card.style.transition = "transform " + FLIP_MS + "ms " + ease;
+      m.card.style.transform = "";
+    });
+    entering.forEach((card) => {
+      card.style.transition = "opacity " + FLIP_MS + "ms ease, transform " + FLIP_MS + "ms " + ease;
+      card.style.opacity = "";
+      card.style.transform = "";
+    });
+    leaving.forEach((card) => {
+      card.style.transition = "opacity 230ms ease, transform 230ms ease";
+      card.style.opacity = "0";
+      card.style.transform = "scale(0.95)";
+    });
+
+    flipFinalize = function () {
+      clearTimeout(flipTimer);
+      flipTimer = null;
+      flipFinalize = null;
+      cards.forEach((card) => {
+        card.style.position = "";
+        card.style.left = "";
+        card.style.top = "";
+        card.style.width = "";
+        card.style.height = "";
+        card.style.opacity = "";
+        card.style.transform = "";
+        card.style.transition = "";
+        card.classList.toggle("is-hidden", shouldHide(card, filter));
+      });
+    };
+    flipTimer = setTimeout(flipFinalize, FLIP_MS + 60);
   }
 
   function initFilters() {

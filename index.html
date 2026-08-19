@@ -303,33 +303,84 @@
     </div>
   </section>
 
-  <!-- COMO TRABAJO / HOW I WORK -->
+  <!-- COMO TRABAJO / HOW I WORK (design 3a: spec sheet + animated stepper) -->
   <section class="section section--tint" id="como-trabajo">
-    <div class="wrap how-inner">
-      <div>
-        <h2 class="section-title" data-i18n="how.title">How I work</h2>
-        <h3 class="how-subtitle" data-i18n="how.standardsTitle">Quality standards</h3>
-        <ul class="check-list">
-          <li data-i18n="how.item1">Content based on real, believable experience</li>
-          <li data-i18n="how.item2">No intro: straight to the point from second zero</li>
-          <li data-i18n="how.item3">Product visible in the first 2–3 seconds</li>
-          <li data-i18n="how.item4">Natural tone, never sounds like an ad</li>
-          <li data-i18n="how.item5">Fast pace, no filler</li>
-          <li data-i18n="how.item6">Vertical format, native to TikTok/Reels</li>
-          <li data-i18n="how.item7">Captions in Poppins, never covering the face</li>
-        </ul>
-      </div>
+    <div class="wrap">
+      <div class="method-card">
 
-      <div class="process-card">
-        <h3 data-i18n="how.processTitle">My process with every brand</h3>
-        <ol class="process-list">
-          <li data-i18n="how.step1">Identify the product: what it is, what it does, what benefit it communicates</li>
-          <li data-i18n="how.step2">Review technical guidelines: length, format, delivery, captions</li>
-          <li data-i18n="how.step3">Define formats: selfie, voiceover, creative</li>
-          <li data-i18n="how.step4">Define the number of hooks and versions</li>
-          <li data-i18n="how.step5">Adjust tone and approach based on what the brand needs</li>
-        </ol>
-        <p class="process-note" data-i18n="how.note">I don't just film what's asked. I propose what's going to work.</p>
+        <header class="method-head">
+          <div>
+            <p class="method-kicker" data-i18n="how.kicker">Method</p>
+            <h2 class="method-title" data-i18n="how.title">How I work</h2>
+            <p class="method-lede" data-i18n="how.lede">A fixed standard of quality and a repeatable process. No improvising on each brief.</p>
+          </div>
+          <p class="method-quote" data-i18n="how.note">I don't just film what's asked. I propose what's going to work.</p>
+        </header>
+
+        <div class="spec-block">
+          <div class="spec-head">
+            <h3 class="spec-kicker" data-i18n="how.standardsTitle">Quality standards</h3>
+            <span class="spec-tag" data-i18n="how.nonNegotiable">Non-negotiable</span>
+          </div>
+          <dl class="spec-grid">
+            <div class="spec-row"><dt data-i18n="how.label1">Source</dt><dd data-i18n="how.item1">Content based on real, believable experience</dd></div>
+            <div class="spec-row"><dt data-i18n="how.label5">Pace</dt><dd data-i18n="how.item5">Fast pace, no filler</dd></div>
+            <div class="spec-row"><dt data-i18n="how.label2">Opening</dt><dd data-i18n="how.item2">No intro: straight to the point from second zero</dd></div>
+            <div class="spec-row"><dt data-i18n="how.label6">Format</dt><dd data-i18n="how.item6">Vertical format, native to TikTok/Reels</dd></div>
+            <div class="spec-row"><dt data-i18n="how.label3">Product</dt><dd data-i18n="how.item3">Product visible in the first 2–3 seconds</dd></div>
+            <div class="spec-row"><dt data-i18n="how.label7">Captions</dt><dd data-i18n="how.item7">Captions in Poppins, never covering the face</dd></div>
+            <div class="spec-row"><dt data-i18n="how.label4">Tone</dt><dd data-i18n="how.item4">Natural tone, never sounds like an ad</dd></div>
+          </dl>
+        </div>
+
+        <div class="process-block">
+          <div class="spec-head process-head">
+            <h3 class="spec-kicker" data-i18n="how.processTitle">My process with every brand</h3>
+            <span class="spec-tag" data-i18n="how.flow">Brief → delivery</span>
+          </div>
+          <ol class="stepper" id="process-stepper">
+            <li class="step">
+              <span class="step-rail" aria-hidden="true"><span class="step-rail-fill"></span></span>
+              <span class="step-ring" aria-hidden="true"><span class="step-dot"></span></span>
+              <div>
+                <h4 class="step-title" data-i18n="how.step1.title">Identify the product</h4>
+                <p class="step-desc" data-i18n="how.step1.desc">What it is, what it does, what benefit it communicates</p>
+              </div>
+            </li>
+            <li class="step">
+              <span class="step-rail" aria-hidden="true"><span class="step-rail-fill"></span></span>
+              <span class="step-ring" aria-hidden="true"><span class="step-dot"></span></span>
+              <div>
+                <h4 class="step-title" data-i18n="how.step2.title">Review technical guidelines</h4>
+                <p class="step-desc" data-i18n="how.step2.desc">Length, format, delivery, captions</p>
+              </div>
+            </li>
+            <li class="step">
+              <span class="step-rail" aria-hidden="true"><span class="step-rail-fill"></span></span>
+              <span class="step-ring" aria-hidden="true"><span class="step-dot"></span></span>
+              <div>
+                <h4 class="step-title" data-i18n="how.step3.title">Define formats</h4>
+                <p class="step-desc" data-i18n="how.step3.desc">Selfie, voiceover, creative</p>
+              </div>
+            </li>
+            <li class="step">
+              <span class="step-rail" aria-hidden="true"><span class="step-rail-fill"></span></span>
+              <span class="step-ring" aria-hidden="true"><span class="step-dot"></span></span>
+              <div>
+                <h4 class="step-title" data-i18n="how.step4.title">Define volume</h4>
+                <p class="step-desc" data-i18n="how.step4.desc">Number of hooks and versions</p>
+              </div>
+            </li>
+            <li class="step">
+              <span class="step-ring" aria-hidden="true"><span class="step-dot"></span></span>
+              <div>
+                <h4 class="step-title" data-i18n="how.step5.title">Adjust tone and approach</h4>
+                <p class="step-desc" data-i18n="how.step5.desc">Based on what the brand needs</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+
       </div>
     </div>
   </section>
