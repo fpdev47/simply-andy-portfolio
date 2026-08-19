@@ -714,6 +714,16 @@ p.pending-badge { display: inline-flex; margin-top: 20px; white-space: normal; }
 }
 .spec-row dd { margin: 0; font-size: 0.97rem; line-height: 1.45; color: var(--color-text); }
 
+/* Quality standards as a standalone section: the spec list re-uses the card's
+   styles, with the site-wide section border color instead of the card's line */
+.standards-section { --method-line: var(--line); }
+.standards-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
 .process-block { padding-top: 52px; }
 .process-head { margin-bottom: 38px; }
 

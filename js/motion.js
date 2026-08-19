@@ -162,6 +162,13 @@
       onFirstIntersect(el, function () { reveal(el, { duration: 500 }); });
     });
 
+    var specGrid = document.querySelector(".standards-section .spec-grid");
+    if (specGrid) {
+      onFirstIntersect(specGrid, function () {
+        reveal(specGrid.querySelectorAll(".spec-row"), { delay: stagger(60) });
+      });
+    }
+
     // Contact CTA: same pop entrance as the stat pill (CSS keyframes, see styles)
     var contactCta = document.querySelector(".section--dark .btn-primary");
     if (contactCta) {
