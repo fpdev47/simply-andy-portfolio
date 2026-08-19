@@ -1107,5 +1107,135 @@ p.pending-badge { display: inline-flex; margin-top: 20px; white-space: normal; }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* ===== Contact modal (design 4a "Dos tarjetas") =====
+   Native <dialog> opened by the "Let's work together" CTAs. Design palette
+   mapped to site tokens: dark card = --color-text (same role as .btn-primary),
+   gold dot = --accent-gold, soft card = the site's soft surfaces. */
+.contact-modal {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  width: min(520px, calc(100vw - 32px));
+}
+.contact-modal::backdrop { background: rgba(42, 27, 61, 0.5); }
+body:has(.contact-modal[open]) { overflow: hidden; }
+
+.contact-modal[open] { animation: modal-in 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+.contact-modal[open]::backdrop { animation: backdrop-in 0.3s ease; }
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(24px) scale(0.96); }
+}
+@keyframes backdrop-in {
+  from { opacity: 0; }
+}
+
+.contact-modal-card {
+  position: relative;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 60px rgba(42, 27, 61, 0.25);
+  padding: 40px 40px 32px;
+}
+
+.contact-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 0;
+  background: var(--color-bg-soft);
+  color: var(--color-text-soft);
+  font-size: 15px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.contact-modal-close:hover { background: rgba(42, 27, 61, 0.12); color: var(--color-text); }
+
+.contact-modal-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 14px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+}
+.contact-modal-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--accent-gold); }
+
+.contact-modal-card h2 {
+  margin: 0 0 10px;
+  font-size: clamp(1.55rem, 5vw, 1.95rem);
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  max-width: 22ch;
+}
+.contact-modal-lede { margin: 0 0 28px; font-size: 0.95rem; line-height: 1.5; color: var(--color-text-soft); }
+
+.modal-option {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 22px 24px;
+  border-radius: var(--radius-md);
+  transition: transform 0.22s cubic-bezier(0.2, 0.85, 0.2, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+}
+.modal-option-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-option-title { display: block; font-size: 1.03rem; font-weight: 600; margin-bottom: 3px; }
+.modal-option-sub { display: block; font-size: 0.84rem; line-height: 1.4; }
+.modal-option-arrow { font-size: 1.1rem; }
+
+.modal-option--primary {
+  background: var(--color-text);
+  color: #fff;
+  margin-bottom: 12px;
+}
+.modal-option--primary:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(42, 27, 61, 0.28); }
+.modal-option--primary .modal-option-icon { background: rgba(255, 255, 255, 0.13); color: #fff; }
+.modal-option--primary .modal-option-sub,
+.modal-option--primary .modal-option-arrow { color: rgba(255, 255, 255, 0.72); }
+
+.modal-option--secondary {
+  background: var(--color-bg-soft);
+  border: 1px solid rgba(42, 27, 61, 0.16);
+}
+.modal-option--secondary:hover { transform: translateY(-2px); border-color: var(--color-primary); }
+.modal-option--secondary .modal-option-icon { background: var(--accent-lifestyle); color: var(--accent-lifestyle-deep); }
+.modal-option--secondary .modal-option-title { color: var(--color-text); }
+.modal-option--secondary .modal-option-sub { color: var(--color-text-soft); }
+.modal-option--secondary .modal-option-arrow { color: var(--color-primary-dark); }
+
+.contact-modal-foot {
+  margin: 22px 0 0;
+  text-align: center;
+  font-size: 0.84rem;
+  color: var(--color-text-soft);
+}
+.contact-modal-foot a {
+  font-weight: 600;
+  color: var(--color-text);
+  border-bottom: 1px solid rgba(42, 27, 61, 0.25);
+}
+.contact-modal-foot a:hover { color: var(--color-primary-dark); border-color: var(--color-primary-dark); }
+
+@media (max-width: 480px) {
+  .contact-modal-card { padding: 30px 22px 26px; }
+  .modal-option { padding: 18px; gap: 12px; }
+}
+
 /* ===== Motion (progressive enhancement; anime.js sets initial state via JS) ===== */
 .motion-target { will-change: transform, opacity; }

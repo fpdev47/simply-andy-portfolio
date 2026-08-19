@@ -36,7 +36,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 <!-- Bump ?v= on every css/js change: GitHub Pages caches assets for 10 min and stale CSS breaks fresh HTML -->
-<link rel="stylesheet" href="css/styles.css?v=9">
+<link rel="stylesheet" href="css/styles.css?v=10">
 
 <script type="application/ld+json">
 {
@@ -124,7 +124,7 @@
         <p class="hero-lede" data-i18n="hero.lede">I make content that doesn't feel like an ad. It feels like a friend telling you about something that actually changed her routine.</p>
         <div class="hero-cta">
           <a href="#portfolio" class="btn btn-primary" data-i18n="hero.ctaPrimary">Come see what I make</a>
-          <a href="#trabajemos" class="btn btn-ghost" data-i18n="hero.ctaSecondary">Let's work together</a>
+          <a href="#trabajemos" class="btn btn-ghost" data-contact-modal data-i18n="hero.ctaSecondary">Let's work together</a>
         </div>
         <p class="hero-handle">@__simplyandy · <span data-i18n="hero.platforms">TikTok &amp; Instagram Reels</span></p>
       </div>
@@ -420,7 +420,7 @@
       <h2 class="contact-title" data-i18n="contact.title">If you have a product that could genuinely add to my routine, let's talk.</h2>
 
       <div class="contact-actions">
-        <a class="btn btn-primary" href="mailto:itssimplyandy1@gmail.com" data-i18n="contact.emailCta">Let's work together</a>
+        <a class="btn btn-primary" href="mailto:itssimplyandy1@gmail.com" data-contact-modal data-i18n="contact.emailCta">Let's work together</a>
       </div>
 
       <div class="socials socials--contact">
@@ -451,9 +451,42 @@
   </div>
 </footer>
 
+<!-- CONTACT MODAL (design 4a "Dos tarjetas"): opened by the "Let's work together"
+     CTAs, whose hrefs remain as the no-JS fallback.
+     TODO: swap the Calendly placeholder for Andy's real scheduling link. -->
+<dialog class="contact-modal" id="contact-modal" aria-labelledby="contact-modal-title">
+  <div class="contact-modal-card">
+    <button type="button" class="contact-modal-close" id="contact-modal-close" aria-label="Close" data-i18n-attr="aria-label:modal.close">✕</button>
+
+    <p class="contact-modal-eyebrow"><span class="contact-modal-dot" aria-hidden="true"></span><span data-i18n="modal.eyebrow">2 collab slots left · September</span></p>
+    <h2 id="contact-modal-title" data-i18n="modal.title">Let's make something that doesn't feel like an ad</h2>
+    <p class="contact-modal-lede" data-i18n="modal.lede">Pick whichever is easier for you. Both reach me directly.</p>
+
+    <a class="modal-option modal-option--primary" href="https://calendly.com/" target="_blank" rel="noopener">
+      <span class="modal-option-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
+      <span>
+        <span class="modal-option-title" data-i18n="modal.callTitle">Book a 15-min call</span>
+        <span class="modal-option-sub" data-i18n="modal.callSub">Fastest way in — we scope hooks and volume live</span>
+      </span>
+      <span class="modal-option-arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a class="modal-option modal-option--secondary" href="mailto:itssimplyandy1@gmail.com?subject=Collab%20with%20Andy">
+      <span class="modal-option-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg></span>
+      <span>
+        <span class="modal-option-title" data-i18n="modal.briefTitle">Send me the brief</span>
+        <span class="modal-option-sub" data-i18n="modal.briefSub">Prefer writing? I reply within 24 hours</span>
+      </span>
+      <span class="modal-option-arrow" aria-hidden="true">→</span>
+    </a>
+
+    <p class="contact-modal-foot"><span data-i18n="modal.footPrefix">Or just DM</span> <a href="https://instagram.com/__simplyandy" target="_blank" rel="noopener">@__simplyandy</a></p>
+  </div>
+</dialog>
+
 <script src="https://cdn.jsdelivr.net/npm/animejs@4.5.0/dist/bundles/anime.umd.min.js" integrity="sha384-InMmvD3VoYcY7hGjSC80aLb2bNNE4CzpX+Eq6FVDlmB0IKgDvmfPw4UY8L/M++iG" crossorigin="anonymous"></script>
-<script src="js/i18n.js?v=4"></script>
-<script src="js/main.js?v=3"></script>
+<script src="js/i18n.js?v=5"></script>
+<script src="js/main.js?v=4"></script>
 <script src="js/motion.js?v=4"></script>
 </body>
 </html>

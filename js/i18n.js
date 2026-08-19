@@ -31,6 +31,16 @@ const I18N = {
     "about.statsLabel": "Profile stats: posts, followers, following",
     "about.photoAlt": "Andy, UGC content creator, in a black and white portrait",
 
+    "modal.close": "Close",
+    "modal.eyebrow": "2 collab slots left · September",
+    "modal.title": "Let's make something that doesn't feel like an ad",
+    "modal.lede": "Pick whichever is easier for you. Both reach me directly.",
+    "modal.callTitle": "Book a 15-min call",
+    "modal.callSub": "Fastest way in — we scope hooks and volume live",
+    "modal.briefTitle": "Send me the brief",
+    "modal.briefSub": "Prefer writing? I reply within 24 hours",
+    "modal.footPrefix": "Or just DM",
+
     "pillars.title": "What I create",
     "pillars.lifestyle.title": "Lifestyle",
     "pillars.lifestyle.body": "Daily routine, everyday products, real moments from my day-to-day.",
@@ -126,6 +136,16 @@ const I18N = {
     "about.placeholderNote": "Bio final y foto en camino",
     "about.statsLabel": "Estadísticas del perfil: publicaciones, seguidores, seguidos",
     "about.photoAlt": "Andy, creadora de contenido UGC, en un retrato en blanco y negro",
+
+    "modal.close": "Cerrar",
+    "modal.eyebrow": "2 cupos para colabs · Septiembre",
+    "modal.title": "Hagamos algo que no parezca publicidad",
+    "modal.lede": "Elegí lo que te quede más cómodo. Las dos me llegan directo.",
+    "modal.callTitle": "Agendá una llamada de 15 min",
+    "modal.callSub": "La vía más rápida: definimos hooks y volumen en vivo",
+    "modal.briefTitle": "Mandame el brief",
+    "modal.briefSub": "¿Preferís escribir? Respondo en menos de 24 horas",
+    "modal.footPrefix": "O escribime al DM",
 
     "pillars.title": "Lo que creo",
     "pillars.lifestyle.title": "Lifestyle",

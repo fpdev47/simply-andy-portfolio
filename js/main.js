@@ -209,9 +209,28 @@
     setTimeout(() => loader.remove(), 2200);
   }
 
+  // Contact modal: the "Let's work together" CTAs open a <dialog> offering a
+  // call or an email. Their hrefs stay untouched as the no-JS fallback, and
+  // Esc / backdrop-click / ✕ all close it.
+  function initContactModal() {
+    const modal = document.getElementById("contact-modal");
+    if (!modal || typeof modal.showModal !== "function") return;
+    document.querySelectorAll("[data-contact-modal]").forEach((el) => {
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+        modal.showModal();
+      });
+    });
+    document.getElementById("contact-modal-close").addEventListener("click", () => modal.close());
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) modal.close();
+    });
+  }
+
   initFilters();
   initNav();
   initLangToggle();
   applyLang(state.lang);
   initLoader();
+  initContactModal();
 })();
