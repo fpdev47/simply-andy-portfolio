@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://fpdev47.github.io/simply-andy-portfolio/sitemap.xml
