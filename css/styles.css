@@ -1007,13 +1007,15 @@ p.pending-badge { display: inline-flex; margin-top: 20px; white-space: normal; }
   position: absolute;
   inset: -9px;
   border-radius: calc(var(--radius-lg) + 9px);
+  /* Ring in the tinted section's own family (caramel/purple, whisper of
+     wellness blue); the gold signature stays reserved for the stats pill */
   background: conic-gradient(
     from var(--ring-angle),
-    var(--accent-gold),
-    var(--accent-foodie),
-    var(--accent-gold),
+    var(--color-primary),
+    var(--color-accent-purple),
+    var(--color-primary),
     var(--accent-wellness),
-    var(--accent-gold)
+    var(--color-primary)
   );
   filter: blur(8px);
   animation: stat-ring-spin 8s linear infinite;
@@ -1024,7 +1026,7 @@ p.pending-badge { display: inline-flex; margin-top: 20px; white-space: normal; }
   position: absolute;
   inset: -20px;
   border-radius: var(--radius-lg);
-  background: var(--accent-gold);
+  background: var(--color-primary);
   filter: blur(35px);
   animation: stat-glow-pulse 3s ease-in-out infinite;
 }
