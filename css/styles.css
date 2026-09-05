@@ -459,7 +459,8 @@ p.pending-badge { display: inline-flex; margin-top: 20px; white-space: normal; }
 
 /* ===== Brands (moved under hero) ===== */
 .brands-section { border-top: 1px solid var(--line); padding-top: 52px; }
-.brands-section .section-title { margin-bottom: 28px; }
+.brands-section .section-title { margin-bottom: 10px; }
+.brands-footnote { margin-top: 0; margin-bottom: 28px; }
 
 /* ===== About ===== */
 .about-inner {
@@ -609,7 +610,7 @@ p.pending-badge { display: inline-flex; margin-top: 20px; white-space: normal; }
   grid-template-columns: repeat(2, 1fr);
   gap: 14px;
 }
-@media (min-width: 700px) { .brands-row { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 700px) { .brands-row { grid-template-columns: repeat(3, 1fr); } }
 .brand-slot {
   height: 84px;
   background: var(--color-bg-soft);
@@ -618,6 +619,11 @@ p.pending-badge { display: inline-flex; margin-top: 20px; white-space: normal; }
   align-items: center;
   justify-content: center;
   padding: 10px;
+}
+.brand-logo-img {
+  max-width: 85%;
+  max-height: 44px;
+  object-fit: contain;
 }
 
 /* ===== Numbers (confident statement, not an empty metric grid) ===== */

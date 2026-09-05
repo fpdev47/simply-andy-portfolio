@@ -164,7 +164,7 @@ const I18N = {
     "portfolio.filterAll": "Todos",
     "portfolio.soon": "Video próximamente",
 
-    "brands.title": "Marcas con las que trabajé",
+    "brands.title": "Marcas que han estado en mi rutina",
     "brands.slotLabel": "Tu marca acá",
     "brands.footnote": "Trabajo con marcas locales e internacionales de habla hispana, y con marcas globales que buscan contenido auténtico en español.",
 
