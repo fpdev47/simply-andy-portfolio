@@ -24,10 +24,12 @@ const I18N = {
     "hero.videoBadge": "Reel",
     "hero.videoSoon": "Video coming soon",
 
-    "about.title": "I don't know if this happens to you too",
-    "about.p1": "I don't know if this happens to you too, but I have a hard time recommending something I haven't actually tried. That's why every video I make is like this: direct, no fluff, with the face I make when something actually works (or doesn't).",
-    "about.p2": "I'm 35, I create Spanish-language content for TikTok and Instagram Reels, and what sets me apart isn't high-end production. It's that what I make doesn't feel like an ad. It feels like a trusted friend.",
-    "about.placeholderNote": "Final bio & photo coming soon",
+    "about.title": "Hi, I'm Andy Luna",
+    "about.p1": "I'm 35, and I make UGC content across lifestyle, wellness, beauty, and tech — mostly on TikTok and Instagram Reels. I care more about storytelling and real experience than high-end production, so what I make doesn't feel like an ad. It feels like a friend telling you about something that actually worked.",
+    "about.p2": "I started less than a year ago, right in the middle of my own self-love journey. It was never a strategic plan, just a way to process what I was going through — and somehow it connected me with other women going through the same thing. I've already done my first brand collaboration, and I'm still learning as I go, at my own pace, just being myself.",
+    "about.trait1": "Confidence",
+    "about.trait2": "Glam",
+    "about.trait3": "Self-Care",
     "about.statsLabel": "Profile stats: posts, followers, following",
     "about.photoAlt": "Andy, UGC content creator, in a black and white portrait",
 
@@ -40,6 +42,7 @@ const I18N = {
     "modal.briefTitle": "Send me the brief",
     "modal.briefSub": "Prefer writing? I reply within 24 hours",
     "modal.footPrefix": "Or just DM",
+    "modal.whatsapp": "WhatsApp",
 
     "pillars.title": "What I create",
     "pillars.lifestyle.title": "Lifestyle",
@@ -130,10 +133,12 @@ const I18N = {
     "hero.videoBadge": "Reel",
     "hero.videoSoon": "Video próximamente",
 
-    "about.title": "No sé si les pasa, pero a mí sí",
-    "about.p1": "No sé si les pasa, pero a mí me cuesta recomendar algo que no probé de verdad. Por eso cada video que hago es así: directo, sin vueltas, y con la cara que pongo cuando algo realmente funciona (o no).",
-    "about.p2": "Tengo 35 años, hago contenido en español para TikTok e Instagram Reels, y mi diferencial no es la producción de alta gama. Es que lo que hago no parece publicidad. Parece una amiga de confianza.",
-    "about.placeholderNote": "Bio final y foto en camino",
+    "about.title": "Hola, soy Andy Luna",
+    "about.p1": "Tengo 35 años y hago contenido UGC de lifestyle, wellness, beauty y tech, sobre todo en TikTok e Instagram Reels. Me importa más contar algo real que la producción de alta gama, por eso lo que hago no parece publicidad. Parece una amiga contándote algo que de verdad le funcionó.",
+    "about.p2": "Empecé hace menos de un año, justo en medio de mi propio proceso de amor propio. Nunca fue un plan estratégico, fue más bien una forma de procesar lo que estaba viviendo, y sin darme cuenta me conectó con otras mujeres que estaban pasando por algo parecido. Ya hice mi primera colaboración con una marca, y sigo aprendiendo sobre la marcha, a mi ritmo, siendo yo misma.",
+    "about.trait1": "Confianza",
+    "about.trait2": "Glam",
+    "about.trait3": "Autocuidado",
     "about.statsLabel": "Estadísticas del perfil: publicaciones, seguidores, seguidos",
     "about.photoAlt": "Andy, creadora de contenido UGC, en un retrato en blanco y negro",
 
@@ -146,6 +151,7 @@ const I18N = {
     "modal.briefTitle": "Mandame el brief",
     "modal.briefSub": "¿Preferís escribir? Respondo en menos de 24 horas",
     "modal.footPrefix": "O escribime al DM",
+    "modal.whatsapp": "WhatsApp",
 
     "pillars.title": "Lo que creo",
     "pillars.lifestyle.title": "Lifestyle",

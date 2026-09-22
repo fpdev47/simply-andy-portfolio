@@ -34,9 +34,9 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&family=Archivo:wght@700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
 <!-- Bump ?v= on every css/js change: GitHub Pages caches assets for 10 min and stale CSS breaks fresh HTML -->
-<link rel="stylesheet" href="css/styles.css?v=11">
+<link rel="stylesheet" href="css/styles.css?v=12">
 
 <script type="application/ld+json">
 {
@@ -78,9 +78,13 @@
 
 <header class="site-header" id="top">
   <div class="wrap header-inner">
-    <a class="brand" href="#top">
-      <span class="brand-mark">SA</span>
-      <span class="brand-name">Simply Andy</span>
+    <a class="brand" href="#top" aria-label="Simply Andy — home">
+      <svg class="brand-logo" viewBox="0 0 256 76" aria-hidden="true" focusable="false">
+        <text x="0" y="58" font-family="Archivo, Helvetica, Arial, sans-serif" font-weight="700" font-size="76" letter-spacing="-3.42" fill="#153B50">andy</text>
+        <circle cx="165" cy="49.5" r="8.5" fill="#429EA6"/>
+        <text x="188" y="41.5" font-family="DM Mono, ui-monospace, monospace" font-size="11.5" letter-spacing="1.84" fill="#153B50">UGC</text>
+        <text x="188" y="58" font-family="DM Mono, ui-monospace, monospace" font-size="11.5" letter-spacing="1.84" fill="#153B50">CREATOR</text>
+      </svg>
     </a>
 
     <nav class="main-nav" id="main-nav" aria-label="Main navigation" data-i18n-attr="aria-label:a11y.mainNav">
@@ -185,10 +189,14 @@
         </div>
       </div>
       <div class="about-copy">
-        <h2 data-i18n="about.title">I don't know if this happens to you too</h2>
-        <p data-i18n="about.p1">I don't know if this happens to you too, but I have a hard time recommending something I haven't actually tried. That's why every video I make is like this: direct, no fluff, with the face I make when something actually works (or doesn't).</p>
-        <p data-i18n="about.p2">I'm 35, I create Spanish-language content for TikTok and Instagram Reels, and what sets me apart isn't high-end production. It's that what I make doesn't feel like an ad. It feels like a trusted friend.</p>
-        <span class="pending-badge" data-i18n="about.placeholderNote">Final bio &amp; photo coming soon</span>
+        <h2 data-i18n="about.title">Hi, I'm Andy Luna</h2>
+        <p data-i18n="about.p1">I'm 35, and I make UGC content across lifestyle, wellness, beauty, and tech — mostly on TikTok and Instagram Reels. I care more about storytelling and real experience than high-end production, so what I make doesn't feel like an ad. It feels like a friend telling you about something that actually worked.</p>
+        <p data-i18n="about.p2">I started less than a year ago, right in the middle of my own self-love journey. It was never a strategic plan, just a way to process what I was going through — and somehow it connected me with other women going through the same thing. I've already done my first brand collaboration, and I'm still learning as I go, at my own pace, just being myself.</p>
+        <div class="trait-row">
+          <span class="trait-chip" data-i18n="about.trait1">Confidence</span>
+          <span class="trait-chip" data-i18n="about.trait2">Glam</span>
+          <span class="trait-chip" data-i18n="about.trait3">Self-Care</span>
+        </div>
       </div>
     </div>
   </section>
@@ -444,11 +452,15 @@
 <footer class="site-footer">
   <div class="wrap footer-inner">
     <div class="footer-brand">
-      <span class="brand-mark brand-mark--footer">SA</span>
-      <div>
-        <p class="footer-name">Simply Andy</p>
-        <p class="footer-handle">@__simplyandy</p>
-      </div>
+      <a href="#top" aria-label="Simply Andy — home">
+        <svg class="brand-logo brand-logo--footer" viewBox="0 0 256 76" aria-hidden="true" focusable="false">
+          <text x="0" y="58" font-family="Archivo, Helvetica, Arial, sans-serif" font-weight="700" font-size="76" letter-spacing="-3.42" fill="#153B50">andy</text>
+          <circle cx="165" cy="49.5" r="8.5" fill="#429EA6"/>
+          <text x="188" y="41.5" font-family="DM Mono, ui-monospace, monospace" font-size="11.5" letter-spacing="1.84" fill="#153B50">UGC</text>
+          <text x="188" y="58" font-family="DM Mono, ui-monospace, monospace" font-size="11.5" letter-spacing="1.84" fill="#153B50">CREATOR</text>
+        </svg>
+      </a>
+      <p class="footer-handle">@__simplyandy</p>
     </div>
     <p class="footer-copy">© <span id="year">2026</span> Simply Andy. <span data-i18n="footer.rights">All rights reserved.</span></p>
   </div>
@@ -483,12 +495,12 @@
       <span class="modal-option-arrow" aria-hidden="true">→</span>
     </a>
 
-    <p class="contact-modal-foot"><span data-i18n="modal.footPrefix">Or just DM</span> <a href="https://instagram.com/__simplyandy" target="_blank" rel="noopener">@__simplyandy</a></p>
+    <p class="contact-modal-foot"><span data-i18n="modal.footPrefix">Or just DM</span> <a href="https://instagram.com/__simplyandy" target="_blank" rel="noopener">@__simplyandy</a> <span aria-hidden="true">·</span> <a href="https://wa.me/5491176392123" target="_blank" rel="noopener" data-i18n="modal.whatsapp">WhatsApp</a></p>
   </div>
 </dialog>
 
 <script src="https://cdn.jsdelivr.net/npm/animejs@4.5.0/dist/bundles/anime.umd.min.js" integrity="sha384-InMmvD3VoYcY7hGjSC80aLb2bNNE4CzpX+Eq6FVDlmB0IKgDvmfPw4UY8L/M++iG" crossorigin="anonymous"></script>
-<script src="js/i18n.js?v=5"></script>
+<script src="js/i18n.js?v=6"></script>
 <script src="js/main.js?v=4"></script>
 <script src="js/motion.js?v=5"></script>
 </body>
