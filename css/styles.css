@@ -669,39 +669,63 @@ p.pending-badge { display: inline-flex; margin-top: 20px; white-space: normal; }
   text-transform: uppercase;
   color: var(--color-text-soft);
 }
-.spec-tag { font-size: 0.8rem; color: var(--color-text-soft); }
 
-.standards-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 8px;
-}
+.standards-section .section-title { margin-bottom: 28px; }
 
-/* Quality standards: a confident checklist, not a spec table. One consistent
-   gold check mark per item (echoes "non-negotiable") rather than seven
-   different icons; label and description read as one flowing line. */
-.standards-list {
-  list-style: none;
-  display: grid;
-  margin: 0;
+/* Quality standards: a two-lane counter-scrolling marquee instead of another
+   grid. Each lane repeats the 7 standards twice back-to-back (the second
+   copy is aria-hidden) so animating the track to translateX(-50%) loops
+   seamlessly; the lanes run opposite directions and sit on contrasting
+   light/dark bands, gently skewed for energy. Full-bleed via the classic
+   100vw/50%-translate breakout so it escapes the .wrap column. */
+.standards-marquee {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  overflow: hidden;
 }
-@media (min-width: 720px) {
-  .standards-list { grid-template-columns: 1fr 1fr; column-gap: 48px; }
+.marquee-row {
+  transform: skewY(-2deg);
+  padding: 15px 0;
 }
-.standards-item {
+.marquee-row--light { background: var(--color-bg-soft); margin-bottom: -4px; }
+.marquee-row--dark { background: var(--color-dark); margin-top: -4px; }
+.marquee-viewport { overflow: hidden; transform: skewY(2deg); }
+
+.marquee-track {
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 19px 0;
-  border-top: 1px solid var(--line);
+  width: max-content;
+  gap: 14px;
+  animation: marquee-left 32s linear infinite;
 }
+.marquee-track--reverse { animation-name: marquee-right; animation-duration: 36s; }
+.marquee-row:hover .marquee-track,
+.marquee-row:focus-within .marquee-track { animation-play-state: paused; }
+@keyframes marquee-left { to { transform: translateX(-50%); } }
+@keyframes marquee-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+.marquee-chip {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: var(--color-surface);
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+.marquee-chip strong { font-weight: 700; color: var(--color-text); }
+.marquee-chip span { color: var(--color-text-soft); }
+.marquee-row--dark .marquee-chip { background: rgba(255, 255, 255, 0.08); }
+.marquee-row--dark .marquee-chip strong { color: var(--color-text-inverse); }
+.marquee-row--dark .marquee-chip span { color: rgba(252, 250, 254, 0.72); }
+
 .standards-check {
   flex: none;
-  width: 26px;
-  height: 26px;
-  margin-top: 2px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
@@ -709,15 +733,20 @@ p.pending-badge { display: inline-flex; margin-top: 20px; white-space: normal; }
   background: var(--accent-gold);
   color: #4A3200;
 }
-.standards-item p { margin: 0; font-size: 0.97rem; line-height: 1.5; color: var(--color-text-soft); }
-.standards-item strong {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-text);
-  margin-bottom: 3px;
+
+@media (prefers-reduced-motion: reduce) {
+  .standards-marquee { overflow: visible; }
+  .marquee-row { transform: none; }
+  .marquee-row--light { margin-bottom: 10px; }
+  .marquee-row--dark { margin-top: 0; }
+  .marquee-viewport { overflow: visible; transform: none; }
+  .marquee-track {
+    animation: none;
+    width: auto;
+    flex-wrap: wrap;
+    padding: 0 20px;
+  }
+  .marquee-chip[aria-hidden="true"] { display: none; }
 }
 
 .process-block { padding-top: 52px; }

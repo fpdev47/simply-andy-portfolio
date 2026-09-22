@@ -155,12 +155,10 @@
       onFirstIntersect(el, function () { reveal(el, { duration: 500 }); });
     });
 
-    var standardsList = document.querySelector(".standards-list");
-    if (standardsList) {
-      onFirstIntersect(standardsList, function () {
-        reveal(standardsList.querySelectorAll(".standards-item"), { delay: stagger(60) });
-      });
-    }
+    // Quality standards marquee is intentionally excluded here: reveal()
+    // animates `transform` (translateY) via anime.js, which would clobber
+    // the translateX(-50%) the full-bleed breakout depends on. It's already
+    // in continuous motion, so it doesn't need a scroll-triggered fade-in.
 
     // Contact CTA: same pop entrance as the stat pill (CSS keyframes, see styles)
     var contactCta = document.querySelector(".section--dark .btn-primary");
