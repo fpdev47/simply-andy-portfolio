@@ -11,7 +11,6 @@ const I18N = {
     "a11y.filterLabel": "Filter reels by pillar",
 
     "nav.about": "About",
-    "nav.pillars": "Content",
     "nav.portfolio": "Reels",
     "nav.brands": "Brands",
     "nav.contact": "Let's work together",
@@ -25,7 +24,7 @@ const I18N = {
     "hero.videoSoon": "Video coming soon",
 
     "about.title": "Hi, I'm Andy Luna",
-    "about.p1": "I'm 35, and I make UGC content across lifestyle, wellness, beauty, and tech — mostly on TikTok and Instagram Reels. I care more about storytelling and real experience than high-end production, so what I make doesn't feel like an ad. It feels like a friend telling you about something that actually worked.",
+    "about.p1": "I make UGC content across lifestyle, wellness, beauty, and tech — mostly on TikTok and Instagram Reels. I care more about storytelling and real experience than high-end production, so what I make doesn't feel like an ad. It feels like a friend telling you about something that actually worked.",
     "about.p2": "I started less than a year ago, right in the middle of my own self-love journey. It was never a strategic plan, just a way to process what I was going through — and somehow it connected me with other women going through the same thing. I've already done my first brand collaboration, and I'm still learning as I go, at my own pace, just being myself.",
     "about.trait1": "Confidence",
     "about.trait2": "Glam",
@@ -44,17 +43,11 @@ const I18N = {
     "modal.footPrefix": "Or just DM",
     "modal.whatsapp": "WhatsApp",
 
-    "pillars.title": "What I create",
     "pillars.lifestyle.title": "Lifestyle",
-    "pillars.lifestyle.body": "Daily routine, everyday products, real moments from my day-to-day.",
     "pillars.wellness.title": "Wellness",
-    "pillars.wellness.body": "Self-care, mental clarity, and the honest, vulnerable moments behind actually feeling good.",
     "pillars.beauty.title": "Beauty",
-    "pillars.beauty.body": "Skincare routines and makeup looks in one place: real results, always through the same authenticity filter.",
     "pillars.tech.title": "Tech",
-    "pillars.tech.body": "Honest takes on the gadgets and apps that actually earn a place in my routine.",
     "pillars.foodie.title": "Foodie",
-    "pillars.foodie.body": "What I'm eating, cooking, and ordering: the kind of recommendation I'd actually give a friend.",
 
     "portfolio.title": "Reels",
     "portfolio.lede": "A preview of what my content looks like. Real videos will be added here.",
@@ -120,21 +113,20 @@ const I18N = {
     "a11y.filterLabel": "Filtrar reels por pilar",
 
     "nav.about": "Sobre mí",
-    "nav.pillars": "Contenido",
     "nav.portfolio": "Reels",
     "nav.brands": "Marcas",
-    "nav.contact": "Trabajemos juntas",
+    "nav.contact": "Trabajemos juntos",
 
     "hero.title": "¡Hola, soy Andy!",
     "hero.lede": "Hago contenido que no parece publicidad. Parece una amiga contándote algo que le cambió la rutina.",
     "hero.ctaPrimary": "Vení a ver lo que hago",
-    "hero.ctaSecondary": "Trabajemos juntas",
+    "hero.ctaSecondary": "Trabajemos juntos",
     "hero.platforms": "TikTok & Instagram Reels",
     "hero.videoBadge": "Reel",
     "hero.videoSoon": "Video próximamente",
 
     "about.title": "Hola, soy Andy Luna",
-    "about.p1": "Tengo 35 años y hago contenido UGC de lifestyle, wellness, beauty y tech, sobre todo en TikTok e Instagram Reels. Me importa más contar algo real que la producción de alta gama, por eso lo que hago no parece publicidad. Parece una amiga contándote algo que de verdad le funcionó.",
+    "about.p1": "Hago contenido UGC de lifestyle, wellness, beauty y tech, sobre todo en TikTok e Instagram Reels. Me importa más contar algo real que la producción de alta gama, por eso lo que hago no parece publicidad. Parece una amiga contándote algo que de verdad le funcionó.",
     "about.p2": "Empecé hace menos de un año, justo en medio de mi propio proceso de amor propio. Nunca fue un plan estratégico, fue más bien una forma de procesar lo que estaba viviendo, y sin darme cuenta me conectó con otras mujeres que estaban pasando por algo parecido. Ya hice mi primera colaboración con una marca, y sigo aprendiendo sobre la marcha, a mi ritmo, siendo yo misma.",
     "about.trait1": "Confianza",
     "about.trait2": "Glam",
@@ -153,17 +145,11 @@ const I18N = {
     "modal.footPrefix": "O escribime al DM",
     "modal.whatsapp": "WhatsApp",
 
-    "pillars.title": "Lo que creo",
     "pillars.lifestyle.title": "Lifestyle",
-    "pillars.lifestyle.body": "Rutina diaria, productos de uso cotidiano, momentos reales de mi día a día.",
     "pillars.wellness.title": "Wellness",
-    "pillars.wellness.body": "Autocuidado, calma mental y los momentos genuinos y vulnerables detrás de sentirse realmente bien.",
     "pillars.beauty.title": "Beauty",
-    "pillars.beauty.body": "Rutinas de skincare y looks de makeup en un solo lugar: resultados reales, siempre con el mismo filtro de autenticidad.",
     "pillars.tech.title": "Tech",
-    "pillars.tech.body": "Opiniones honestas sobre la tecnología y las apps que realmente se ganan un lugar en mi rutina.",
     "pillars.foodie.title": "Foodie",
-    "pillars.foodie.body": "Lo que como, cocino y pido: la recomendación que de verdad le haría a una amiga.",
 
     "portfolio.title": "Reels",
     "portfolio.lede": "Una muestra de cómo se ve mi contenido. Los videos reales se van a ir sumando acá.",
@@ -212,7 +198,7 @@ const I18N = {
     "how.step5.desc": "Según lo que pida la marca",
 
     "contact.title": "Si tenés un producto que puede sumar a mi rutina de verdad, hablemos.",
-    "contact.emailCta": "Trabajemos juntas",
+    "contact.emailCta": "Trabajemos juntos",
 
     "footer.rights": "Todos los derechos reservados."
   }

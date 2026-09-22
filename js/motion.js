@@ -130,13 +130,6 @@
       onFirstIntersect(el, function () { reveal(el, { duration: 500 }); });
     });
 
-    var pillarList = document.querySelector(".pillar-list");
-    if (pillarList) {
-      onFirstIntersect(pillarList, function () {
-        reveal(pillarList.querySelectorAll(".pillar-row"), { delay: stagger(80) });
-      });
-    }
-
     var reelsGrid = document.getElementById("portfolio-grid");
     if (reelsGrid) {
       onFirstIntersect(reelsGrid, function () {
@@ -162,10 +155,10 @@
       onFirstIntersect(el, function () { reveal(el, { duration: 500 }); });
     });
 
-    var specGrid = document.querySelector(".standards-section .spec-grid");
-    if (specGrid) {
-      onFirstIntersect(specGrid, function () {
-        reveal(specGrid.querySelectorAll(".spec-row"), { delay: stagger(60) });
+    var standardsList = document.querySelector(".standards-list");
+    if (standardsList) {
+      onFirstIntersect(standardsList, function () {
+        reveal(standardsList.querySelectorAll(".standards-item"), { delay: stagger(60) });
       });
     }
 
