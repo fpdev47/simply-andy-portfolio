@@ -12,16 +12,19 @@ const I18N = {
 
     "nav.about": "About",
     "nav.portfolio": "Reels",
+    "nav.how": "How I work",
     "nav.brands": "Brands",
     "nav.contact": "Let's work together",
 
     "hero.title": "Hi, I'm Andy, a UGC Content Creator",
-    "hero.lede": "I make content that doesn't feel like an ad. It feels like a friend telling you about something that actually changed her routine.",
+    "hero.hello": "Spanish-language UGC for TikTok & Reels",
+    "hero.ledeA": "I make content that ",
+    "hero.ledeMark": "doesn't feel like an ad",
+    "hero.ledeB": ". It feels like a friend telling you about something that actually changed her routine.",
     "hero.ctaPrimary": "Come see what I make",
     "hero.ctaSecondary": "Let's work together",
-    "hero.platforms": "TikTok & Instagram Reels",
-    "hero.videoBadge": "Reel",
-    "hero.videoSoon": "Video coming soon",
+    "hero.reelNote": "This is how my captions look: one idea per line, one word marked.",
+    "hero.captions": "This *changed* my routine|I tried it for *30* days|Honest review, *no* filter",
 
     "about.title": "Hi, I'm Andy Luna",
     "about.p1": "I make UGC content across lifestyle, wellness, beauty, and tech — mostly on TikTok and Instagram Reels. I care more about storytelling and real experience than high-end production, so what I make doesn't feel like an ad. It feels like a friend telling you about something that actually worked.",
@@ -29,18 +32,21 @@ const I18N = {
     "about.trait1": "Confidence",
     "about.trait2": "Glam",
     "about.trait3": "Self-Care",
-    "about.statsLabel": "Profile stats: posts, followers, following",
-    "about.photoAlt": "Andy, UGC content creator, in a black and white portrait",
+    "about.statPosts": "posts",
+    "about.statFollowers": "followers",
+    "about.statFollowing": "following",
+    "about.photoAlt": "Andy, UGC content creator, smiling with her hand on her cheek",
 
     "modal.close": "Close",
-    "modal.eyebrow": "2 collab slots left · September",
+    "modal.eyebrow": "Open to new collabs",
     "modal.title": "Let's make something that doesn't feel like an ad",
     "modal.lede": "Pick whichever is easier for you. Both reach me directly.",
     "modal.callTitle": "Book a 15-min call",
-    "modal.callSub": "Fastest way in — we scope hooks and volume live",
+    "modal.callSub": "Fastest way in: we scope hooks and volume live",
     "modal.briefTitle": "Send me the brief",
     "modal.briefSub": "Prefer writing? I reply within 24 hours",
     "modal.footPrefix": "Or just DM",
+    "modal.footOr": "or write on",
     "modal.whatsapp": "WhatsApp",
 
     "pillars.lifestyle.title": "Lifestyle",
@@ -60,9 +66,8 @@ const I18N = {
 
     "stats.title": "Reach & audience",
     "stats.note": "Full reach, audience demographics, and engagement numbers live in my media kit. Happy to send it over.",
-    "stats.cta": "Just ask →",
+    "stats.cta": "Ask me for the media kit",
 
-    "how.kicker": "Method",
     "how.title": "How I work",
     "how.lede": "A fixed standard of quality and a repeatable process. No improvising on each brief.",
     "how.note": "I don't just film what's asked. I propose what's going to work.",
@@ -80,7 +85,7 @@ const I18N = {
     "how.item4": "Natural tone, never sounds like an ad",
     "how.item5": "Fast pace, no filler",
     "how.item6": "Vertical format, native to TikTok/Reels",
-    "how.item7": "Captions in Poppins, never covering the face",
+    "how.item7": "Captions in Big Shoulders, never covering the face",
     "how.processTitle": "My process with every brand",
     "how.step1.title": "Identify the product",
     "how.step1.desc": "What it is, what it does, what benefit it communicates",
@@ -93,8 +98,9 @@ const I18N = {
     "how.step5.title": "Adjust tone and approach",
     "how.step5.desc": "Based on what the brand needs",
 
-    "contact.title": "If you have a product that could genuinely add to my routine, let's talk.",
     "contact.emailCta": "Let's work together",
+    "contact.titleA": "If you have a product that could genuinely add to my routine, ",
+    "contact.titleMark": "let's talk",
 
     "footer.rights": "All rights reserved."
   },
@@ -112,16 +118,19 @@ const I18N = {
 
     "nav.about": "Sobre mí",
     "nav.portfolio": "Reels",
+    "nav.how": "Cómo trabajo",
     "nav.brands": "Marcas",
     "nav.contact": "Trabajemos juntos",
 
-    "hero.title": "¡Hola, soy Andy, creadora de contenido UGC!",
-    "hero.lede": "Hago contenido que no parece publicidad. Parece una amiga contándote algo que le cambió la rutina.",
+    "hero.title": "Hola, soy Andy, creadora de contenido UGC",
+    "hero.hello": "UGC en español para TikTok y Reels",
+    "hero.ledeA": "Hago contenido que ",
+    "hero.ledeMark": "no parece publicidad",
+    "hero.ledeB": ". Parece una amiga contándote algo que le cambió la rutina.",
     "hero.ctaPrimary": "Vení a ver lo que hago",
     "hero.ctaSecondary": "Trabajemos juntos",
-    "hero.platforms": "TikTok & Instagram Reels",
-    "hero.videoBadge": "Reel",
-    "hero.videoSoon": "Video próximamente",
+    "hero.reelNote": "Así se ven mis subtítulos: una idea por línea, una palabra marcada.",
+    "hero.captions": "Esto me *cambió* la rutina|Lo probé *30* días|Reseña honesta, *sin* filtro",
 
     "about.title": "Hola, soy Andy Luna",
     "about.p1": "Hago contenido UGC de lifestyle, wellness, beauty y tech, sobre todo en TikTok e Instagram Reels. Me importa más contar algo real que la producción de alta gama, por eso lo que hago no parece publicidad. Parece una amiga contándote algo que de verdad le funcionó.",
@@ -129,11 +138,13 @@ const I18N = {
     "about.trait1": "Confianza",
     "about.trait2": "Glam",
     "about.trait3": "Autocuidado",
-    "about.statsLabel": "Estadísticas del perfil: publicaciones, seguidores, seguidos",
-    "about.photoAlt": "Andy, creadora de contenido UGC, en un retrato en blanco y negro",
+    "about.statPosts": "publicaciones",
+    "about.statFollowers": "seguidores",
+    "about.statFollowing": "seguidos",
+    "about.photoAlt": "Andy, creadora de contenido UGC, sonriendo con la mano en la mejilla",
 
     "modal.close": "Cerrar",
-    "modal.eyebrow": "2 cupos para colabs · Septiembre",
+    "modal.eyebrow": "Abierta a nuevas colabs",
     "modal.title": "Hagamos algo que no parezca publicidad",
     "modal.lede": "Elegí lo que te quede más cómodo. Las dos me llegan directo.",
     "modal.callTitle": "Agendá una llamada de 15 min",
@@ -141,6 +152,7 @@ const I18N = {
     "modal.briefTitle": "Mandame el brief",
     "modal.briefSub": "¿Preferís escribir? Respondo en menos de 24 horas",
     "modal.footPrefix": "O escribime al DM",
+    "modal.footOr": "o escribime por",
     "modal.whatsapp": "WhatsApp",
 
     "pillars.lifestyle.title": "Lifestyle",
@@ -160,9 +172,8 @@ const I18N = {
 
     "stats.title": "Alcance y audiencia",
     "stats.note": "El alcance completo, la demografía y el engagement están en mi media kit. Te lo mando con gusto.",
-    "stats.cta": "Solo pedímelo →",
+    "stats.cta": "Pedime el media kit",
 
-    "how.kicker": "Método",
     "how.title": "Cómo trabajo",
     "how.lede": "Un estándar de calidad fijo y un proceso repetible. Sin improvisar en cada brief.",
     "how.note": "No solo grabo lo que me piden. Propongo lo que va a funcionar.",
@@ -180,7 +191,7 @@ const I18N = {
     "how.item4": "Tono natural, nunca suena a publicidad",
     "how.item5": "Ritmo ágil, sin relleno",
     "how.item6": "Formato vertical, nativo de TikTok/Reels",
-    "how.item7": "Subtítulos en Poppins, sin tapar la cara",
+    "how.item7": "Subtítulos en Big Shoulders, sin tapar la cara",
     "how.processTitle": "Mi proceso con cada marca",
     "how.step1.title": "Identifico el producto",
     "how.step1.desc": "Qué es, qué hace, qué beneficio comunica",
@@ -193,8 +204,9 @@ const I18N = {
     "how.step5.title": "Ajusto tono y enfoque",
     "how.step5.desc": "Según lo que pida la marca",
 
-    "contact.title": "Si tenés un producto que puede sumar a mi rutina de verdad, hablemos.",
     "contact.emailCta": "Trabajemos juntos",
+    "contact.titleA": "Si tenés un producto que puede sumar a mi rutina de verdad, ",
+    "contact.titleMark": "hablemos",
 
     "footer.rights": "Todos los derechos reservados."
   }

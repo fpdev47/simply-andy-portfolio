@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Simply Andy — UGC Content Creator | TikTok &amp; Instagram Reels</title>
 <meta name="description" content="Simply Andy (@__simplyandy), a UGC content creator specializing in lifestyle, wellness, beauty, tech and food content in Spanish. Content that doesn't feel like an ad.">
-<meta name="theme-color" content="#C8996B">
+<meta name="theme-color" content="#E9E2D0">
 
 <link rel="canonical" href="https://fpdev47.github.io/simply-andy-portfolio/">
 
@@ -23,20 +23,27 @@
 
 <script>
 (function () {
+  var root = document.documentElement;
+  root.className = root.className.replace("no-js", "js");
   var lang = (navigator.language || "").toLowerCase().indexOf("es") === 0 ? "es" : "en";
   try {
     var saved = localStorage.getItem("sa-lang");
     if (saved === "en" || saved === "es") lang = saved;
   } catch (e) {}
-  document.documentElement.lang = lang;
+  root.lang = lang;
+  // Returning visitors in the same tab get the short version of the dot loader.
+  try {
+    if (sessionStorage.getItem("sa-seen")) root.classList.add("loader-quick");
+  } catch (e) {}
 })();
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@600;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/andreina-luna.webp" type="image/webp">
 <!-- Bump ?v= on every css/js change: GitHub Pages caches assets for 10 min and stale CSS breaks fresh HTML -->
-<link rel="stylesheet" href="css/styles.css?v=14">
+<link rel="stylesheet" href="css/styles.css?v=24">
 
 <script type="application/ld+json">
 {
@@ -46,6 +53,7 @@
   "alternateName": "@__simplyandy",
   "jobTitle": "UGC Content Creator",
   "description": "UGC content creator making lifestyle, wellness, beauty, tech and food content in Spanish for TikTok and Instagram Reels.",
+  "image": "https://fpdev47.github.io/simply-andy-portfolio/assets/andreina-luna.webp",
   "knowsLanguage": ["es", "en"],
   "email": "mailto:itssimplyandy1@gmail.com",
   "sameAs": [
@@ -57,45 +65,68 @@
 </head>
 <body>
 
-<!-- Split-curtain page loader: main.js opens it at 1.4s and removes it at 2.2s;
-     motion.js waits for the curtain to start opening before playing the hero entrance. -->
-<div class="page-loader" id="page-loader" aria-hidden="true">
-  <div class="page-loader-panel page-loader-panel--left"></div>
-  <div class="page-loader-panel page-loader-panel--right"></div>
-  <div class="page-loader-center">
-    <span class="page-loader-spinner"></span>
-    <p class="page-loader-brand">Simply Andy<span>.</span></p>
-  </div>
+<!-- Dot loader. The Cuero dot from the logo drops in, "writes" the wordmark,
+     then swells to fill the screen and opens an iris from its own center onto
+     the page. Driven by main.js (Web Animations API, no library); hidden for
+     no-JS via .js gating in CSS, and reduced to a quick fade for reduced motion. -->
+<div class="loader" id="loader" aria-hidden="true">
+  <svg class="loader-logo" viewBox="0 0 256 76" fill="none">
+    <g class="loader-word">
+      <text class="loader-letter" x="0" y="58">a</text>
+      <text class="loader-letter" x="40.66" y="58">n</text>
+      <text class="loader-letter" x="82.99" y="58">d</text>
+      <text class="loader-letter" x="125.78" y="58">y</text>
+      <text class="loader-tag" x="188" y="25.5">UGC</text>
+      <text class="loader-tag" x="188" y="42">CREATOR</text>
+    </g>
+    <circle class="loader-dot" cx="177" cy="29" r="7.5"/>
+  </svg>
 </div>
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="logo" viewBox="0 0 256 76">
+    <text x="0" y="58" style="fill:var(--logo-ink)" font-family="AndyLogoDisplay, Archivo, Helvetica, Arial, sans-serif" font-weight="700" font-size="76" letter-spacing="-3.42">andy</text>
+    <circle class="logo-dot" cx="177" cy="29" r="7.5" style="fill:var(--logo-dot)"/>
+    <text x="188" y="25.5" style="fill:var(--logo-ink)" font-family="AndyLogoMono, 'DM Mono', ui-monospace, monospace" font-size="11.5" letter-spacing="1.84">UGC</text>
+    <text x="188" y="42" style="fill:var(--logo-ink)" font-family="AndyLogoMono, 'DM Mono', ui-monospace, monospace" font-size="11.5" letter-spacing="1.84">CREATOR</text>
+  </symbol>
   <symbol id="icon-instagram" viewBox="0 0 24 24"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></symbol>
   <symbol id="icon-tiktok" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></symbol>
   <symbol id="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+  <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.9 1.2 5.3 3 1.4-1.8 3.2-3 5.3-3 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></symbol>
+  <symbol id="icon-comment" viewBox="0 0 24 24"><path d="M12 3c5 0 9 3.4 9 7.7s-4 7.7-9 7.7c-1 0-2-.1-2.9-.4L4 20.5l1.5-4.2C4 14.9 3 12.9 3 10.7 3 6.4 7 3 12 3z"/></symbol>
+  <symbol id="icon-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4.5L6 21z"/></symbol>
 </svg>
 
 <a class="skip-link" href="#main" data-i18n="a11y.skip">Skip to content</a>
 
 <header class="site-header" id="top">
-  <div class="wrap header-inner">
-    <a class="brand" href="#top">
-      <img class="brand-logo" src="img/andy-color.svg" alt="Simply Andy — UGC Creator" width="256" height="76">
+  <div class="header-inner">
+    <a class="brand" href="#top" aria-label="Simply Andy — UGC Creator">
+      <svg class="brand-logo" id="header-logo" viewBox="0 0 256 76" width="118" height="35" aria-hidden="true">
+        <text x="0" y="58" class="logo-word">andy</text>
+        <circle class="logo-dot" cx="177" cy="29" r="7.5"/>
+        <text x="188" y="25.5" class="logo-tag">UGC</text>
+        <text x="188" y="42" class="logo-tag">CREATOR</text>
+      </svg>
     </a>
 
     <nav class="main-nav" id="main-nav" aria-label="Main navigation" data-i18n-attr="aria-label:a11y.mainNav">
       <a href="#marcas" data-i18n="nav.brands">Brands</a>
       <a href="#sobre-mi" data-i18n="nav.about">About</a>
       <a href="#portfolio" data-i18n="nav.portfolio">Reels</a>
-      <a href="#trabajemos" data-i18n="nav.contact">Let's work together</a>
+      <a href="#como-trabajo" data-i18n="nav.how">How I work</a>
+      <a class="nav-cta" href="#trabajemos" data-i18n="nav.contact">Let's work together</a>
+      <span class="nav-dot" id="nav-dot" aria-hidden="true"></span>
     </nav>
 
     <div class="header-actions">
       <div class="socials socials--header">
         <a href="https://instagram.com/__simplyandy" target="_blank" rel="noopener" aria-label="Instagram @__simplyandy">
-          <svg width="18" height="18" fill="currentColor" aria-hidden="true"><use href="#icon-instagram"/></svg>
+          <svg width="17" height="17" fill="currentColor" aria-hidden="true"><use href="#icon-instagram"/></svg>
         </a>
         <a href="https://tiktok.com/@__simplyandy" target="_blank" rel="noopener" aria-label="TikTok @__simplyandy">
-          <svg width="18" height="18" fill="currentColor" aria-hidden="true"><use href="#icon-tiktok"/></svg>
+          <svg width="17" height="17" fill="currentColor" aria-hidden="true"><use href="#icon-tiktok"/></svg>
         </a>
       </div>
 
@@ -106,7 +137,7 @@
       </button>
 
       <button class="nav-burger" id="nav-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav">
-        <span></span><span></span><span></span>
+        <span></span><span></span>
       </button>
     </div>
   </div>
@@ -114,336 +145,306 @@
 
 <main id="main">
 
-  <!-- HERO -->
+  <!-- HERO: the headline types itself out with the logo dot as the caret (the
+       Kiro "mascot leads the text" idea, in Andy's own mark). Characters are
+       pre-laid-out and only change opacity, so nothing reflows while typing and
+       screen readers always get the full sentence. -->
   <section class="hero">
     <div class="wrap hero-inner">
       <div class="hero-copy">
-        <h1 data-i18n="hero.title">Hi, I'm Andy, a UGC Content Creator</h1>
-        <p class="hero-lede" data-i18n="hero.lede">I make content that doesn't feel like an ad. It feels like a friend telling you about something that actually changed her routine.</p>
+        <p class="hero-hello"><span class="rec-dot" aria-hidden="true"></span><span data-i18n="hero.hello">UGC in Spanish · TikTok &amp; Reels</span></p>
+        <h1 class="hero-title" id="hero-title"><span class="hero-title-text" data-i18n="hero.title">Hi, I'm Andy, a UGC Content Creator</span><span class="type-caret" aria-hidden="true"></span></h1>
+        <p class="hero-lede"><span data-i18n="hero.ledeA">I make content that </span><mark class="hl" data-i18n="hero.ledeMark">doesn't feel like an ad</mark><span data-i18n="hero.ledeB">. It feels like a friend telling you about something that actually changed her routine.</span></p>
         <div class="hero-cta">
           <a href="#portfolio" class="btn btn-primary" data-i18n="hero.ctaPrimary">Come see what I make</a>
           <a href="#trabajemos" class="btn btn-ghost" data-contact-modal data-i18n="hero.ctaSecondary">Let's work together</a>
         </div>
-        <p class="hero-handle">@__simplyandy · <span data-i18n="hero.platforms">TikTok &amp; Instagram Reels</span></p>
       </div>
 
-      <div class="hero-portrait">
-        <div class="video-card video-card--hero" data-cat="lifestyle">
-          <div class="video-card-fill">
-            <span class="video-badge" data-i18n="hero.videoBadge">Reel</span>
-            <span class="play-icon play-icon--lg">
-              <svg width="20" height="20" fill="currentColor" aria-hidden="true"><use href="#icon-play"/></svg>
-            </span>
-            <span data-i18n="hero.videoSoon">Video coming soon</span>
+      <!-- Reel frame: Andy's photo inside a 9:16 vertical, with the brand's
+           video-caption system (Big Shoulders, one keyword marked) cycling in. -->
+      <figure class="hero-reel" id="hero-reel">
+        <div class="reel-frame spot">
+          <img class="reel-photo" src="assets/andreina-luna.webp" width="1000" height="1414" fetchpriority="high" decoding="async" alt="Andy, UGC content creator, smiling with her hand on her cheek" data-i18n-attr="alt:about.photoAlt">
+          <div class="reel-top" aria-hidden="true">
+            <span class="reel-rec"><span class="rec-dot"></span>REC</span>
+            <span class="reel-time" id="reel-time">0:00</span>
           </div>
-          <span class="caption-bar"></span>
+          <div class="reel-side" aria-hidden="true">
+            <span><svg width="22" height="22" fill="currentColor"><use href="#icon-heart"/></svg></span>
+            <span><svg width="22" height="22" fill="currentColor"><use href="#icon-comment"/></svg></span>
+            <span><svg width="22" height="22" fill="currentColor"><use href="#icon-bookmark"/></svg></span>
+          </div>
+          <p class="reel-caption" id="reel-caption" aria-hidden="true"><span class="cap-word">Esto</span> <span class="cap-word">me</span> <span class="cap-word is-key">cambió</span> <span class="cap-word">la</span> <span class="cap-word">rutina</span></p>
+          <p class="reel-handle" aria-hidden="true">@__simplyandy</p>
+          <div class="reel-progress" aria-hidden="true"><span id="reel-progress"></span></div>
         </div>
-        <span class="dot dot-1"></span>
-        <span class="dot dot-2"></span>
-        <span class="dot dot-3"></span>
-        <span class="dot dot-4"></span>
-      </div>
+        <figcaption class="reel-note" data-i18n="hero.reelNote">This is how my captions look: one idea per line, one word marked.</figcaption>
+      </figure>
     </div>
   </section>
 
-  <!-- MARCAS / BRANDS (directly under hero) -->
+  <!-- MARCAS / BRANDS -->
   <section class="section brands-section" id="marcas">
     <div class="wrap">
-      <h2 class="section-title" data-i18n="brands.title">Brands I've worked with</h2>
+      <div class="brands-head">
+        <h2 class="section-title" data-i18n="brands.title">Brands I've worked with</h2>
+        <p class="section-footnote" data-i18n="brands.footnote">I work with local and international Spanish-speaking brands, as well as global brands looking for authentic Spanish-language content.</p>
+      </div>
       <div class="brands-row">
-        <div class="brand-slot"><img class="brand-logo-img" src="img/clients/dove.svg" alt="Dove" loading="lazy"></div>
-        <div class="brand-slot"><img class="brand-logo-img" src="img/clients/loreal-elvive.svg" alt="L'Oréal Elvive" loading="lazy"></div>
-        <div class="brand-slot"><img class="brand-logo-img" src="img/clients/pump-fun-logo.svg" alt="Pump.fun" loading="lazy"></div>
+        <div class="brand-slot spot"><img class="brand-logo-img" src="img/clients/dove.svg" alt="Dove" loading="lazy"></div>
+        <div class="brand-slot spot"><img class="brand-logo-img" src="img/clients/loreal-elvive.svg" alt="L'Oréal Elvive" loading="lazy"></div>
+        <div class="brand-slot spot"><img class="brand-logo-img" src="img/clients/pump-fun-logo.svg" alt="Pump.fun" loading="lazy"></div>
         <a class="brand-slot brand-slot--cta" href="mailto:itssimplyandy1@gmail.com" data-contact-modal>
-          <span class="pending-badge" data-i18n="brands.slotLabel">Your brand here</span>
+          <span class="slot-dot" aria-hidden="true"></span>
+          <span data-i18n="brands.slotLabel">Your brand here</span>
         </a>
       </div>
-      <p class="section-footnote" data-i18n="brands.footnote">I work with local and international Spanish-speaking brands, as well as global brands looking for authentic Spanish-language content.</p>
     </div>
   </section>
 
-  <!-- SOBRE MI / ABOUT -->
-  <section class="section section--tint" id="sobre-mi">
+  <!-- SOBRE MI / ABOUT: profile header in the vernacular of the platforms she
+       lives on (avatar, handle, three counts), then her story in first person. -->
+  <section class="section about-section" id="sobre-mi">
     <div class="wrap about-inner">
-      <div class="about-photo">
-        <!-- Stat card: photo frame with rotating conic ring, breathing glow, shine sweep
-             and a stats pill whose numbers count up on first scroll into view. -->
-        <div class="stat-card" id="stat-card">
-          <span class="stat-card-ring" aria-hidden="true"></span>
-          <span class="stat-card-glow" aria-hidden="true"></span>
-          <div class="stat-card-frame">
-            <img class="stat-card-photo" src="assets/andreina-luna-pic-web.jpg" width="1000" height="1000" loading="lazy" decoding="async" alt="Andy, UGC content creator, in a black and white portrait" data-i18n-attr="alt:about.photoAlt">
-            <span class="stat-card-shine" aria-hidden="true"></span>
-          </div>
-          <div class="stat-pill" role="group" aria-label="Profile stats: posts, followers, following" data-i18n-attr="aria-label:about.statsLabel">
-            <span class="stat-num" data-count="142">142</span>
-            <span class="stat-sep" aria-hidden="true"></span>
-            <span class="stat-num" data-count="40000">40.000</span>
-            <span class="stat-sep" aria-hidden="true"></span>
-            <span class="stat-num" data-count="1133">1133</span>
+      <div class="profile-card spot" id="stat-card">
+        <div class="profile-top">
+          <span class="profile-avatar">
+            <img src="assets/andreina-luna-avatar.webp" width="320" height="320" loading="lazy" decoding="async" alt="">
+          </span>
+          <div>
+            <p class="profile-name">Andy Luna</p>
+            <p class="profile-handle">@__simplyandy</p>
           </div>
         </div>
+        <dl class="profile-stats">
+          <div><dt data-i18n="about.statPosts">posts</dt><dd class="stat-num" data-count="142">142</dd></div>
+          <div><dt data-i18n="about.statFollowers">followers</dt><dd class="stat-num" data-count="40000">40,000</dd></div>
+          <div><dt data-i18n="about.statFollowing">following</dt><dd class="stat-num" data-count="1133">1,133</dd></div>
+        </dl>
+        <ul class="trait-row">
+          <li class="trait-chip" data-i18n="about.trait1">Confidence</li>
+          <li class="trait-chip" data-i18n="about.trait2">Glam</li>
+          <li class="trait-chip" data-i18n="about.trait3">Self-Care</li>
+        </ul>
       </div>
       <div class="about-copy">
-        <h2 data-i18n="about.title">Hi, I'm Andy Luna</h2>
+        <h2 class="section-title" data-i18n="about.title">Hi, I'm Andy Luna</h2>
         <p data-i18n="about.p1">I make UGC content across lifestyle, wellness, beauty, and tech — mostly on TikTok and Instagram Reels. I care more about storytelling and real experience than high-end production, so what I make doesn't feel like an ad. It feels like a friend telling you about something that actually worked.</p>
         <p data-i18n="about.p2">I started less than a year ago, right in the middle of my own self-love journey. It was never a strategic plan, just a way to process what I was going through — and somehow it connected me with other women going through the same thing. I've already done my first brand collaboration, and I'm still learning as I go, at my own pace, just being myself.</p>
-        <div class="trait-row">
-          <span class="trait-chip" data-i18n="about.trait1">Confidence</span>
-          <span class="trait-chip" data-i18n="about.trait2">Glam</span>
-          <span class="trait-chip" data-i18n="about.trait3">Self-Care</span>
-        </div>
       </div>
     </div>
   </section>
 
-  <!-- REELS (formerly "Portfolio", renamed since the whole site is the portfolio) -->
-  <section class="section section--tint" id="portfolio">
+  <!-- REELS -->
+  <section class="section reels-section" id="portfolio">
     <div class="wrap">
-      <h2 class="section-title" data-i18n="portfolio.title">Reels</h2>
-      <p class="section-lede" data-i18n="portfolio.lede">A preview of what my content looks like. Real videos will be added here.</p>
-
-      <div class="filter-bar" id="filter-bar" role="group" aria-label="Filter reels by pillar" data-i18n-attr="aria-label:a11y.filterLabel">
-        <button class="filter-btn is-active" type="button" data-filter="all" aria-pressed="true" data-i18n="portfolio.filterAll">All</button>
-        <button class="filter-btn" type="button" data-filter="lifestyle" aria-pressed="false" data-i18n="pillars.lifestyle.title">Lifestyle</button>
-        <button class="filter-btn" type="button" data-filter="wellness" aria-pressed="false" data-i18n="pillars.wellness.title">Wellness</button>
-        <button class="filter-btn" type="button" data-filter="beauty" aria-pressed="false" data-i18n="pillars.beauty.title">Beauty</button>
-        <button class="filter-btn" type="button" data-filter="tech" aria-pressed="false" data-i18n="pillars.tech.title">Tech</button>
-        <button class="filter-btn" type="button" data-filter="foodie" aria-pressed="false" data-i18n="pillars.foodie.title">Foodie</button>
+      <div class="reels-head">
+        <div>
+          <h2 class="section-title" data-i18n="portfolio.title">Reels</h2>
+          <p class="section-lede" data-i18n="portfolio.lede">A preview of what my content looks like. Real videos will be added here.</p>
+        </div>
+        <div class="filter-bar" id="filter-bar" role="group" aria-label="Filter reels by pillar" data-i18n-attr="aria-label:a11y.filterLabel">
+          <button class="filter-btn is-active" type="button" data-filter="all" aria-pressed="true" data-i18n="portfolio.filterAll">All</button>
+          <button class="filter-btn" type="button" data-filter="lifestyle" aria-pressed="false" data-i18n="pillars.lifestyle.title">Lifestyle</button>
+          <button class="filter-btn" type="button" data-filter="wellness" aria-pressed="false" data-i18n="pillars.wellness.title">Wellness</button>
+          <button class="filter-btn" type="button" data-filter="beauty" aria-pressed="false" data-i18n="pillars.beauty.title">Beauty</button>
+          <button class="filter-btn" type="button" data-filter="tech" aria-pressed="false" data-i18n="pillars.tech.title">Tech</button>
+          <button class="filter-btn" type="button" data-filter="foodie" aria-pressed="false" data-i18n="pillars.foodie.title">Foodie</button>
+        </div>
       </div>
 
       <div class="portfolio-grid" id="portfolio-grid">
-        <div class="video-card" data-cat="lifestyle">
-          <div class="video-card-fill">
-            <span class="video-badge" data-i18n="pillars.lifestyle.title">Lifestyle</span>
-            <span class="play-icon"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="#icon-play"/></svg></span>
-            <span class="pending-badge" data-i18n="portfolio.soon">Video coming soon</span>
-          </div>
-          <span class="caption-bar"></span>
-        </div>
-        <div class="video-card" data-cat="lifestyle">
-          <div class="video-card-fill">
-            <span class="video-badge" data-i18n="pillars.lifestyle.title">Lifestyle</span>
-            <span class="play-icon"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="#icon-play"/></svg></span>
-            <span class="pending-badge" data-i18n="portfolio.soon">Video coming soon</span>
-          </div>
-          <span class="caption-bar"></span>
-        </div>
-        <div class="video-card" data-cat="wellness">
-          <div class="video-card-fill">
-            <span class="video-badge" data-i18n="pillars.wellness.title">Wellness</span>
-            <span class="play-icon"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="#icon-play"/></svg></span>
-            <span class="pending-badge" data-i18n="portfolio.soon">Video coming soon</span>
-          </div>
-          <span class="caption-bar"></span>
-        </div>
-        <div class="video-card" data-cat="wellness">
-          <div class="video-card-fill">
-            <span class="video-badge" data-i18n="pillars.wellness.title">Wellness</span>
-            <span class="play-icon"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="#icon-play"/></svg></span>
-            <span class="pending-badge" data-i18n="portfolio.soon">Video coming soon</span>
-          </div>
-          <span class="caption-bar"></span>
-        </div>
-        <div class="video-card" data-cat="beauty">
-          <div class="video-card-fill">
-            <span class="video-badge" data-i18n="pillars.beauty.title">Beauty</span>
-            <span class="play-icon"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="#icon-play"/></svg></span>
-            <span class="pending-badge" data-i18n="portfolio.soon">Video coming soon</span>
-          </div>
-          <span class="caption-bar"></span>
-        </div>
-        <div class="video-card" data-cat="beauty">
-          <div class="video-card-fill">
-            <span class="video-badge" data-i18n="pillars.beauty.title">Beauty</span>
-            <span class="play-icon"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="#icon-play"/></svg></span>
-            <span class="pending-badge" data-i18n="portfolio.soon">Video coming soon</span>
-          </div>
-          <span class="caption-bar"></span>
-        </div>
-        <div class="video-card" data-cat="tech">
-          <div class="video-card-fill">
-            <span class="video-badge" data-i18n="pillars.tech.title">Tech</span>
-            <span class="play-icon"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="#icon-play"/></svg></span>
-            <span class="pending-badge" data-i18n="portfolio.soon">Video coming soon</span>
-          </div>
-          <span class="caption-bar"></span>
-        </div>
-        <div class="video-card" data-cat="tech">
-          <div class="video-card-fill">
-            <span class="video-badge" data-i18n="pillars.tech.title">Tech</span>
-            <span class="play-icon"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="#icon-play"/></svg></span>
-            <span class="pending-badge" data-i18n="portfolio.soon">Video coming soon</span>
-          </div>
-          <span class="caption-bar"></span>
-        </div>
-        <div class="video-card" data-cat="foodie">
-          <div class="video-card-fill">
-            <span class="video-badge" data-i18n="pillars.foodie.title">Foodie</span>
-            <span class="play-icon"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="#icon-play"/></svg></span>
-            <span class="pending-badge" data-i18n="portfolio.soon">Video coming soon</span>
-          </div>
-          <span class="caption-bar"></span>
-        </div>
-        <div class="video-card" data-cat="foodie">
-          <div class="video-card-fill">
-            <span class="video-badge" data-i18n="pillars.foodie.title">Foodie</span>
-            <span class="play-icon"><svg width="16" height="16" fill="currentColor" aria-hidden="true"><use href="#icon-play"/></svg></span>
-            <span class="pending-badge" data-i18n="portfolio.soon">Video coming soon</span>
-          </div>
-          <span class="caption-bar"></span>
-        </div>
+        <article class="video-card spot" data-cat="lifestyle">
+          <div class="video-card-top"><span class="rec-dot" aria-hidden="true"></span><span class="video-badge" data-i18n="pillars.lifestyle.title">Lifestyle</span></div>
+          <span class="play-icon" aria-hidden="true"><svg width="18" height="18" fill="currentColor"><use href="#icon-play"/></svg></span>
+          <p class="video-soon" data-i18n="portfolio.soon">Video coming soon</p>
+          <span class="video-lines" aria-hidden="true"><span></span><span></span></span>
+        </article>
+        <article class="video-card spot" data-cat="lifestyle">
+          <div class="video-card-top"><span class="rec-dot" aria-hidden="true"></span><span class="video-badge" data-i18n="pillars.lifestyle.title">Lifestyle</span></div>
+          <span class="play-icon" aria-hidden="true"><svg width="18" height="18" fill="currentColor"><use href="#icon-play"/></svg></span>
+          <p class="video-soon" data-i18n="portfolio.soon">Video coming soon</p>
+          <span class="video-lines" aria-hidden="true"><span></span><span></span></span>
+        </article>
+        <article class="video-card spot" data-cat="wellness">
+          <div class="video-card-top"><span class="rec-dot" aria-hidden="true"></span><span class="video-badge" data-i18n="pillars.wellness.title">Wellness</span></div>
+          <span class="play-icon" aria-hidden="true"><svg width="18" height="18" fill="currentColor"><use href="#icon-play"/></svg></span>
+          <p class="video-soon" data-i18n="portfolio.soon">Video coming soon</p>
+          <span class="video-lines" aria-hidden="true"><span></span><span></span></span>
+        </article>
+        <article class="video-card spot" data-cat="wellness">
+          <div class="video-card-top"><span class="rec-dot" aria-hidden="true"></span><span class="video-badge" data-i18n="pillars.wellness.title">Wellness</span></div>
+          <span class="play-icon" aria-hidden="true"><svg width="18" height="18" fill="currentColor"><use href="#icon-play"/></svg></span>
+          <p class="video-soon" data-i18n="portfolio.soon">Video coming soon</p>
+          <span class="video-lines" aria-hidden="true"><span></span><span></span></span>
+        </article>
+        <article class="video-card spot" data-cat="beauty">
+          <div class="video-card-top"><span class="rec-dot" aria-hidden="true"></span><span class="video-badge" data-i18n="pillars.beauty.title">Beauty</span></div>
+          <span class="play-icon" aria-hidden="true"><svg width="18" height="18" fill="currentColor"><use href="#icon-play"/></svg></span>
+          <p class="video-soon" data-i18n="portfolio.soon">Video coming soon</p>
+          <span class="video-lines" aria-hidden="true"><span></span><span></span></span>
+        </article>
+        <article class="video-card spot" data-cat="beauty">
+          <div class="video-card-top"><span class="rec-dot" aria-hidden="true"></span><span class="video-badge" data-i18n="pillars.beauty.title">Beauty</span></div>
+          <span class="play-icon" aria-hidden="true"><svg width="18" height="18" fill="currentColor"><use href="#icon-play"/></svg></span>
+          <p class="video-soon" data-i18n="portfolio.soon">Video coming soon</p>
+          <span class="video-lines" aria-hidden="true"><span></span><span></span></span>
+        </article>
+        <article class="video-card spot" data-cat="tech">
+          <div class="video-card-top"><span class="rec-dot" aria-hidden="true"></span><span class="video-badge" data-i18n="pillars.tech.title">Tech</span></div>
+          <span class="play-icon" aria-hidden="true"><svg width="18" height="18" fill="currentColor"><use href="#icon-play"/></svg></span>
+          <p class="video-soon" data-i18n="portfolio.soon">Video coming soon</p>
+          <span class="video-lines" aria-hidden="true"><span></span><span></span></span>
+        </article>
+        <article class="video-card spot" data-cat="tech">
+          <div class="video-card-top"><span class="rec-dot" aria-hidden="true"></span><span class="video-badge" data-i18n="pillars.tech.title">Tech</span></div>
+          <span class="play-icon" aria-hidden="true"><svg width="18" height="18" fill="currentColor"><use href="#icon-play"/></svg></span>
+          <p class="video-soon" data-i18n="portfolio.soon">Video coming soon</p>
+          <span class="video-lines" aria-hidden="true"><span></span><span></span></span>
+        </article>
+        <article class="video-card spot" data-cat="foodie">
+          <div class="video-card-top"><span class="rec-dot" aria-hidden="true"></span><span class="video-badge" data-i18n="pillars.foodie.title">Foodie</span></div>
+          <span class="play-icon" aria-hidden="true"><svg width="18" height="18" fill="currentColor"><use href="#icon-play"/></svg></span>
+          <p class="video-soon" data-i18n="portfolio.soon">Video coming soon</p>
+          <span class="video-lines" aria-hidden="true"><span></span><span></span></span>
+        </article>
+        <article class="video-card spot" data-cat="foodie">
+          <div class="video-card-top"><span class="rec-dot" aria-hidden="true"></span><span class="video-badge" data-i18n="pillars.foodie.title">Foodie</span></div>
+          <span class="play-icon" aria-hidden="true"><svg width="18" height="18" fill="currentColor"><use href="#icon-play"/></svg></span>
+          <p class="video-soon" data-i18n="portfolio.soon">Video coming soon</p>
+          <span class="video-lines" aria-hidden="true"><span></span><span></span></span>
+        </article>
       </div>
     </div>
   </section>
 
   <!-- NUMEROS / STATS -->
-  <section class="section" id="numeros">
+  <section class="section numbers-section" id="numeros">
     <div class="wrap numbers-inner">
       <h2 class="section-title" data-i18n="stats.title">Reach &amp; audience</h2>
       <p class="numbers-note" data-i18n="stats.note">Full reach, audience demographics, and engagement numbers live in my media kit. Happy to send it over.</p>
-      <a class="text-link" href="mailto:itssimplyandy1@gmail.com" data-i18n="stats.cta">Just ask →</a>
+      <a class="text-link" href="mailto:itssimplyandy1@gmail.com?subject=Media%20kit" data-i18n="stats.cta">Ask me for the media kit</a>
     </div>
   </section>
 
-  <!-- COMO TRABAJO / HOW I WORK (design 3a: spec sheet + animated stepper) -->
-  <section class="section section--tint" id="como-trabajo">
+  <!-- COMO TRABAJO / HOW I WORK -->
+  <section class="section how-section" id="como-trabajo">
     <div class="wrap">
       <div class="method-card">
-
         <header class="method-head">
           <div>
-            <p class="method-kicker" data-i18n="how.kicker">Method</p>
-            <h2 class="method-title" data-i18n="how.title">How I work</h2>
+            <h2 class="section-title" data-i18n="how.title">How I work</h2>
             <p class="method-lede" data-i18n="how.lede">A fixed standard of quality and a repeatable process. No improvising on each brief.</p>
           </div>
-          <p class="method-quote" data-i18n="how.note">I don't just film what's asked. I propose what's going to work.</p>
+          <blockquote class="method-quote"><p data-i18n="how.note">I don't just film what's asked. I propose what's going to work.</p></blockquote>
         </header>
 
-        <div class="process-block">
-          <div class="spec-head process-head">
-            <h3 class="spec-kicker" data-i18n="how.processTitle">My process with every brand</h3>
-          </div>
-          <ol class="stepper" id="process-stepper">
-            <li class="step">
-              <span class="step-rail" aria-hidden="true"><span class="step-rail-fill"></span></span>
-              <span class="step-ring" aria-hidden="true"><span class="step-dot"></span></span>
-              <div>
-                <h4 class="step-title" data-i18n="how.step1.title">Identify the product</h4>
-                <p class="step-desc" data-i18n="how.step1.desc">What it is, what it does, what benefit it communicates</p>
-              </div>
-            </li>
-            <li class="step">
-              <span class="step-rail" aria-hidden="true"><span class="step-rail-fill"></span></span>
-              <span class="step-ring" aria-hidden="true"><span class="step-dot"></span></span>
-              <div>
-                <h4 class="step-title" data-i18n="how.step2.title">Review technical guidelines</h4>
-                <p class="step-desc" data-i18n="how.step2.desc">Length, format, delivery, captions</p>
-              </div>
-            </li>
-            <li class="step">
-              <span class="step-rail" aria-hidden="true"><span class="step-rail-fill"></span></span>
-              <span class="step-ring" aria-hidden="true"><span class="step-dot"></span></span>
-              <div>
-                <h4 class="step-title" data-i18n="how.step3.title">Define formats</h4>
-                <p class="step-desc" data-i18n="how.step3.desc">Selfie, voiceover, creative</p>
-              </div>
-            </li>
-            <li class="step">
-              <span class="step-rail" aria-hidden="true"><span class="step-rail-fill"></span></span>
-              <span class="step-ring" aria-hidden="true"><span class="step-dot"></span></span>
-              <div>
-                <h4 class="step-title" data-i18n="how.step4.title">Define volume</h4>
-                <p class="step-desc" data-i18n="how.step4.desc">Number of hooks and versions</p>
-              </div>
-            </li>
-            <li class="step">
-              <span class="step-ring" aria-hidden="true"><span class="step-dot"></span></span>
-              <div>
-                <h4 class="step-title" data-i18n="how.step5.title">Adjust tone and approach</h4>
-                <p class="step-desc" data-i18n="how.step5.desc">Based on what the brand needs</p>
-              </div>
-            </li>
-          </ol>
-        </div>
-
+        <h3 class="process-title" data-i18n="how.processTitle">My process with every brand</h3>
+        <ol class="stepper" id="process-stepper">
+          <li class="step">
+            <span class="step-marker" aria-hidden="true"><span class="step-dot"></span></span>
+            <div class="step-body">
+              <h4 class="step-title" data-i18n="how.step1.title">Identify the product</h4>
+              <p class="step-desc" data-i18n="how.step1.desc">What it is, what it does, what benefit it communicates</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step-marker" aria-hidden="true"><span class="step-dot"></span></span>
+            <div class="step-body">
+              <h4 class="step-title" data-i18n="how.step2.title">Review technical guidelines</h4>
+              <p class="step-desc" data-i18n="how.step2.desc">Length, format, delivery, captions</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step-marker" aria-hidden="true"><span class="step-dot"></span></span>
+            <div class="step-body">
+              <h4 class="step-title" data-i18n="how.step3.title">Define formats</h4>
+              <p class="step-desc" data-i18n="how.step3.desc">Selfie, voiceover, creative</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step-marker" aria-hidden="true"><span class="step-dot"></span></span>
+            <div class="step-body">
+              <h4 class="step-title" data-i18n="how.step4.title">Define volume</h4>
+              <p class="step-desc" data-i18n="how.step4.desc">Number of hooks and versions</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="step-marker" aria-hidden="true"><span class="step-dot"></span></span>
+            <div class="step-body">
+              <h4 class="step-title" data-i18n="how.step5.title">Adjust tone and approach</h4>
+              <p class="step-desc" data-i18n="how.step5.desc">Based on what the brand needs</p>
+            </div>
+          </li>
+        </ol>
       </div>
     </div>
   </section>
 
-  <!-- ESTANDARES / QUALITY STANDARDS — two-lane counter-scrolling marquee, full-bleed
-       and gently skewed for energy. Each lane holds the 7 standards twice back-to-back
-       (second copy aria-hidden) so a translateX(-50%) loop over the doubled track is
-       seamless. prefers-reduced-motion drops the transform/skew entirely and shows a
-       plain wrapped, static chip row instead (see styles.css). -->
+  <!-- ESTANDARES / QUALITY STANDARDS: two counter-scrolling lanes. Second copy in
+       each lane is aria-hidden so the translateX(-50%) loop is seamless. Reduced
+       motion gets a static wrapped chip list instead. -->
   <section class="section standards-section" id="estandares">
     <div class="wrap">
       <h2 class="section-title" data-i18n="how.standardsTitle">Quality standards</h2>
     </div>
-
     <div class="standards-marquee">
       <div class="marquee-row marquee-row--light">
-        <div class="marquee-viewport">
-          <ul class="marquee-track">
-            <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label1">Source</strong><span data-i18n="how.item1">Content based on real, believable experience</span></li>
-            <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label5">Pace</strong><span data-i18n="how.item5">Fast pace, no filler</span></li>
-            <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label2">Opening</strong><span data-i18n="how.item2">No intro: straight to the point from second zero</span></li>
-            <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label6">Format</strong><span data-i18n="how.item6">Vertical format, native to TikTok/Reels</span></li>
-            <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label3">Product</strong><span data-i18n="how.item3">Product visible in the first 2–3 seconds</span></li>
-            <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label7">Captions</strong><span data-i18n="how.item7">Captions in Poppins, never covering the face</span></li>
-            <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label4">Tone</strong><span data-i18n="how.item4">Natural tone, never sounds like an ad</span></li>
-            <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label1">Source</strong><span data-i18n="how.item1">Content based on real, believable experience</span></li>
-            <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label5">Pace</strong><span data-i18n="how.item5">Fast pace, no filler</span></li>
-            <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label2">Opening</strong><span data-i18n="how.item2">No intro: straight to the point from second zero</span></li>
-            <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label6">Format</strong><span data-i18n="how.item6">Vertical format, native to TikTok/Reels</span></li>
-            <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label3">Product</strong><span data-i18n="how.item3">Product visible in the first 2–3 seconds</span></li>
-            <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label7">Captions</strong><span data-i18n="how.item7">Captions in Poppins, never covering the face</span></li>
-            <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label4">Tone</strong><span data-i18n="how.item4">Natural tone, never sounds like an ad</span></li>
-          </ul>
-        </div>
+        <ul class="marquee-track">
+          <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label1">Source</strong><span data-i18n="how.item1">Content based on real, believable experience</span></li>
+          <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label5">Pace</strong><span data-i18n="how.item5">Fast pace, no filler</span></li>
+          <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label2">Opening</strong><span data-i18n="how.item2">No intro: straight to the point from second zero</span></li>
+          <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label6">Format</strong><span data-i18n="how.item6">Vertical format, native to TikTok/Reels</span></li>
+          <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label3">Product</strong><span data-i18n="how.item3">Product visible in the first 2–3 seconds</span></li>
+          <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label7">Captions</strong><span data-i18n="how.item7">Captions in Big Shoulders, never covering the face</span></li>
+          <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label4">Tone</strong><span data-i18n="how.item4">Natural tone, never sounds like an ad</span></li>
+          <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label1">Source</strong><span data-i18n="how.item1">Content based on real, believable experience</span></li>
+          <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label5">Pace</strong><span data-i18n="how.item5">Fast pace, no filler</span></li>
+          <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label2">Opening</strong><span data-i18n="how.item2">No intro: straight to the point from second zero</span></li>
+          <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label6">Format</strong><span data-i18n="how.item6">Vertical format, native to TikTok/Reels</span></li>
+          <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label3">Product</strong><span data-i18n="how.item3">Product visible in the first 2–3 seconds</span></li>
+          <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label7">Captions</strong><span data-i18n="how.item7">Captions in Big Shoulders, never covering the face</span></li>
+          <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label4">Tone</strong><span data-i18n="how.item4">Natural tone, never sounds like an ad</span></li>
+        </ul>
       </div>
-
       <div class="marquee-row marquee-row--dark">
-        <div class="marquee-viewport">
-          <ul class="marquee-track marquee-track--reverse">
-            <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label4">Tone</strong><span data-i18n="how.item4">Natural tone, never sounds like an ad</span></li>
-            <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label7">Captions</strong><span data-i18n="how.item7">Captions in Poppins, never covering the face</span></li>
-            <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label3">Product</strong><span data-i18n="how.item3">Product visible in the first 2–3 seconds</span></li>
-            <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label6">Format</strong><span data-i18n="how.item6">Vertical format, native to TikTok/Reels</span></li>
-            <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label2">Opening</strong><span data-i18n="how.item2">No intro: straight to the point from second zero</span></li>
-            <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label5">Pace</strong><span data-i18n="how.item5">Fast pace, no filler</span></li>
-            <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label1">Source</strong><span data-i18n="how.item1">Content based on real, believable experience</span></li>
-            <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label4">Tone</strong><span data-i18n="how.item4">Natural tone, never sounds like an ad</span></li>
-            <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label7">Captions</strong><span data-i18n="how.item7">Captions in Poppins, never covering the face</span></li>
-            <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label3">Product</strong><span data-i18n="how.item3">Product visible in the first 2–3 seconds</span></li>
-            <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label6">Format</strong><span data-i18n="how.item6">Vertical format, native to TikTok/Reels</span></li>
-            <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label2">Opening</strong><span data-i18n="how.item2">No intro: straight to the point from second zero</span></li>
-            <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label5">Pace</strong><span data-i18n="how.item5">Fast pace, no filler</span></li>
-            <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label1">Source</strong><span data-i18n="how.item1">Content based on real, believable experience</span></li>
-          </ul>
-        </div>
+        <ul class="marquee-track marquee-track--reverse">
+          <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label4">Tone</strong><span data-i18n="how.item4">Natural tone, never sounds like an ad</span></li>
+          <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label7">Captions</strong><span data-i18n="how.item7">Captions in Big Shoulders, never covering the face</span></li>
+          <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label3">Product</strong><span data-i18n="how.item3">Product visible in the first 2–3 seconds</span></li>
+          <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label6">Format</strong><span data-i18n="how.item6">Vertical format, native to TikTok/Reels</span></li>
+          <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label2">Opening</strong><span data-i18n="how.item2">No intro: straight to the point from second zero</span></li>
+          <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label5">Pace</strong><span data-i18n="how.item5">Fast pace, no filler</span></li>
+          <li class="marquee-chip"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label1">Source</strong><span data-i18n="how.item1">Content based on real, believable experience</span></li>
+          <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label4">Tone</strong><span data-i18n="how.item4">Natural tone, never sounds like an ad</span></li>
+          <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label7">Captions</strong><span data-i18n="how.item7">Captions in Big Shoulders, never covering the face</span></li>
+          <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label3">Product</strong><span data-i18n="how.item3">Product visible in the first 2–3 seconds</span></li>
+          <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label6">Format</strong><span data-i18n="how.item6">Vertical format, native to TikTok/Reels</span></li>
+          <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label2">Opening</strong><span data-i18n="how.item2">No intro: straight to the point from second zero</span></li>
+          <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label5">Pace</strong><span data-i18n="how.item5">Fast pace, no filler</span></li>
+          <li class="marquee-chip" aria-hidden="true"><span class="standards-check" aria-hidden="true"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1.5 5.2l3 3.3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong data-i18n="how.label1">Source</strong><span data-i18n="how.item1">Content based on real, believable experience</span></li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <!-- CONTACTO / CONTACT -->
-  <section class="section section--dark" id="trabajemos">
+  <!-- CONTACTO / CONTACT: Bordó is the brand's "premium block"; CTA in Cuero. -->
+  <section class="section contact-section" id="trabajemos">
     <div class="wrap contact-inner">
-      <h2 class="contact-title" data-i18n="contact.title">If you have a product that could genuinely add to my routine, let's talk.</h2>
-
+      <h2 class="contact-title"><span data-i18n="contact.titleA">If you have a product that could genuinely add to my routine, </span><mark class="hl hl--on-bordo" data-i18n="contact.titleMark">let's talk</mark><span class="contact-dot" aria-hidden="true"></span></h2>
       <div class="contact-actions">
-        <a class="btn btn-primary" href="mailto:itssimplyandy1@gmail.com" data-contact-modal data-i18n="contact.emailCta">Let's work together</a>
-      </div>
-
-      <div class="socials socials--contact">
-        <a href="https://instagram.com/__simplyandy" target="_blank" rel="noopener">
-          <svg width="20" height="20" fill="currentColor" aria-hidden="true"><use href="#icon-instagram"/></svg>
-          <span>Instagram</span>
-        </a>
-        <a href="https://tiktok.com/@__simplyandy" target="_blank" rel="noopener">
-          <svg width="20" height="20" fill="currentColor" aria-hidden="true"><use href="#icon-tiktok"/></svg>
-          <span>TikTok</span>
-        </a>
+        <a class="btn btn-accent" href="mailto:itssimplyandy1@gmail.com" data-contact-modal data-i18n="contact.emailCta">Let's work together</a>
+        <div class="socials socials--contact">
+          <a href="https://instagram.com/__simplyandy" target="_blank" rel="noopener">
+            <svg width="18" height="18" fill="currentColor" aria-hidden="true"><use href="#icon-instagram"/></svg>
+            <span>Instagram</span>
+          </a>
+          <a href="https://tiktok.com/@__simplyandy" target="_blank" rel="noopener">
+            <svg width="18" height="18" fill="currentColor" aria-hidden="true"><use href="#icon-tiktok"/></svg>
+            <span>TikTok</span>
+          </a>
+        </div>
       </div>
     </div>
   </section>
@@ -452,24 +453,23 @@
 
 <footer class="site-footer">
   <div class="wrap footer-inner">
-    <div class="footer-brand">
-      <a href="#top">
-        <img class="brand-logo brand-logo--footer" src="img/andy-color.svg" alt="Simply Andy — UGC Creator" width="256" height="76">
-      </a>
-      <p class="footer-handle">@__simplyandy</p>
-    </div>
-    <p class="footer-copy">© <span id="year">2026</span> Simply Andy. <span data-i18n="footer.rights">All rights reserved.</span></p>
+    <a href="#top" class="footer-brand" aria-label="Simply Andy — UGC Creator">
+      <svg class="brand-logo" viewBox="0 0 256 76" width="140" height="42" aria-hidden="true"><use href="#logo"/></svg>
+    </a>
+    <p class="footer-copy">© <span id="year">2026</span> Simply Andy · @__simplyandy. <span data-i18n="footer.rights">All rights reserved.</span></p>
   </div>
 </footer>
 
-<!-- CONTACT MODAL (design 4a "Dos tarjetas"): opened by the "Let's work together"
-     CTAs, whose hrefs remain as the no-JS fallback.
+<!-- CONTACT MODAL: opened by the "Let's work together" CTAs, whose hrefs remain
+     as the no-JS fallback.
      TODO: swap the Calendly placeholder for Andy's real scheduling link. -->
 <dialog class="contact-modal" id="contact-modal" aria-labelledby="contact-modal-title">
   <div class="contact-modal-card">
-    <button type="button" class="contact-modal-close" id="contact-modal-close" aria-label="Close" data-i18n-attr="aria-label:modal.close">✕</button>
+    <button type="button" class="contact-modal-close" id="contact-modal-close" aria-label="Close" data-i18n-attr="aria-label:modal.close">
+      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
 
-    <p class="contact-modal-eyebrow"><span class="contact-modal-dot" aria-hidden="true"></span><span data-i18n="modal.eyebrow">2 collab slots left · September</span></p>
+    <p class="contact-modal-eyebrow"><span class="rec-dot" aria-hidden="true"></span><span data-i18n="modal.eyebrow">Open to new collabs</span></p>
     <h2 id="contact-modal-title" data-i18n="modal.title">Let's make something that doesn't feel like an ad</h2>
     <p class="contact-modal-lede" data-i18n="modal.lede">Pick whichever is easier for you. Both reach me directly.</p>
 
@@ -477,9 +477,8 @@
       <span class="modal-option-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
       <span>
         <span class="modal-option-title" data-i18n="modal.callTitle">Book a 15-min call</span>
-        <span class="modal-option-sub" data-i18n="modal.callSub">Fastest way in — we scope hooks and volume live</span>
+        <span class="modal-option-sub" data-i18n="modal.callSub">Fastest way in: we scope hooks and volume live</span>
       </span>
-      <span class="modal-option-arrow" aria-hidden="true">→</span>
     </a>
 
     <a class="modal-option modal-option--secondary" href="mailto:itssimplyandy1@gmail.com?subject=Collab%20with%20Andy">
@@ -488,16 +487,14 @@
         <span class="modal-option-title" data-i18n="modal.briefTitle">Send me the brief</span>
         <span class="modal-option-sub" data-i18n="modal.briefSub">Prefer writing? I reply within 24 hours</span>
       </span>
-      <span class="modal-option-arrow" aria-hidden="true">→</span>
     </a>
 
-    <p class="contact-modal-foot"><span data-i18n="modal.footPrefix">Or just DM</span> <a href="https://instagram.com/__simplyandy" target="_blank" rel="noopener">@__simplyandy</a> <span aria-hidden="true">·</span> <a href="https://wa.me/5491176392123" target="_blank" rel="noopener" data-i18n="modal.whatsapp">WhatsApp</a></p>
+    <p class="contact-modal-foot"><span data-i18n="modal.footPrefix">Or just DM</span> <a href="https://instagram.com/__simplyandy" target="_blank" rel="noopener">@__simplyandy</a> <span data-i18n="modal.footOr">or write on</span> <a href="https://wa.me/5491176392123" target="_blank" rel="noopener" data-i18n="modal.whatsapp">WhatsApp</a></p>
   </div>
 </dialog>
 
-<script src="https://cdn.jsdelivr.net/npm/animejs@4.5.0/dist/bundles/anime.umd.min.js" integrity="sha384-InMmvD3VoYcY7hGjSC80aLb2bNNE4CzpX+Eq6FVDlmB0IKgDvmfPw4UY8L/M++iG" crossorigin="anonymous"></script>
-<script src="js/i18n.js?v=8"></script>
-<script src="js/main.js?v=4"></script>
-<script src="js/motion.js?v=7"></script>
+<script src="js/i18n.js?v=11"></script>
+<script src="js/main.js?v=11"></script>
+<script src="js/motion.js?v=11"></script>
 </body>
 </html>

@@ -1,280 +1,435 @@
+/* Motion layer. Everything here is progressive enhancement on top of a fully
+   readable static page; no animation library, just CSS transitions, WAAPI and
+   IntersectionObserver. Reduced motion gets the final states directly. */
 (function () {
-  if (typeof anime === "undefined") return;
-  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var finePointer = window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  var hasIO = "IntersectionObserver" in window;
 
-  var animate = anime.animate;
-  var stagger = anime.stagger;
-  if (typeof animate !== "function") return;
-
-  function withMotionClass(list, fn) {
-    list.forEach(function (el) { el.classList.add("motion-target"); });
-    fn(function () {
-      list.forEach(function (el) { el.classList.remove("motion-target"); });
-    });
+  function lang() {
+    return document.documentElement.lang === "es" ? "es" : "en";
   }
 
-  function reveal(targets, opts) {
-    var nodeList = typeof targets === "string" ? document.querySelectorAll(targets) : targets;
-    var list = Array.prototype.slice.call(nodeList && nodeList.length !== undefined ? nodeList : [nodeList]);
-    if (!list.length) return;
-    withMotionClass(list, function (done) {
-      animate(list, Object.assign({
-        opacity: [0, 1],
-        y: [18, 0],
-        duration: 550,
-        ease: "out(3)",
-        delay: stagger(70),
-        onComplete: done
-      }, opts));
-    });
-  }
-
-  function onFirstIntersect(container, run) {
-    if (!container || !("IntersectionObserver" in window)) { run(); return; }
+  function onFirstIntersect(el, run, opts) {
+    if (!el) return;
+    if (!hasIO) { run(); return; }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          run();
           io.unobserve(entry.target);
+          run();
         }
       });
-    }, { threshold: 0.15, rootMargin: "0px 0px -8% 0px" });
-    io.observe(container);
+    }, opts || { threshold: 0.3, rootMargin: "0px 0px -8% 0px" });
+    io.observe(el);
   }
 
-  function init() {
-    // Focal moment: the hero entrance, the one sequence that earns authorship.
-    var heroCopyItems = document.querySelectorAll(".hero-copy > *");
-    if (heroCopyItems.length) {
-      reveal(heroCopyItems, { duration: 700, ease: "out(4)", delay: stagger(90) });
-    }
-    var portrait = document.querySelector(".hero-portrait");
-    var dots = document.querySelectorAll(".hero-portrait .dot");
-    if (portrait) {
-      // Keeps .motion-target for good: the portrait transitions into a permanent ambient float.
-      portrait.classList.add("motion-target");
-      animate(portrait, {
-        opacity: [0, 1],
-        y: [22, 0],
-        scale: [0.97, 1],
-        duration: 750,
-        delay: 200,
-        ease: "out(4)",
-        onComplete: function () {
-          animate(portrait, { y: [0, -8], duration: 3200, ease: "inOutSine", alternate: true, loop: true });
-        }
-      });
-    }
+  /* ---------------- Hero: typed headline with the dot as caret ---------------- */
 
-    // Ambient float: slow, small, desynced loops on the decorative dots.
-    var DOT_FLOATS = [
-      { y: -10, x: 4, duration: 2600, delay: 0 },
-      { y: -14, x: -6, duration: 3400, delay: 400 },
-      { y: -8, x: 5, duration: 2900, delay: 900 },
-      { y: -12, x: -4, duration: 3800, delay: 200 }
-    ];
-    dots.forEach(function (dot, i) {
-      var cfg = DOT_FLOATS[i % DOT_FLOATS.length];
-      dot.classList.add("motion-target");
-      animate(dot, {
-        y: cfg.y,
-        x: cfg.x,
-        duration: cfg.duration,
-        delay: cfg.delay,
-        ease: "inOutSine",
-        alternate: true,
-        loop: true
-      });
-    });
+  var title = document.getElementById("hero-title");
+  var titleText = title && title.querySelector(".hero-title-text");
+  var caret = title && title.querySelector(".type-caret");
+  var typing = null;
 
-    // Mouse parallax on the hero. Writes the individual `translate` property so it
-    // composes with the anime-driven `transform` instead of fighting it.
-    (function initParallax() {
-      if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-      if (!("translate" in document.documentElement.style)) return;
-      var hero = document.querySelector(".hero");
-      if (!hero || !portrait) return;
-
-      var DOT_DEPTHS = [14, 10, 18, 12];
-      var layers = [{ el: portrait, depth: 6 }];
-      dots.forEach(function (dot, i) {
-        layers.push({ el: dot, depth: DOT_DEPTHS[i % DOT_DEPTHS.length] });
-      });
-
-      var tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
-      function tick() {
-        cx += (tx - cx) * 0.08;
-        cy += (ty - cy) * 0.08;
-        layers.forEach(function (l) {
-          l.el.style.translate = (cx * l.depth).toFixed(2) + "px " + (cy * l.depth).toFixed(2) + "px";
-        });
-        raf = Math.abs(tx - cx) + Math.abs(ty - cy) > 0.001 ? requestAnimationFrame(tick) : null;
+  // Wrap each character in a span so the final layout exists from the start and
+  // typing is only an opacity change. Words stay in nowrap groups so a line
+  // never breaks mid-word.
+  function splitTitle() {
+    var text = titleText.textContent;
+    titleText.textContent = "";
+    text.split(/(\s+)/).forEach(function (part) {
+      if (!part) return;
+      if (/^\s+$/.test(part)) {
+        titleText.appendChild(document.createTextNode(part));
+        return;
       }
-      function schedule() { if (raf === null) raf = requestAnimationFrame(tick); }
-
-      hero.addEventListener("mousemove", function (e) {
-        var r = hero.getBoundingClientRect();
-        tx = (e.clientX - r.left) / r.width - 0.5;
-        ty = (e.clientY - r.top) / r.height - 0.5;
-        schedule();
+      var word = document.createElement("span");
+      word.style.whiteSpace = "nowrap";
+      Array.prototype.forEach.call(part, function (c) {
+        var ch = document.createElement("span");
+        ch.className = "ch";
+        ch.textContent = c;
+        word.appendChild(ch);
       });
-      hero.addEventListener("mouseleave", function () {
-        tx = 0;
-        ty = 0;
-        schedule();
-      });
-    })();
-
-    // Supporting states: quiet, single-material scroll reveals (same fade+rise idea).
-    document.querySelectorAll(".section-title").forEach(function (el) {
-      onFirstIntersect(el, function () { reveal(el, { duration: 500 }); });
+      titleText.appendChild(word);
     });
+    return Array.prototype.slice.call(titleText.querySelectorAll(".ch"));
+  }
 
-    var reelsGrid = document.getElementById("portfolio-grid");
-    if (reelsGrid) {
-      onFirstIntersect(reelsGrid, function () {
-        reveal(reelsGrid.querySelectorAll(".video-card"), { delay: stagger(45), y: [14, 0] });
-      });
+  function placeCaret(ch) {
+    var t = title.getBoundingClientRect();
+    var r = ch.getBoundingClientRect();
+    var size = caret.offsetWidth;
+    // Sit on the glyph baseline, just after the character, like a full stop.
+    var baseline = r.top + r.height * 0.78;
+    title.style.setProperty("--cx", r.right - t.left + size * 0.35 + "px");
+    title.style.setProperty("--cy", baseline - t.top - size + "px");
+  }
+
+  function typeTitle(done) {
+    var chars = splitTitle();
+    title.classList.remove("is-done");
+    title.classList.add("is-typing");
+    var i = 0;
+    var first = chars[0];
+    if (first) placeCaret(first);
+    function step() {
+      if (i >= chars.length) {
+        title.classList.remove("is-typing");
+        title.classList.add("is-done");
+        typing = null;
+        if (done) done();
+        return;
+      }
+      var ch = chars[i++];
+      ch.classList.add("is-on");
+      placeCaret(ch);
+      // A little human rhythm: pause after punctuation, faster inside words.
+      var c = ch.textContent;
+      var delay = /[,!¡.]/.test(c) ? 220 : 34 + Math.random() * 30;
+      typing = setTimeout(step, delay);
     }
+    typing = setTimeout(step, 260);
+  }
 
-    var numbersInner = document.querySelector(".numbers-inner");
-    if (numbersInner) {
-      onFirstIntersect(numbersInner, function () {
-        reveal(numbersInner.querySelectorAll(".numbers-note, .text-link"), { delay: stagger(90) });
-      });
-    }
+  function finishTitle() {
+    if (typing) clearTimeout(typing);
+    typing = null;
+    title.classList.remove("is-typing");
+    title.classList.add("is-done");
+  }
 
-    var brandsRow = document.querySelector(".brands-row");
-    if (brandsRow) {
-      onFirstIntersect(brandsRow, function () {
-        reveal(brandsRow.querySelectorAll(".brand-slot"), { delay: stagger(60) });
-      });
-    }
+  /* ---------------- Hero: reel captions, timer, tilt ---------------- */
 
-    document.querySelectorAll(".method-card").forEach(function (el) {
-      onFirstIntersect(el, function () { reveal(el, { duration: 500 }); });
+  var reel = document.getElementById("hero-reel");
+  var capEl = document.getElementById("reel-caption");
+  var timeEl = document.getElementById("reel-time");
+  var progEl = document.getElementById("reel-progress");
+  var capIndex = 0;
+  var capTimer = null;
+  var clockRaf = null;
+  var reelVisible = true;
+  var REEL_SECONDS = 15;
+
+  function captionLines() {
+    return (I18N[lang()]["hero.captions"] || "").split("|");
+  }
+
+  function renderCaption(line, instant) {
+    capEl.classList.remove("is-leaving");
+    capEl.textContent = "";
+    line.split(" ").forEach(function (w, i, arr) {
+      var span = document.createElement("span");
+      var key = /^\*.*\*$/.test(w);
+      span.className = "cap-word" + (key ? " is-key" : "");
+      span.textContent = key ? w.slice(1, -1) : w;
+      capEl.appendChild(span);
+      if (i < arr.length - 1) capEl.appendChild(document.createTextNode(" "));
     });
+    var words = capEl.querySelectorAll(".cap-word");
+    Array.prototype.forEach.call(words, function (w, i) {
+      if (instant) w.classList.add("is-on");
+      else setTimeout(function () { w.classList.add("is-on"); }, 140 * i);
+    });
+    return words.length;
+  }
 
-    // Quality standards marquee is intentionally excluded here: reveal()
-    // animates `transform` (translateY) via anime.js, which would clobber
-    // the translateX(-50%) the full-bleed breakout depends on. It's already
-    // in continuous motion, so it doesn't need a scroll-triggered fade-in.
+  function nextCaption() {
+    var lines = captionLines();
+    var n = renderCaption(lines[capIndex % lines.length]);
+    capIndex++;
+    capTimer = setTimeout(function () {
+      capEl.classList.add("is-leaving");
+      capTimer = setTimeout(nextCaption, 320);
+    }, 140 * n + 1900);
+  }
 
-    // Contact CTA: same pop entrance as the stat pill (CSS keyframes, see styles)
-    var contactCta = document.querySelector(".section--dark .btn-primary");
-    if (contactCta) {
-      onFirstIntersect(contactCta, function () {
-        contactCta.classList.add("is-animated");
+  function startClock() {
+    var t0 = performance.now();
+    function frame(now) {
+      var s = ((now - t0) / 1000) % REEL_SECONDS;
+      timeEl.textContent = "0:" + (s < 10 ? "0" : "") + Math.floor(s);
+      progEl.style.setProperty("--p", (s / REEL_SECONDS).toFixed(4));
+      clockRaf = reelVisible && !document.hidden ? requestAnimationFrame(frame) : null;
+    }
+    clockRaf = requestAnimationFrame(frame);
+  }
+
+  function startReel() {
+    if (!capEl) return;
+    if (reduce) {
+      renderCaption(captionLines()[0], true);
+      return;
+    }
+    nextCaption();
+    startClock();
+    if (hasIO) {
+      new IntersectionObserver(function (entries) {
+        reelVisible = entries[0].isIntersecting;
+        if (reelVisible && clockRaf === null) startClock();
+      }).observe(reel);
+    }
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden && clockRaf === null && reelVisible) startClock();
+    });
+  }
+
+  function initTilt() {
+    if (!finePointer || reduce || !reel) return;
+    var frame = reel.querySelector(".reel-frame");
+    var hero = document.querySelector(".hero");
+    hero.addEventListener("pointermove", function (e) {
+      var r = frame.getBoundingClientRect();
+      var x = (e.clientX - (r.left + r.width / 2)) / window.innerWidth;
+      var y = (e.clientY - (r.top + r.height / 2)) / window.innerHeight;
+      frame.style.setProperty("--ry", (x * 10).toFixed(2) + "deg");
+      frame.style.setProperty("--rx", (-y * 8).toFixed(2) + "deg");
+    });
+    hero.addEventListener("pointerleave", function () {
+      frame.style.setProperty("--ry", "0deg");
+      frame.style.setProperty("--rx", "0deg");
+    });
+  }
+
+  /* ---------------- Hero orchestration ---------------- */
+
+  var heroRise = [];
+  function prepareHero() {
+    if (reduce) return;
+    heroRise = Array.prototype.slice.call(document.querySelectorAll(".hero-hello, .hero-lede, .hero-cta, .hero-reel"));
+    heroRise.forEach(function (el) { el.classList.add("hero-rise"); });
+  }
+
+  function playHero() {
+    if (reduce) {
+      drawMark(document.querySelector(".hero-lede .hl"));
+      startReel();
+      return;
+    }
+    // Reel and hello chip first, the headline types, then lede + CTAs follow the caret.
+    var reelEl = document.querySelector(".hero-reel");
+    var hello = document.querySelector(".hero-hello");
+    if (reelEl) setTimeout(function () { reelEl.classList.add("is-in"); }, 80);
+    if (hello) hello.classList.add("is-in");
+    typeTitle(function () {
+      setTimeout(function () { drawMark(document.querySelector(".hero-lede .hl")); }, 450);
+    });
+    setTimeout(function () { document.querySelector(".hero-lede").classList.add("is-in"); }, 700);
+    setTimeout(function () { document.querySelector(".hero-cta").classList.add("is-in"); }, 860);
+    setTimeout(startReel, 500);
+  }
+
+  /* ---------------- Marker highlight ---------------- */
+
+  function drawMark(el) {
+    if (el) el.classList.add("is-drawn");
+  }
+
+  /* ---------------- Cursor spotlight on cards ---------------- */
+
+  function initSpotlight() {
+    if (!finePointer) return;
+    document.addEventListener("pointermove", function (e) {
+      var el = e.target.closest && e.target.closest(".spot");
+      if (!el) return;
+      var r = el.getBoundingClientRect();
+      el.style.setProperty("--mx", e.clientX - r.left + "px");
+      el.style.setProperty("--my", e.clientY - r.top + "px");
+    }, { passive: true });
+  }
+
+  /* ---------------- Nav: the dot follows the section in view ---------------- */
+
+  function initNavDot() {
+    var dot = document.getElementById("nav-dot");
+    var navEl = document.getElementById("main-nav");
+    if (!dot || !hasIO) return;
+    var links = Array.prototype.slice.call(navEl.querySelectorAll("a:not(.nav-cta)"));
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute("href").slice(1)] = a; });
+    var current = null;
+    function moveTo(a) {
+      current = a;
+      if (!a) { dot.style.opacity = "0"; return; }
+      var n = navEl.getBoundingClientRect();
+      var r = a.getBoundingClientRect();
+      dot.style.opacity = "1";
+      dot.style.transform = "translateX(" + (r.left - n.left + r.width / 2 - 3) + "px)";
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) moveTo(map[entry.target.id]);
+        else if (current === map[entry.target.id]) moveTo(null);
       });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    Object.keys(map).forEach(function (id) {
+      var s = document.getElementById(id);
+      if (s) io.observe(s);
+    });
+    window.addEventListener("resize", function () { if (current) moveTo(current); });
+    document.addEventListener("sa:lang", function () { if (current) moveTo(current); });
+  }
+
+  /* ---------------- Section moments ---------------- */
+
+  function initSections() {
+    // Reels grid: one staggered entrance the first time it comes into view.
+    var grid = document.getElementById("portfolio-grid");
+    if (grid && !reduce) {
+      var cards = Array.prototype.slice.call(grid.querySelectorAll(".video-card"));
+      cards.forEach(function (c) { c.classList.add("is-pre"); });
+      onFirstIntersect(grid, function () {
+        cards.forEach(function (c, i) {
+          c.style.transition = "opacity .6s ease " + i * 55 + "ms, transform .7s cubic-bezier(.16,1,.3,1) " + i * 55 + "ms";
+          c.classList.remove("is-pre");
+          setTimeout(function () { c.style.transition = ""; }, 800 + i * 55);
+        });
+      }, { threshold: 0.15 });
     }
 
-    // About stat card: the entrance itself is CSS keyframes gated on .is-animated
-    // (so no inline transform lingers and the CSS hover scales keep working);
-    // JS adds the class and drives the count-up (0 → final, 1.5s, ease-out).
-    var statCard = document.getElementById("stat-card");
-    if (statCard) {
-      onFirstIntersect(statCard, function () {
-        statCard.classList.add("is-animated");
-        statCard.querySelectorAll(".stat-num").forEach(function (el) {
+    // Profile counts tick up once.
+    var card = document.getElementById("stat-card");
+    if (card) {
+      onFirstIntersect(card, function () {
+        card.querySelectorAll(".stat-num").forEach(function (el) {
           var target = parseInt(el.getAttribute("data-count"), 10);
           if (isNaN(target)) return;
-          el.textContent = "0";
-          var obj = { v: 0 };
-          animate(obj, {
-            v: target,
-            duration: 1500,
-            delay: 500,
-            ease: "out(3)",
-            onUpdate: function () {
-              el.textContent = Math.floor(obj.v).toLocaleString(document.documentElement.lang || "en");
-            }
-          });
+          var fmt = function (v) { return Math.floor(v).toLocaleString(lang() === "es" ? "es-AR" : "en-US"); };
+          if (reduce) { el.textContent = fmt(target); return; }
+          var t0 = performance.now();
+          var D = 1400;
+          (function frame(now) {
+            var t = Math.min(1, (now - t0) / D);
+            el.textContent = fmt(target * (1 - Math.pow(1 - t, 3)));
+            if (t < 1) requestAnimationFrame(frame);
+          })(t0);
+        });
+      });
+      document.addEventListener("sa:lang", function () {
+        card.querySelectorAll(".stat-num").forEach(function (el) {
+          el.textContent = parseInt(el.getAttribute("data-count"), 10).toLocaleString(lang() === "es" ? "es-AR" : "en-US");
         });
       });
     }
 
-    // Process stepper (design 3a): auto-advances with a linear "fill" during each
-    // step's dwell, brief reset pass at the end of the cycle, hover pauses, click jumps.
+    // Contact: highlight draws, then the full stop drops in.
+    var contactMark = document.querySelector(".contact-title .hl");
+    var contactDot = document.querySelector(".contact-dot");
+    onFirstIntersect(contactMark, function () {
+      drawMark(contactMark);
+      if (contactDot && !reduce) setTimeout(function () { contactDot.classList.add("is-in"); }, 700);
+    });
+  }
+
+  /* ---------------- Process stepper ---------------- */
+
+  function initStepper() {
     var stepper = document.getElementById("process-stepper");
-    if (stepper) {
-      var steps = Array.prototype.slice.call(stepper.querySelectorAll(".step"));
-      var DWELL = 2600;
-      var RESET = 420;
-      var active = -1;
-      var paused = false;
-      var stepTimer = null;
+    if (!stepper) return;
+    var steps = Array.prototype.slice.call(stepper.querySelectorAll(".step"));
+    var DWELL = 2600;
+    var RESET = 420;
+    var active = -1;
+    var paused = false;
+    var stepTimer = null;
+    stepper.style.setProperty("--dwell", DWELL + "ms");
 
-      stepper.style.setProperty("--stepper-dwell", DWELL + "ms");
-
-      var render = function () {
-        steps.forEach(function (li, i) {
-          li.classList.toggle("is-done", active > -1 && i < active);
-          li.classList.toggle("is-active", i === active);
-        });
-      };
-      var tick = function (delay) {
-        stepTimer = setTimeout(function () {
-          if (!paused) {
-            active = active >= steps.length - 1 ? -1 : active + 1;
-            render();
-          }
-          tick(!paused && active === -1 ? RESET : DWELL);
-        }, delay);
-      };
-      var startCycle = function () {
-        if (stepTimer !== null) return;
-        stepper.classList.add("is-animated");
-        active = 0;
-        render();
-        tick(DWELL);
-      };
-      var stopCycle = function () {
-        if (stepTimer === null) return;
-        clearTimeout(stepTimer);
-        stepTimer = null;
-        stepper.classList.remove("is-animated");
-        active = -1;
-        render();
-      };
-
-      stepper.addEventListener("mouseenter", function () { paused = true; });
-      stepper.addEventListener("mouseleave", function () { paused = false; });
+    function render() {
       steps.forEach(function (li, i) {
-        li.addEventListener("click", function () {
-          active = i;
-          render();
-        });
+        li.classList.toggle("is-done", active > -1 && i < active);
+        li.classList.toggle("is-active", i === active);
       });
+    }
+    function tick(delay) {
+      stepTimer = setTimeout(function () {
+        if (!paused) {
+          active = active >= steps.length - 1 ? -1 : active + 1;
+          render();
+        }
+        tick(!paused && active === -1 ? RESET : DWELL);
+      }, delay);
+    }
+    function startCycle() {
+      if (stepTimer !== null) return;
+      stepper.classList.add("is-animated");
+      active = 0;
+      render();
+      tick(DWELL);
+    }
+    function stopCycle() {
+      if (stepTimer === null) return;
+      clearTimeout(stepTimer);
+      stepTimer = null;
+      stepper.classList.remove("is-animated");
+      active = -1;
+      render();
+    }
 
-      if ("IntersectionObserver" in window) {
-        new IntersectionObserver(function (entries) {
-          entries.forEach(function (entry) {
-            if (entry.isIntersecting) startCycle();
-            else stopCycle();
-          });
-        }, { threshold: 0.35 }).observe(stepper);
-      } else {
-        startCycle();
-      }
+    steps.forEach(function (li, i) {
+      li.addEventListener("click", function () {
+        active = i;
+        render();
+      });
+    });
+
+    if (reduce) {
+      // Static: every step reads as done, no cycling.
+      active = steps.length;
+      render();
+      return;
+    }
+    stepper.addEventListener("mouseenter", function () { paused = true; });
+    stepper.addEventListener("mouseleave", function () { paused = false; });
+    if (hasIO) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) startCycle();
+          else stopCycle();
+        });
+      }, { threshold: 0.35 }).observe(stepper);
+    } else {
+      startCycle();
     }
   }
 
+  /* ---------------- Language switches ---------------- */
+
+  document.addEventListener("sa:lang", function () {
+    // i18n just replaced the headline's text node; re-split without animating.
+    if (title && titleText && !titleText.querySelector(".ch")) {
+      splitTitle().forEach(function (c) { c.classList.add("is-on"); });
+      finishTitle();
+    }
+    // Restart the caption loop so the reel switches language right away.
+    if (capEl && capTimer !== null) {
+      clearTimeout(capTimer);
+      capIndex = 0;
+      nextCaption();
+    }
+    if (capEl && reduce) renderCaption(captionLines()[0], true);
+  });
+
+  /* ---------------- Boot ---------------- */
+
   function boot() {
-    // With the curtain loader present, hold every entrance until it starts
-    // opening ("sa:curtain-open", dispatched by main.js at 1.4s) so the hero
-    // animation plays as the panels part instead of hidden behind them.
-    // The timeout is a safety net in case the loader script never ran.
-    if (document.getElementById("page-loader")) {
-      var started = false;
-      var start = function () {
-        if (started) return;
-        started = true;
-        init();
-      };
-      document.addEventListener("sa:curtain-open", start, { once: true });
-      setTimeout(start, 3000);
+    prepareHero();
+    initTilt();
+    initSpotlight();
+    initNavDot();
+    initSections();
+    initStepper();
+
+    var started = false;
+    function start() {
+      if (started) return;
+      started = true;
+      playHero();
+    }
+    if (document.getElementById("loader")) {
+      document.addEventListener("sa:reveal", start, { once: true });
+      setTimeout(start, 6000);
     } else {
-      init();
+      start();
     }
   }
 
