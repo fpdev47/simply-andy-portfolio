@@ -214,15 +214,16 @@
   document.getElementById("year").textContent = new Date().getFullYear();
 
   /* ------------------------------------------------------------------------
-     Dot loader
-     1. drop: the Cuero dot falls onto the center of the screen and bounces.
-     2. write: "a n d y" rise in one by one while the whole mark slides from
-        dot-centered to logo-centered; "UGC / CREATOR" follow.
-     3. hold: until the page has loaded (min/max bounded).
-     4. swell: the letters step back and the dot grows until it covers the screen.
-     5. iris: a hole opens from the dot's center outward, revealing the page.
-     "sa:reveal" fires at the start of the iris so the hero entrance plays in view.
-     Returning visitors in the same tab (sessionStorage) skip straight to 4–5.
+     Dot loader (~2s first visit, ~0.8s on return)
+     1. drop: the Cuero dot falls onto the center with gravity easing, squashes,
+        rebounds once and settles.
+     2. write: "a n d y" pop in while the mark slides from dot-centered to
+        logo-centered; "UGC / CREATOR" follow.
+     3. hold: only if the page still hasn't loaded (short cap).
+     4. swell: the dot grows past the screen edges and turns Terracota, so it
+        becomes the hero's background; the overlay then fades out.
+     "sa:reveal" fires as the overlay fades so the hero and menu enter in view.
+     Returning visitors in the same tab (sessionStorage) skip straight to 4.
      ------------------------------------------------------------------------ */
   function initLoader() {
     const loader = document.getElementById("loader");
@@ -243,13 +244,20 @@
       reveal();
       return;
     }
+    // Opened in a background tab: browsers pause animations there, so skip the
+    // intro and show the page as it is when the visitor switches to it.
+    if (document.hidden) {
+      loader.remove();
+      reveal();
+      return;
+    }
     if (reduceMotion || typeof loader.animate !== "function") {
       loader.style.transition = "opacity .3s";
       setTimeout(() => {
         loader.style.opacity = "0";
         reveal();
-      }, 250);
-      setTimeout(() => loader.remove(), 600);
+      }, 200);
+      setTimeout(() => loader.remove(), 550);
       return;
     }
 
@@ -262,6 +270,8 @@
     const dot = loader.querySelector(".loader-dot");
     const spring = "cubic-bezier(.34, 1.56, .64, 1)";
     const out = "cubic-bezier(.16, 1, .3, 1)";
+    const gravity = "cubic-bezier(.55, 0, 1, .45)"; // accelerate into the ground
+    const lift = "cubic-bezier(0, .55, .45, 1)"; // decelerate on the way up
 
     const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     const pageLoaded = new Promise((r) => {
@@ -270,89 +280,75 @@
     });
     const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
 
-    let CENTER_SHIFT = "none";
-
     async function run() {
-      await Promise.race([fontsReady, wait(900)]);
+      await Promise.race([fontsReady, wait(600)]);
       // Shift that puts the dot on the svg's center: (128 - 177) viewBox units, in px.
-      CENTER_SHIFT = "translateX(" + (-49 * svg.getBoundingClientRect().width) / 256 + "px)";
+      const shift = "translateX(" + (-49 * svg.getBoundingClientRect().width) / 256 + "px)";
 
       if (quick) {
         letters.concat(tags).forEach((el) => (el.style.opacity = "1"));
         dot.style.opacity = "1";
-        await Promise.race([pageLoaded, wait(1200)]);
-        await wait(250);
+        await Promise.race([pageLoaded, wait(500)]);
       } else {
         const start = performance.now();
-        svg.style.transform = CENTER_SHIFT;
+        svg.style.transform = shift;
         dot.style.opacity = "1";
-        // 1. drop + bounce, squash on impact
+        // 1. drop: per-keyframe easing gives a real fall/rebound rhythm
         await dot.animate(
           [
-            { transform: "translateY(-260px) scale(.7, 1.3)", offset: 0 },
-            { transform: "translateY(0) scale(1.35, .7)", offset: 0.45 },
-            { transform: "translateY(-40px) scale(.9, 1.1)", offset: 0.68 },
-            { transform: "translateY(0) scale(1.15, .88)", offset: 0.86 },
-            { transform: "translateY(0) scale(1)", offset: 1 }
+            { transform: "translateY(-240px) scale(.85, 1.2)", easing: gravity },
+            { transform: "translateY(0) scale(1.4, .65)", offset: 0.46, easing: lift },
+            { transform: "translateY(-30px) scale(.94, 1.06)", offset: 0.7, easing: gravity },
+            { transform: "translateY(0) scale(1.12, .9)", offset: 0.86, easing: "ease-out" },
+            { transform: "none" }
           ],
-          { duration: 820, easing: "cubic-bezier(.45, 0, .55, 1)" }
+          { duration: 620 }
         ).finished;
 
         // 2. write the wordmark
-        svg.animate([{ transform: CENTER_SHIFT }, { transform: "none" }], { duration: 900, easing: out, fill: "forwards" });
+        svg.animate([{ transform: shift }, { transform: "none" }], { duration: 560, easing: out, fill: "forwards" });
         letters.forEach((el, i) => {
           el.animate(
             [
-              { opacity: 0, transform: "translateY(26px)" },
+              { opacity: 0, transform: "translateY(22px) scale(.9)" },
               { opacity: 1, transform: "none" }
             ],
-            { duration: 520, delay: 120 + i * 90, easing: spring, fill: "forwards" }
+            { duration: 420, delay: 40 + i * 55, easing: spring, fill: "forwards" }
           );
         });
         tags.forEach((el, i) => {
-          el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: 560 + i * 120, easing: "linear", fill: "forwards" });
+          el.animate([{ opacity: 0, transform: "translateX(-6px)" }, { opacity: 1, transform: "none" }], {
+            duration: 260,
+            delay: 260 + i * 70,
+            easing: out,
+            fill: "forwards"
+          });
         });
-        await wait(980);
+        await wait(600);
 
-        // 3. hold for the page (at least ~1.9s total, at most ~4s)
-        await Promise.race([Promise.all([pageLoaded, wait(Math.max(0, 1900 - (performance.now() - start)))]), wait(2200)]);
+        // 3. hold only as long as needed (at least ~1.3s total, at most +700ms)
+        await Promise.race([Promise.all([pageLoaded, wait(Math.max(0, 1300 - (performance.now() - start)))]), wait(700)]);
       }
 
-      // 4. swell
+      // 4. swell into the hero
       const r = dot.getBoundingClientRect();
       const cx = r.left + r.width / 2;
       const cy = r.top + r.height / 2;
       const far = Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy));
       const scale = (far * 2) / r.width + 2;
 
-      word.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, fill: "forwards" });
-      await dot.animate([{ transform: "scale(1)" }, { transform: "scale(" + scale + ")" }], {
-        duration: quick ? 520 : 680,
-        easing: "cubic-bezier(.7, 0, .84, 0)",
-        fill: "forwards"
-      }).finished;
+      word.animate([{ opacity: 1, transform: "none" }, { opacity: 0, transform: "scale(.96)" }], { duration: 200, fill: "forwards" });
+      await dot.animate(
+        [
+          { transform: "scale(1)", fill: "#864C24" },
+          { transform: "scale(.82)", fill: "#864C24", offset: 0.18 },
+          { transform: "scale(" + scale + ")", fill: "#8F3F23" }
+        ],
+        { duration: quick ? 420 : 520, easing: "cubic-bezier(.65, 0, .35, 1)", fill: "forwards" }
+      ).finished;
 
-      // 5. iris out from the dot's center
-      loader.classList.add("is-opening");
       reveal();
-      const D = quick ? 620 : 820;
-      const t0 = performance.now();
-      const setHole = (px) => {
-        const g = "radial-gradient(circle at " + cx + "px " + cy + "px, transparent " + px + "px, #000 " + (px + 1) + "px)";
-        loader.style.webkitMaskImage = g;
-        loader.style.maskImage = g;
-      };
-      await new Promise((done) => {
-        // rAF pauses in background tabs; the timeout makes sure the page still opens.
-        setTimeout(done, D + 400);
-        (function frame(now) {
-          const t = Math.min(1, (now - t0) / D);
-          const e = 1 - Math.pow(1 - t, 3);
-          setHole(e * (far + 4));
-          if (t < 1) requestAnimationFrame(frame);
-          else done();
-        })(performance.now());
-      });
+      await loader.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, easing: "ease-out", fill: "forwards" }).finished;
       loader.remove();
       document.dispatchEvent(new Event("sa:loaded"));
     }
@@ -363,21 +359,117 @@
     });
   }
 
-  // Contact modal: the "Let's work together" CTAs open a <dialog> offering a
-  // call or an email. Their hrefs stay untouched as the no-JS fallback, and
-  // Esc / backdrop-click / ✕ all close it.
+  /* ------------------------------------------------------------------------
+     Contact modal as a DM thread. The CTAs keep their hrefs as the no-JS
+     fallback. On open, Andy's bubbles arrive one by one behind a typing
+     indicator. The composer adds the visitor's bubble, Andy "answers", then
+     the visitor's own mail app opens with their text as the body.
+     ------------------------------------------------------------------------ */
   function initContactModal() {
     const modal = document.getElementById("contact-modal");
     if (!modal || typeof modal.showModal !== "function") return;
+    const thread = document.getElementById("dm-thread");
+    const typing = thread.querySelector(".dm-typing");
+    const form = document.getElementById("dm-compose");
+    const input = document.getElementById("dm-input");
+    const items = Array.from(thread.querySelectorAll(".dm-msg, .dm-share"));
+    let timers = [];
+
+    const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+    const scrollDown = () => (thread.scrollTop = thread.scrollHeight);
+
+    function arrive(el) {
+      el.classList.remove("is-pending");
+      el.classList.remove("is-arrived");
+      void el.offsetWidth;
+      el.classList.add("is-arrived");
+      scrollDown();
+    }
+
+    function playThread() {
+      timers.forEach(clearTimeout);
+      timers = [];
+      thread.querySelectorAll(".dm-user, .dm-reply").forEach((el) => el.remove());
+      if (reduceMotion) {
+        items.forEach((el) => el.classList.remove("is-pending"));
+        return;
+      }
+      items.forEach((el) => el.classList.add("is-pending"));
+      let t = 120;
+      items.forEach((el, i) => {
+        const isBubble = el.classList.contains("dm-msg");
+        if (isBubble) {
+          later(() => {
+            typing.classList.add("is-on");
+            thread.appendChild(typing);
+            scrollDown();
+          }, t);
+          t += i === 0 ? 420 : 340;
+        }
+        later(() => {
+          typing.classList.remove("is-on");
+          typing.before(el);
+          arrive(el);
+        }, t);
+        t += isBubble ? 140 : 180;
+      });
+    }
+
     document.querySelectorAll("[data-contact-modal]").forEach((el) => {
       el.addEventListener("click", (e) => {
         e.preventDefault();
         modal.showModal();
+        playThread();
       });
     });
     document.getElementById("contact-modal-close").addEventListener("click", () => modal.close());
     modal.addEventListener("click", (e) => {
       if (e.target === modal) modal.close();
+    });
+    modal.addEventListener("close", () => {
+      timers.forEach(clearTimeout);
+      typing.classList.remove("is-on");
+      items.forEach((el) => el.classList.remove("is-pending"));
+    });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) {
+        input.focus();
+        return;
+      }
+      const mine = document.createElement("p");
+      mine.className = "dm-msg dm-user";
+      mine.textContent = text;
+      typing.before(mine);
+      arrive(mine);
+      input.value = "";
+
+      const href =
+        "mailto:itssimplyandy1@gmail.com?subject=" +
+        encodeURIComponent("Collab with Andy") +
+        "&body=" +
+        encodeURIComponent(text);
+      const replyDelay = reduceMotion ? 0 : 700;
+      if (!reduceMotion) {
+        later(() => {
+          typing.classList.add("is-on");
+          thread.appendChild(typing);
+          scrollDown();
+        }, 250);
+      }
+      later(() => {
+        typing.classList.remove("is-on");
+        const reply = document.createElement("p");
+        reply.className = "dm-msg dm-reply";
+        reply.textContent = I18N[state.lang]["modal.reply"];
+        typing.before(reply);
+        arrive(reply);
+      }, replyDelay);
+      later(() => {
+        window.location.href = href;
+      }, replyDelay + 900);
     });
   }
 

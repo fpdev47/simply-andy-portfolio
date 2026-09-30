@@ -25,7 +25,7 @@ Cercana, auténtica, cálida. The site should feel like Andy talking: direct, no
 
 1. **Practice the premise.** The pitch is "content that doesn't feel like an ad", so the site itself must never feel like one. Persuade through warmth and specificity, not pressure.
 2. **First-person voice everywhere.** Copy reads like Andy speaking, in both languages; UI text stays conversational, never corporate.
-3. **Warm and handcrafted.** Follows the Simply Andy brand kit (https://fpdev47.github.io/simply-andy-brand-kit/): Eggshell/Tinta/Cuero/Oliva/Bordó/Índigo used as flat solid colors, Big Shoulders for display and Manrope for text, the marker highlight, pill CTAs and the five-step corner scale. The Cuero dot from the logo is the recurring motion element (loader, typing caret, REC light, nav marker, step markers).
+3. **Warm and handcrafted.** Follows the Simply Andy brand kit (https://fpdev47.github.io/simply-andy-brand-kit/): Eggshell/Tinta/Cuero/Oliva/Bordó/Índigo plus Terracota (Andy's favorite, used for the hero block and markers) as flat solid colors, with Eggshell text on Terracota, Bordó and Índigo, Big Shoulders for display and Manrope for text, the marker highlight, pill CTAs and the five-step corner scale. The Cuero dot from the logo is the recurring motion element (loader, typing caret, REC light, nav marker, step markers).
 4. **Honest placeholders.** Content still pending (photos, videos, brands, stats) is labeled as coming, never faked as real.
 5. **Motion as garnish, progressive enhancement.** Animations run on top of a fully usable static page: reduced-motion, no-JS, and slow connections all get the complete content.
 
