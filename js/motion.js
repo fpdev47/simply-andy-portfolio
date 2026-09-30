@@ -138,24 +138,28 @@
   // Wrap each character in a span so the final layout exists from the start and
   // typing is only an opacity change. Words stay in nowrap groups so a line
   // never breaks mid-word.
+  // The headline is two parts (plain text + the marked phrase); each part is
+  // split in place so the <mark> wrapper survives.
   function splitTitle() {
-    var text = titleText.textContent;
-    titleText.textContent = "";
-    text.split(/(\s+)/).forEach(function (part) {
-      if (!part) return;
-      if (/^\s+$/.test(part)) {
-        titleText.appendChild(document.createTextNode(part));
-        return;
-      }
-      var word = document.createElement("span");
-      word.style.whiteSpace = "nowrap";
-      Array.prototype.forEach.call(part, function (c) {
-        var ch = document.createElement("span");
-        ch.className = "ch";
-        ch.textContent = c;
-        word.appendChild(ch);
+    Array.prototype.forEach.call(titleText.children, function (part) {
+      var text = part.textContent;
+      part.textContent = "";
+      text.split(/(\s+)/).forEach(function (chunk) {
+        if (!chunk) return;
+        if (/^\s+$/.test(chunk)) {
+          part.appendChild(document.createTextNode(chunk));
+          return;
+        }
+        var word = document.createElement("span");
+        word.style.whiteSpace = "nowrap";
+        Array.prototype.forEach.call(chunk, function (c) {
+          var ch = document.createElement("span");
+          ch.className = "ch";
+          ch.textContent = c;
+          word.appendChild(ch);
+        });
+        part.appendChild(word);
       });
-      titleText.appendChild(word);
     });
     return Array.prototype.slice.call(titleText.querySelectorAll(".ch"));
   }
@@ -414,6 +418,7 @@
   function playHero() {
     enterMenu();
     if (reduce) {
+      drawMark(title && title.querySelector(".hl"));
       drawMark(document.querySelector(".hero-lede .hl"));
       if (heroReel) heroReel.arm();
       return;
@@ -422,8 +427,17 @@
     var hello = document.querySelector(".hero-hello");
     if (reelEl) setTimeout(function () { reelEl.classList.add("is-in"); }, 60);
     if (hello) hello.classList.add("is-in");
+    // Same beat as the contact block, staged: typing ends, the pen marks the
+    // phrase, then the dot drops in as the full stop with a small burst.
     typeTitle(function () {
-      setTimeout(function () { drawMark(document.querySelector(".hero-lede .hl")); }, 300);
+      drawMark(title.querySelector(".hl"));
+      setTimeout(function () {
+        title.classList.add("is-landed");
+        setTimeout(function () {
+          burstAt(caret, { count: 10, dist: 30, size: 6, colors: ["#E9E2D0", "#2A2620", "#E9E2D0", "#51091B"] });
+        }, 260);
+      }, 650);
+      setTimeout(function () { drawMark(document.querySelector(".hero-lede .hl")); }, 1100);
     });
     setTimeout(function () { document.querySelector(".hero-lede").classList.add("is-in"); }, 550);
     setTimeout(function () { document.querySelector(".hero-cta").classList.add("is-in"); }, 700);
@@ -604,6 +618,15 @@
     });
   }
 
+  function initStandards() {
+    var grid = document.getElementById("std-grid");
+    if (!grid) return;
+    if (!hasIO) { grid.classList.add("is-in"); return; }
+    new IntersectionObserver(function (entries) {
+      grid.classList.toggle("is-in", entries[0].isIntersecting);
+    }, { threshold: 0.1 }).observe(grid);
+  }
+
   /* ---------------- How I work: editor timeline ----------------
      A playhead scrubs across five clips (1.4s each). The clip under it lifts
      and its waveform plays; the monitor shows that step. Hover pauses, click
@@ -652,6 +675,7 @@
       var cr = clips[i].getBoundingClientRect();
       var x = cr.left - tl.left + cr.width * f;
       head.style.transform = "translateX(" + x.toFixed(1) + "px)";
+      clips.forEach(function (c, k) { c.style.setProperty("--f", k < i ? 1 : k === i ? f.toFixed(3) : 0); });
       var secs = (pos / TOTAL) * 15;
       tc.textContent = "00:" + (secs < 10 ? "0" : "") + secs.toFixed(0);
       show(i);
@@ -716,7 +740,7 @@
 
   document.addEventListener("sa:lang", function () {
     // i18n just replaced the headline's text node; re-split without animating.
-    if (title && titleText && !titleText.querySelector(".ch")) {
+    if (title && titleText && Array.prototype.some.call(titleText.children, function (p) { return !p.querySelector(".ch"); })) {
       splitTitle().forEach(function (c) { c.classList.add("is-on"); });
       finishTitle();
     }
@@ -739,6 +763,7 @@
     initStats();
     initSections();
     initEditor();
+    initStandards();
 
     var started = false;
     function start() {
