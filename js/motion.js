@@ -263,6 +263,7 @@
 
   var heroTyper = createTyper(document.getElementById("hero-title"));
   var contactTyper = createTyper(document.getElementById("contact-title"));
+  var howTyper = createTyper(document.getElementById("how-quote"));
 
   /* ---------------- Reels (hero IG frame + About TikTok frame) ----------------
      Each figure.reel gets: caption lines from i18n that pop word by word, a 15s
@@ -679,6 +680,34 @@
       }, { threshold: 0.08 });
     }
 
+    // How I work: the bubble pops (quote mark first), then Andy's line types
+    // itself and the dot lands as its full stop.
+    var bubble = document.querySelector(".how-bubble");
+    var howQuote = document.getElementById("how-quote");
+    if (bubble && howTyper) {
+      if (reduce) {
+        bubble.classList.add("is-in");
+      } else {
+        howQuote.classList.add("is-waiting");
+        onFirstIntersect(bubble, function () {
+          bubble.classList.add("is-in");
+          setTimeout(function () {
+            howQuote.classList.remove("is-waiting");
+            howTyper.type();
+          }, 520);
+        }, { threshold: 0.6 });
+      }
+    }
+
+    // BTS photo: the brands line plays like a video caption, word by word.
+    renderBtsCaption(reduce);
+    var btsSub = document.getElementById("bts-sub");
+    onFirstIntersect(btsSub, function () {
+      Array.prototype.forEach.call(btsSub.querySelectorAll(".cap-word"), function (w, i) {
+        setTimeout(function () { w.classList.add("is-on"); }, 90 * i);
+      });
+    }, { threshold: 0.8 });
+
     var traits = document.querySelector(".traits");
     onFirstIntersect(traits, function () { traits.classList.add("is-in"); }, { threshold: 0.6 });
 
@@ -699,6 +728,22 @@
         }, { threshold: 0.45 });
       }
     }
+  }
+
+  // Splits the BTS caption into words; the brand's key word gets the marker.
+  function renderBtsCaption(instant) {
+    var el = document.getElementById("bts-sub");
+    if (!el) return;
+    var words = el.textContent.trim().split(/\s+/);
+    el.textContent = "";
+    words.forEach(function (w, i) {
+      var span = document.createElement("span");
+      span.className = "cap-word" + (/^(authentic|auténtico)$/i.test(w.replace(/[.,]/g, "")) ? " is-key" : "");
+      if (instant) span.classList.add("is-on");
+      span.textContent = w;
+      el.appendChild(span);
+      if (i < words.length - 1) el.appendChild(document.createTextNode(" "));
+    });
   }
 
   /* ---------------- Eyebrow viewfinder: running REC timecode ---------------- */
@@ -816,10 +861,11 @@
         // Serialize ticks so rows entering together still check one after another.
         queue = queue.then(function () {
           return new Promise(function (res) {
+            if (e.target.classList.contains("is-checked")) { res(); return; }
             e.target.classList.add("is-checked");
             burstAt(e.target.querySelector(".sheet-box"), { count: 6, dist: 16, size: 4, colors: ["#8F3F23", "#2A2620"] });
             done++;
-            if (done === rows.length) {
+            if (done === rows.length && !sheet.classList.contains("is-stamped")) {
               setTimeout(function () {
                 sheet.classList.add("is-stamped");
                 var st = sheet.querySelector(".sheet-stamp");
@@ -827,15 +873,39 @@
                 setTimeout(function () {
                   sheet.classList.add("is-slammed");
                   burstAt(st, { count: 16, dist: 74, size: 6, colors: ["#51091B", "#51091B", "#8F3F23"] });
-                }, 290);
-              }, 450);
+                }, 250);
+              }, 120);
             }
-            setTimeout(res, 160);
+            setTimeout(res, 70);
           });
         });
       });
-    }, { rootMargin: "0px 0px -18% 0px", threshold: 0.6 });
+    }, { rootMargin: "0px 0px -4% 0px", threshold: 0.2 });
     rows.forEach(function (r) { io.observe(r); });
+    // Once the bottom of the sheet shows, tick whatever is left and stamp
+    // right away instead of waiting for every row to cross the line.
+    var tail = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      tail.disconnect();
+      rows.forEach(function (r) {
+        if (!r.classList.contains("is-checked")) {
+          io.unobserve(r);
+          io.takeRecords();
+          r.classList.add("is-checked");
+          done++;
+        }
+      });
+      if (!sheet.classList.contains("is-stamped") && done >= rows.length) {
+        setTimeout(function () {
+          sheet.classList.add("is-stamped");
+          setTimeout(function () {
+            sheet.classList.add("is-slammed");
+            burstAt(sheet.querySelector(".sheet-stamp"), { count: 16, dist: 74, size: 6, colors: ["#51091B", "#51091B", "#8F3F23"] });
+          }, 250);
+        }, 150);
+      }
+    }, { threshold: 0.5 });
+    tail.observe(rows[rows.length - 1]);
   }
 
   /* ---------------- Language switches ---------------- */
@@ -843,6 +913,8 @@
   document.addEventListener("sa:lang", function () {
     if (heroTyper) heroTyper.refresh();
     if (contactTyper) contactTyper.refresh();
+    if (howTyper) howTyper.refresh();
+    renderBtsCaption(true);
     reels.forEach(function (R) { R.restartCaptions(); });
   });
 

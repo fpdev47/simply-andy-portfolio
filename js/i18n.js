@@ -49,6 +49,12 @@ const I18N = {
     "about.captions": "*Passionate* about what I do|*Creative* by nature|*Human* before anything|Always *real*, never scripted",
 
     "modal.close": "Close",
+    "follow.open": "Follow Andy",
+    "follow.title": "Follow Andy",
+    "follow.sub": "Pick where you scroll. Same Andy everywhere.",
+    "follow.more": "More from Andy",
+    "follow.travel": "Travel",
+    "follow.crypto": "Crypto",
     "modal.today": "Today",
     "modal.status": "Usually replies within a day",
     "modal.bio": "Spanish-language UGC for TikTok and Instagram. Real routines, real products.",
@@ -89,6 +95,7 @@ const I18N = {
 
     "brands.title": "Brands I've worked with",
     "brands.slotLabel": "Your brand here",
+    "brands.slotCta": "Let's talk",
     "brands.footnote": "I work with local and international Spanish-speaking brands, as well as global brands looking for authentic Spanish-language content.",
     "brands.photoAlt": "Andy in her home studio, filming a reel on her phone at the desk",
     "brands.photoCaption": "Behind the scenes: where every reel gets made.",
@@ -99,7 +106,7 @@ const I18N = {
 
     "how.title": "How I work",
     "how.lede": "A fixed standard of quality and a repeatable process. No improvising on each brief.",
-    "how.note": "I don't just film what's asked. I propose what's going to work.",
+    "how.note": "I don't just film what's asked. I propose what's going to work",
     "how.standardsTitle": "Quality standards",
     "how.standardsLede": "The checklist every video passes before it gets to you.",
     "how.sheetTitle": "Video checklist",
@@ -188,6 +195,12 @@ const I18N = {
     "about.captions": "*Apasionada* por lo que hago|*Creativa* por naturaleza|*Humana* antes que todo|Siempre *real*, nunca actuada",
 
     "modal.close": "Cerrar",
+    "follow.open": "Seguir a Andy",
+    "follow.title": "Seguí a Andy",
+    "follow.sub": "Elegí dónde scrolleás. La misma Andy en todos lados.",
+    "follow.more": "Más de Andy",
+    "follow.travel": "Viajes",
+    "follow.crypto": "Cripto",
     "modal.today": "Hoy",
     "modal.status": "Suele responder en el día",
     "modal.bio": "UGC en español para TikTok e Instagram. Rutinas reales, productos reales.",
@@ -228,6 +241,7 @@ const I18N = {
 
     "brands.title": "Marcas con las que trabajé",
     "brands.slotLabel": "Tu marca acá",
+    "brands.slotCta": "Hablemos",
     "brands.footnote": "Trabajo con marcas locales e internacionales de habla hispana, y con marcas globales que buscan contenido auténtico en español.",
     "brands.photoAlt": "Andy en su estudio en casa, grabando un reel con el teléfono en el escritorio",
     "brands.photoCaption": "Detrás de cámaras: donde nace cada reel.",
@@ -238,7 +252,7 @@ const I18N = {
 
     "how.title": "Cómo trabajo",
     "how.lede": "Un estándar de calidad fijo y un proceso repetible. Sin improvisar en cada brief.",
-    "how.note": "No solo grabo lo que me piden. Propongo lo que va a funcionar.",
+    "how.note": "No solo grabo lo que me piden. Propongo lo que va a funcionar",
     "how.standardsTitle": "Estándares de calidad",
     "how.standardsLede": "El checklist que pasa cada video antes de llegarte.",
     "how.sheetTitle": "Checklist de video",

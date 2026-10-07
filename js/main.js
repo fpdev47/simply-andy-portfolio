@@ -583,6 +583,25 @@
     box.addEventListener("close", () => (frame.innerHTML = ""));
   }
 
+  // Follow modal: opened by the Follow / + buttons on the reel mockups.
+  function initFollowModal() {
+    const modal = document.getElementById("follow-modal");
+    if (!modal || typeof modal.showModal !== "function") return;
+    document.querySelectorAll("[data-follow-modal]").forEach((el) => {
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        modal.showModal();
+      });
+      // Keep the reel's double-tap from counting a tap on the button.
+      el.addEventListener("pointerup", (e) => e.stopPropagation());
+    });
+    document.getElementById("follow-close").addEventListener("click", () => modal.close());
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) modal.close();
+    });
+  }
+
   initFilters();
   initNav();
   initHeader();
@@ -591,4 +610,5 @@
   initLoader();
   initContactModal();
   initReels();
+  initFollowModal();
 })();
