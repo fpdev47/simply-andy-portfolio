@@ -128,81 +128,141 @@
     });
   }
 
-  /* ---------------- Hero: typed headline with the dot as caret ---------------- */
+  /* ---------------- Typed headlines with the dot as caret ----------------
+     Used by the hero H1 and the contact title. Each character is pre-laid-out
+     (only opacity changes, so nothing reflows and readers get the full text).
+     The dot hops from letter to letter on a small arc as each one appears,
+     like a karaoke ball; when typing ends the pen marks the phrase and the dot
+     drops in as the full stop. */
+  function createTyper(el) {
+    if (!el) return null;
+    var text = el.querySelector(".type-text");
+    var caret = el.querySelector(".type-caret");
+    var timer = null;
+    var prev = null;
+    var T = { el: el };
 
-  var title = document.getElementById("hero-title");
-  var titleText = title && title.querySelector(".hero-title-text");
-  var caret = title && title.querySelector(".type-caret");
-  var typing = null;
+    // Each part (plain span + <mark>) is split in place so the wrapper survives.
+    // Words stay in nowrap groups so a line never breaks mid-word.
+    function split() {
+      Array.prototype.forEach.call(text.children, function (part) {
+        var str = part.textContent;
+        part.textContent = "";
+        str.split(/(\s+)/).forEach(function (chunk) {
+          if (!chunk) return;
+          if (/^\s+$/.test(chunk)) {
+            part.appendChild(document.createTextNode(chunk));
+            return;
+          }
+          var word = document.createElement("span");
+          word.style.whiteSpace = "nowrap";
+          Array.prototype.forEach.call(chunk, function (c) {
+            var ch = document.createElement("span");
+            ch.className = "ch";
+            ch.textContent = c;
+            word.appendChild(ch);
+          });
+          part.appendChild(word);
+        });
+      });
+      return Array.prototype.slice.call(text.querySelectorAll(".ch"));
+    }
 
-  // Wrap each character in a span so the final layout exists from the start and
-  // typing is only an opacity change. Words stay in nowrap groups so a line
-  // never breaks mid-word.
-  // The headline is two parts (plain text + the marked phrase); each part is
-  // split in place so the <mark> wrapper survives.
-  function splitTitle() {
-    Array.prototype.forEach.call(titleText.children, function (part) {
-      var text = part.textContent;
-      part.textContent = "";
-      text.split(/(\s+)/).forEach(function (chunk) {
-        if (!chunk) return;
-        if (/^\s+$/.test(chunk)) {
-          part.appendChild(document.createTextNode(chunk));
+    function spot(ch) {
+      var tr = el.getBoundingClientRect();
+      var r = ch.getBoundingClientRect();
+      var size = caret.offsetWidth;
+      return { x: r.right - tr.left + size * 0.35, y: r.top + r.height * 0.78 - tr.top - size, h: r.height };
+    }
+
+    // Move the caret to the new letter: jump the layout position, then animate
+    // the transform from the old spot to zero along an arc.
+    function hop(ch, dur) {
+      var p = spot(ch);
+      el.style.setProperty("--cx", p.x + "px");
+      el.style.setProperty("--cy", p.y + "px");
+      if (prev && canAnimate && !reduce) {
+        var dx = prev.x - p.x;
+        var dy = prev.y - p.y;
+        var lift = Math.min(p.h * 0.32, 26) + (dy ? 12 : 0);
+        caret.animate(
+          [
+            { transform: "translate(" + dx + "px," + dy + "px) scale(1)" },
+            { transform: "translate(" + dx * 0.5 + "px," + (dy * 0.5 - lift) + "px) scale(.9, 1.12)", offset: 0.5 },
+            { transform: "translate(0,0) scale(1.18, .82)", offset: 0.88 },
+            { transform: "none" }
+          ],
+          { duration: dur, easing: "cubic-bezier(.3, .2, .3, 1)" }
+        );
+      }
+      prev = p;
+    }
+
+    T.type = function (done) {
+      T.pending = done;
+      var chars = split();
+      prev = null;
+      el.classList.remove("is-done", "is-landed");
+      el.classList.add("is-typing");
+      var i = 0;
+      if (chars[0]) hop(chars[0], 0);
+      function step() {
+        if (i >= chars.length) {
+          el.classList.remove("is-typing");
+          el.classList.add("is-done");
+          timer = null;
+          T.pending = null;
+          T.land(done);
           return;
         }
-        var word = document.createElement("span");
-        word.style.whiteSpace = "nowrap";
-        Array.prototype.forEach.call(chunk, function (c) {
-          var ch = document.createElement("span");
-          ch.className = "ch";
-          ch.textContent = c;
-          word.appendChild(ch);
-        });
-        part.appendChild(word);
-      });
-    });
-    return Array.prototype.slice.call(titleText.querySelectorAll(".ch"));
-  }
-
-  function placeCaret(ch) {
-    var tr = title.getBoundingClientRect();
-    var r = ch.getBoundingClientRect();
-    var size = caret.offsetWidth;
-    var baseline = r.top + r.height * 0.78;
-    title.style.setProperty("--cx", r.right - tr.left + size * 0.35 + "px");
-    title.style.setProperty("--cy", baseline - tr.top - size + "px");
-  }
-
-  function typeTitle(done) {
-    var chars = splitTitle();
-    title.classList.remove("is-done");
-    title.classList.add("is-typing");
-    var i = 0;
-    if (chars[0]) placeCaret(chars[0]);
-    function step() {
-      if (i >= chars.length) {
-        title.classList.remove("is-typing");
-        title.classList.add("is-done");
-        typing = null;
-        if (done) done();
-        return;
+        var ch = chars[i++];
+        var c = ch.textContent;
+        var delay = /[,!¡.?]/.test(c) ? 230 : 52 + Math.random() * 22;
+        ch.classList.add("is-on");
+        hop(ch, Math.min(delay + 30, 140));
+        timer = setTimeout(step, delay);
       }
-      var ch = chars[i++];
-      ch.classList.add("is-on");
-      placeCaret(ch);
-      var c = ch.textContent;
-      var delay = /[,!¡.]/.test(c) ? 200 : 30 + Math.random() * 26;
-      typing = setTimeout(step, delay);
-    }
-    typing = setTimeout(step, 200);
+      timer = setTimeout(step, 220);
+    };
+
+    // Pen marks the phrase, then the dot drops in as the full stop with a burst.
+    T.land = function (done) {
+      drawMark(el.querySelector(".hl"));
+      setTimeout(function () {
+        el.classList.add("is-landed");
+        setTimeout(function () {
+          burstAt(caret, { count: 10, dist: 30, size: 6, colors: ["#E9E2D0", "#2A2620", "#E9E2D0", "#8F3F23"] });
+        }, 260);
+        if (done) done();
+      }, 650);
+    };
+
+    T.finish = function () {
+      if (timer) clearTimeout(timer);
+      timer = null;
+      el.classList.remove("is-typing");
+      el.classList.add("is-done");
+    };
+
+    // i18n replaced the text nodes: re-split instantly, no animation.
+    T.refresh = function () {
+      var lost = Array.prototype.some.call(text.children, function (p) { return !p.querySelector(".ch"); });
+      if (!lost || !el.classList.contains("is-done") && !el.classList.contains("is-typing")) return;
+      var wasTyping = el.classList.contains("is-typing");
+      split().forEach(function (c) { c.classList.add("is-on"); });
+      T.finish();
+      // Switched language mid-typing: still play the ending (mark + landing dot).
+      if (wasTyping) {
+        var done = T.pending;
+        T.pending = null;
+        T.land(done);
+      }
+    };
+    return T;
   }
 
-  function finishTitle() {
-    if (typing) clearTimeout(typing);
-    typing = null;
-    title.classList.remove("is-typing");
-    title.classList.add("is-done");
-  }
+  var heroTyper = createTyper(document.getElementById("hero-title"));
+  var contactTyper = createTyper(document.getElementById("contact-title"));
 
   /* ---------------- Reels (hero IG frame + About TikTok frame) ----------------
      Each figure.reel gets: caption lines from i18n that pop word by word, a 15s
@@ -221,6 +281,7 @@
     var big = fig.querySelector(".big-heart");
     var key = fig.getAttribute("data-captions");
     var heartEvery = parseInt(fig.getAttribute("data-hearts"), 10) || 1400;
+    var video = fig.querySelector("video.reel-media");
     var R = { fig: fig, running: false, visible: false, armed: false, idx: 0, timers: [], raf: null, t0: 0, elapsed: 0 };
 
     function lines() { return t(key).split("|"); }
@@ -311,6 +372,10 @@
       if (R.running || !R.armed || !R.visible || document.hidden) return;
       R.running = true;
       fig.classList.add("is-playing");
+      if (video && !reduce) {
+        var pr = video.play();
+        if (pr && pr.catch) pr.catch(function () {});
+      }
       if (reduce) return;
       if (!capEl.childNodes.length || R.idx === 0) nextCaption();
       else R.timers.push(setTimeout(nextCaption, 200));
@@ -330,6 +395,7 @@
       if (!R.running) return;
       R.running = false;
       fig.classList.remove("is-playing");
+      if (video) video.pause();
       R.timers.forEach(clearTimeout);
       R.timers = [];
       clearInterval(R.heartTimer);
@@ -418,7 +484,7 @@
   function playHero() {
     enterMenu();
     if (reduce) {
-      drawMark(title && title.querySelector(".hl"));
+      drawMark(document.querySelector("#hero-title .hl"));
       drawMark(document.querySelector(".hero-lede .hl"));
       if (heroReel) heroReel.arm();
       return;
@@ -427,17 +493,8 @@
     var hello = document.querySelector(".hero-hello");
     if (reelEl) setTimeout(function () { reelEl.classList.add("is-in"); }, 60);
     if (hello) hello.classList.add("is-in");
-    // Same beat as the contact block, staged: typing ends, the pen marks the
-    // phrase, then the dot drops in as the full stop with a small burst.
-    typeTitle(function () {
-      drawMark(title.querySelector(".hl"));
-      setTimeout(function () {
-        title.classList.add("is-landed");
-        setTimeout(function () {
-          burstAt(caret, { count: 10, dist: 30, size: 6, colors: ["#E9E2D0", "#2A2620", "#E9E2D0", "#51091B"] });
-        }, 260);
-      }, 650);
-      setTimeout(function () { drawMark(document.querySelector(".hero-lede .hl")); }, 1100);
+    heroTyper.type(function () {
+      setTimeout(function () { drawMark(document.querySelector(".hero-lede .hl")); }, 450);
     });
     setTimeout(function () { document.querySelector(".hero-lede").classList.add("is-in"); }, 550);
     setTimeout(function () { document.querySelector(".hero-cta").classList.add("is-in"); }, 700);
@@ -599,7 +656,7 @@
   function initSections() {
     var grid = document.getElementById("portfolio-grid");
     if (grid && !reduce) {
-      var cards = Array.prototype.slice.call(grid.querySelectorAll(".video-card"));
+      var cards = Array.prototype.slice.call(grid.querySelectorAll(".reel-card"));
       cards.forEach(function (c) { c.classList.add("is-pre"); });
       onFirstIntersect(grid, function () {
         cards.forEach(function (c, i) {
@@ -610,140 +667,142 @@
       }, { threshold: 0.15 });
     }
 
-    var contactMark = document.querySelector(".contact-title .hl");
-    var contactDot = document.querySelector(".contact-dot");
-    onFirstIntersect(contactMark, function () {
-      drawMark(contactMark);
-      if (contactDot && !reduce) setTimeout(function () { contactDot.classList.add("is-in"); }, 700);
+    // Brands photo settles from a slight zoom the first time it is seen.
+    var bts = document.querySelector(".bts-photo");
+    onFirstIntersect(bts, function () { bts.classList.add("is-in"); }, { threshold: 0.25 });
+
+    // Contact title writes itself like the hero headline once it is in view.
+    var contactTitle = document.getElementById("contact-title");
+    if (contactTitle && contactTyper) {
+      if (reduce) {
+        drawMark(contactTitle.querySelector(".hl"));
+      } else {
+        contactTitle.classList.add("is-waiting");
+        onFirstIntersect(contactTitle, function () {
+          contactTitle.classList.remove("is-waiting");
+          contactTyper.type();
+        }, { threshold: 0.45 });
+      }
+    }
+  }
+
+  /* ---------------- Eyebrow viewfinder: running REC timecode ---------------- */
+
+  function initViewfinder() {
+    var tc = document.getElementById("vf-tc");
+    var hello = document.querySelector(".hero-hello");
+    if (!tc) return;
+    var t0 = Date.now();
+    function tick() {
+      var s = Math.floor((Date.now() - t0) / 1000);
+      tc.textContent = (s / 60 < 10 ? "0" : "") + Math.floor(s / 60) + ":" + (s % 60 < 10 ? "0" : "") + (s % 60);
+    }
+    if (!reduce) setInterval(tick, 1000);
+    if (hello) setTimeout(function () { hello.classList.add("is-focused"); }, reduce ? 0 : 900);
+  }
+
+  /* ---------------- Ambient backgrounds: pointer parallax ----------------
+     The floating marks drift on CSS loops; the pointer adds a little depth. */
+  function initAmbient() {
+    if (!finePointer || reduce) return;
+    document.querySelectorAll(".ambient").forEach(function (amb) {
+      var zone = amb.parentElement;
+      var tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
+      function frame() {
+        cx += (tx - cx) * 0.06;
+        cy += (ty - cy) * 0.06;
+        amb.style.setProperty("--px", cx.toFixed(3));
+        amb.style.setProperty("--py", cy.toFixed(3));
+        raf = Math.abs(tx - cx) + Math.abs(ty - cy) > 0.001 ? requestAnimationFrame(frame) : null;
+      }
+      zone.addEventListener("pointermove", function (e) {
+        var r = zone.getBoundingClientRect();
+        tx = (e.clientX - r.left) / r.width - 0.5;
+        ty = (e.clientY - r.top) / r.height - 0.5;
+        if (raf === null) raf = requestAnimationFrame(frame);
+      });
+      zone.addEventListener("pointerleave", function () {
+        tx = ty = 0;
+        if (raf === null) raf = requestAnimationFrame(frame);
+      });
     });
   }
 
-  function initStandards() {
-    var grid = document.getElementById("std-grid");
-    if (!grid) return;
-    if (!hasIO) { grid.classList.add("is-in"); return; }
-    new IntersectionObserver(function (entries) {
-      grid.classList.toggle("is-in", entries[0].isIntersecting);
-    }, { threshold: 0.1 }).observe(grid);
+  /* ---------------- How I work: the step at the middle of the screen ----------------
+     Pure scroll: the step crossing the viewport's center band becomes current
+     (full color, Terracota marker, description open) and the sticky counter
+     rolls to its number. Click/Enter also selects a step. */
+  function initHow() {
+    var steps = Array.prototype.slice.call(document.querySelectorAll(".how-step"));
+    var strip = document.querySelector(".how-counter-strip");
+    var bar = document.getElementById("how-progress");
+    if (!steps.length) return;
+    var current = -1;
+    function select(i) {
+      if (i === current) return;
+      current = i;
+      steps.forEach(function (st, k) {
+        st.classList.toggle("is-active", k === i);
+        st.classList.toggle("is-past", k < i);
+      });
+      if (strip) strip.style.transform = "translateY(" + -i * 0.8 + "em)";
+      if (bar) bar.style.setProperty("--p", ((i + 1) / steps.length).toFixed(3));
+    }
+    select(0);
+    if (!hasIO) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) select(steps.indexOf(e.target));
+      });
+    }, { rootMargin: "-46% 0px -46% 0px" });
+    steps.forEach(function (st) { io.observe(st); });
   }
 
-  /* ---------------- How I work: editor timeline ----------------
-     A playhead scrubs across five clips (1.4s each). The clip under it lifts
-     and its waveform plays; the monitor shows that step. Hover pauses, click
-     or Enter on a clip jumps the playhead there. */
-  function initEditor() {
-    var editor = document.getElementById("process-editor");
-    if (!editor) return;
-    var clips = Array.prototype.slice.call(editor.querySelectorAll(".clip"));
-    var list = editor.querySelector(".clips");
-    var head = document.getElementById("playhead");
-    var timeline = editor.querySelector(".editor-timeline");
-    var monitor = editor.querySelector(".editor-monitor");
-    var mNum = monitor.querySelector(".editor-num");
-    var mTitle = monitor.querySelector(".editor-title");
-    var mDesc = monitor.querySelector(".editor-desc");
-    var tc = monitor.querySelector(".editor-tc");
-    var STEP = 1400;
-    var TOTAL = STEP * clips.length;
-    var pos = 0;
-    var active = -1;
-    var paused = false;
-    var visible = false;
-    var raf = null;
-    var last = 0;
-
-    function show(i) {
-      if (i === active) return;
-      active = i;
-      clips.forEach(function (c, k) {
-        c.classList.toggle("is-active", k === i);
-        c.classList.toggle("is-done", k < i);
+  /* ---------------- Quality standards: the checklist gets ticked ----------------
+     Each row is ticked once as it scrolls into view; when all seven are ticked
+     the approval stamp lands. */
+  function initSheet() {
+    var sheet = document.getElementById("std-sheet");
+    if (!sheet) return;
+    var rows = Array.prototype.slice.call(sheet.querySelectorAll(".sheet-row"));
+    if (reduce || !hasIO) {
+      rows.forEach(function (r) { r.classList.add("is-checked"); });
+      sheet.classList.add("is-stamped");
+      return;
+    }
+    sheet.classList.add("is-armed");
+    var done = 0;
+    var queue = Promise.resolve();
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        // Serialize ticks so rows entering together still check one after another.
+        queue = queue.then(function () {
+          return new Promise(function (res) {
+            e.target.classList.add("is-checked");
+            burstAt(e.target.querySelector(".sheet-box"), { count: 6, dist: 16, size: 4, colors: ["#8F3F23", "#2A2620"] });
+            done++;
+            if (done === rows.length) {
+              setTimeout(function () {
+                sheet.classList.add("is-stamped");
+                var st = sheet.querySelector(".sheet-stamp");
+                setTimeout(function () { burstAt(st, { count: 12, dist: 60, size: 5, colors: ["#8F3F23", "#51091B"] }); }, 260);
+              }, 350);
+            }
+            setTimeout(res, 160);
+          });
+        });
       });
-      var c = clips[i];
-      mNum.textContent = c.querySelector(".clip-num").textContent;
-      mTitle.textContent = c.querySelector(".clip-title").textContent;
-      mDesc.textContent = c.querySelector(".clip-desc").textContent;
-      monitor.classList.remove("is-swap");
-      void monitor.offsetWidth;
-      monitor.classList.add("is-swap");
-    }
-
-    function place() {
-      var i = Math.min(clips.length - 1, Math.floor(pos / STEP));
-      var f = (pos - i * STEP) / STEP;
-      var tl = timeline.getBoundingClientRect();
-      var cr = clips[i].getBoundingClientRect();
-      var x = cr.left - tl.left + cr.width * f;
-      head.style.transform = "translateX(" + x.toFixed(1) + "px)";
-      clips.forEach(function (c, k) { c.style.setProperty("--f", k < i ? 1 : k === i ? f.toFixed(3) : 0); });
-      var secs = (pos / TOTAL) * 15;
-      tc.textContent = "00:" + (secs < 10 ? "0" : "") + secs.toFixed(0);
-      show(i);
-    }
-
-    function frame(now) {
-      if (!paused) pos = (pos + (now - last)) % TOTAL;
-      last = now;
-      place();
-      raf = visible && !document.hidden ? requestAnimationFrame(frame) : null;
-    }
-    function run() {
-      if (raf !== null || reduce) return;
-      last = performance.now();
-      raf = requestAnimationFrame(frame);
-    }
-
-    function jump(i) {
-      pos = i * STEP + 1;
-      active = -1;
-      place();
-    }
-
-    clips.forEach(function (c, i) {
-      c.addEventListener("click", function () {
-        jump(i);
-        if (!reduce) burstAt(c.querySelector(".clip-num"), { count: 7, dist: 18, size: 4, colors: ["#E9E2D0", "#8F3F23"] });
-      });
-      c.addEventListener("keydown", function (e) {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          jump(i);
-        }
-      });
-      c.addEventListener("focus", function () { paused = true; jump(i); });
-      c.addEventListener("blur", function () { paused = false; });
-    });
-    list.addEventListener("pointerenter", function () { paused = finePointer; });
-    list.addEventListener("pointerleave", function () { paused = false; });
-
-    show(0);
-    place();
-    window.addEventListener("resize", place);
-    document.addEventListener("sa:lang", function () {
-      var i = active;
-      active = -1;
-      show(i < 0 ? 0 : i);
-    });
-    if (hasIO) {
-      new IntersectionObserver(function (entries) {
-        visible = entries[0].isIntersecting;
-        if (visible) run();
-      }, { threshold: 0.25 }).observe(editor);
-    } else {
-      visible = true;
-      run();
-    }
-    document.addEventListener("visibilitychange", function () { if (!document.hidden && visible) run(); });
+    }, { rootMargin: "0px 0px -18% 0px", threshold: 0.6 });
+    rows.forEach(function (r) { io.observe(r); });
   }
 
   /* ---------------- Language switches ---------------- */
 
   document.addEventListener("sa:lang", function () {
-    // i18n just replaced the headline's text node; re-split without animating.
-    if (title && titleText && Array.prototype.some.call(titleText.children, function (p) { return !p.querySelector(".ch"); })) {
-      splitTitle().forEach(function (c) { c.classList.add("is-on"); });
-      finishTitle();
-    }
+    if (heroTyper) heroTyper.refresh();
+    if (contactTyper) contactTyper.refresh();
     reels.forEach(function (R) { R.restartCaptions(); });
   });
 
@@ -762,8 +821,10 @@
     initMenuReplay();
     initStats();
     initSections();
-    initEditor();
-    initStandards();
+    initViewfinder();
+    initAmbient();
+    initHow();
+    initSheet();
 
     var started = false;
     function start() {

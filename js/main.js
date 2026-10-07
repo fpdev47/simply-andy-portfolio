@@ -11,7 +11,7 @@
     try {
       localStorage.setItem("sa-lang", lang);
     } catch (e) {
-      /* storage unavailable (private mode / blocked cookies) — language just won't persist */
+      /* storage unavailable (private mode / blocked cookies): language just won't persist */
     }
   }
 
@@ -27,7 +27,7 @@
   }
 
   function applyFilter(filter) {
-    const cards = Array.from(grid.querySelectorAll(".video-card"));
+    const cards = Array.from(grid.querySelectorAll(".reel-card"));
     if (flipFinalize) flipFinalize();
 
     if (reduceMotion) {
@@ -154,9 +154,9 @@
 
   // Header: shadow once the page scrolls, tucks away while scrolling down and
   // comes back on any upward scroll.
+  // Header stays pinned at the top; it only gains a shadow once the page scrolls.
   function initHeader() {
     const header = document.querySelector(".site-header");
-    let lastY = window.scrollY;
     let ticking = false;
     window.addEventListener(
       "scroll",
@@ -164,12 +164,7 @@
         if (ticking) return;
         ticking = true;
         requestAnimationFrame(() => {
-          const y = window.scrollY;
-          header.classList.toggle("is-scrolled", y > 10);
-          const hide = y > 400 && y > lastY + 4 && !nav.classList.contains("is-open");
-          if (hide) header.classList.add("is-hidden");
-          else if (y < lastY - 4 || y <= 400) header.classList.remove("is-hidden");
-          lastY = y;
+          header.classList.toggle("is-scrolled", window.scrollY > 10);
           ticking = false;
         });
       },
@@ -400,15 +395,14 @@
         const isBubble = el.classList.contains("dm-msg");
         if (isBubble) {
           later(() => {
+            el.before(typing);
             typing.classList.add("is-on");
-            thread.appendChild(typing);
             scrollDown();
           }, t);
           t += i === 0 ? 420 : 340;
         }
         later(() => {
           typing.classList.remove("is-on");
-          typing.before(el);
           arrive(el);
         }, t);
         t += isBubble ? 140 : 180;
@@ -442,7 +436,7 @@
       const mine = document.createElement("p");
       mine.className = "dm-msg dm-user";
       mine.textContent = text;
-      typing.before(mine);
+      thread.appendChild(mine);
       arrive(mine);
       input.value = "";
 
@@ -464,13 +458,129 @@
         const reply = document.createElement("p");
         reply.className = "dm-msg dm-reply";
         reply.textContent = I18N[state.lang]["modal.reply"];
-        typing.before(reply);
+        thread.appendChild(reply);
         arrive(reply);
       }, replyDelay);
       later(() => {
         window.location.href = href;
       }, replyDelay + 900);
     });
+  }
+
+  /* ------------------------------------------------------------------------
+     Reels: real platform players. Cards ship a local poster; a muted, chrome-
+     less preview of the real video loads on hover (fine pointers) or for the
+     card centered on screen (touch). Clicking opens the full player with sound
+     in a lightbox; closing it removes the iframe so audio stops. Instagram has
+     no muted preview player, so its cards stay on the poster until clicked.
+     ------------------------------------------------------------------------ */
+  function playerUrl(platform, id, preview) {
+    if (platform === "tiktok") {
+      return "https://www.tiktok.com/player/v1/" + id + "?autoplay=1&loop=1&rel=0&native_context_menu=0" +
+        (preview
+          ? "&muted=1&controls=0&progress_bar=0&play_button=0&volume_control=0&fullscreen_button=0&timestamp=0&music_info=0&description=0&closed_caption=0"
+          : "&music_info=1&description=1");
+    }
+    if (platform === "youtube") {
+      return "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1&playsinline=1&rel=0&modestbranding=1&loop=1&playlist=" + id +
+        (preview ? "&mute=1&controls=0" : "");
+    }
+    return "https://www.instagram.com/reel/" + id + "/embed/";
+  }
+
+  function initReels() {
+    const grid = document.getElementById("portfolio-grid");
+    const box = document.getElementById("reel-box");
+    if (!grid) return;
+    const cards = Array.from(grid.querySelectorAll(".reel-card"));
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    let active = null;
+    let hoverTimer = null;
+
+    function stopPreview(card) {
+      const pv = card && card.querySelector(".reel-card-preview");
+      if (!pv) return;
+      card.classList.remove("is-previewing");
+      setTimeout(() => pv.remove(), 450);
+      if (active === card) active = null;
+    }
+    function startPreview(card) {
+      if (reduceMotion || card.dataset.platform === "instagram" || card.classList.contains("is-previewing")) return;
+      if (active && active !== card) stopPreview(active);
+      active = card;
+      const pv = document.createElement("div");
+      pv.className = "reel-card-preview";
+      const f = document.createElement("iframe");
+      f.src = playerUrl(card.dataset.platform, card.dataset.id, true);
+      f.title = "";
+      f.tabIndex = -1;
+      f.setAttribute("aria-hidden", "true");
+      f.allow = "autoplay; encrypted-media";
+      f.loading = "eager";
+      // Give the player a moment to paint before fading over the poster.
+      f.addEventListener("load", () => setTimeout(() => pv.classList.add("is-ready"), 700));
+      pv.appendChild(f);
+      card.querySelector(".reel-card-link").appendChild(pv);
+      card.classList.add("is-previewing");
+    }
+
+    if (fine) {
+      cards.forEach((card) => {
+        card.addEventListener("pointerenter", () => {
+          clearTimeout(hoverTimer);
+          hoverTimer = setTimeout(() => startPreview(card), 260);
+        });
+        card.addEventListener("pointerleave", () => {
+          clearTimeout(hoverTimer);
+          stopPreview(card);
+        });
+      });
+    } else if ("IntersectionObserver" in window && !reduceMotion) {
+      // Touch: preview the one card that sits fully in the middle of the screen.
+      let pick = null;
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              clearTimeout(pick);
+              pick = setTimeout(() => startPreview(e.target), 650);
+            } else stopPreview(e.target);
+          });
+        },
+        { rootMargin: "-38% 0px -38% 0px" }
+      );
+      cards.forEach((c) => io.observe(c));
+    }
+
+    if (!box || typeof box.showModal !== "function") return;
+    const frame = document.getElementById("reel-box-frame");
+    const open = document.getElementById("reel-box-open");
+    const names = { tiktok: "TikTok", instagram: "Instagram", youtube: "YouTube" };
+    cards.forEach((card) => {
+      card.querySelector(".reel-card-link").addEventListener("click", (e) => {
+        e.preventDefault();
+        stopPreview(card);
+        const p = card.dataset.platform;
+        frame.className = "reel-box-frame reel-box-frame--" + p;
+        frame.innerHTML = "";
+        const f = document.createElement("iframe");
+        f.src = playerUrl(p, card.dataset.id, false);
+        f.title = card.querySelector(".reel-card-title").textContent;
+        f.allow = "autoplay; encrypted-media; fullscreen; picture-in-picture";
+        f.allowFullscreen = true;
+        frame.appendChild(f);
+        open.href = card.querySelector(".reel-card-link").href;
+        open.querySelector("span").textContent =
+          (state.lang === "es" ? "Abrir en " : "Open in ") + names[p];
+        box.showModal();
+      });
+    });
+    const close = () => box.close();
+    document.getElementById("reel-box-close").addEventListener("click", close);
+    box.addEventListener("click", (e) => {
+      if (e.target === box) close();
+    });
+    box.addEventListener("close", () => (frame.innerHTML = ""));
   }
 
   initFilters();
@@ -480,4 +590,5 @@
   applyLang(state.lang);
   initLoader();
   initContactModal();
+  initReels();
 })();
