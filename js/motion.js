@@ -277,6 +277,7 @@
   var heroTyper = createTyper(document.getElementById("hero-title"));
   var contactTyper = createTyper(document.getElementById("contact-title"));
   var howTyper = createTyper(document.getElementById("how-quote"));
+  var btsTyper = createTyper(document.getElementById("bts-key"));
 
   /* ---------------- Reels (hero IG frame + About TikTok frame) ----------------
      Each figure.reel gets: caption lines from i18n that pop word by word, a 15s
@@ -519,14 +520,26 @@
 
   /* ---------------- Marker highlight ---------------- */
 
-  // Pen marker: the stroke sweeps left to right and each letter switches color
-  // the moment the stroke reaches it.
+  // Pen marker: the stroke sweeps left to right at a constant speed and each
+  // letter switches color the moment the stroke covers it. A mark that wraps
+  // sweeps every line at once, so each letter is timed against its own line.
   function drawMark(el) {
     if (!el) return;
-    var chars = el.querySelectorAll(".ch");
+    var chars = Array.prototype.slice.call(el.querySelectorAll(".ch"));
     var dur = 750;
-    Array.prototype.forEach.call(chars, function (c, i) {
-      c.style.transitionDelay = Math.round(((i + 0.6) / chars.length) * dur) + "ms";
+    var lines = {};
+    var boxes = chars.map(function (c) {
+      var r = c.getBoundingClientRect();
+      var k = Math.round(r.top / 4);
+      var line = lines[k] || (lines[k] = { l: Infinity, r: -Infinity });
+      line.l = Math.min(line.l, r.left);
+      line.r = Math.max(line.r, r.right);
+      return { k: k, x: r.left + r.width * 0.5 };
+    });
+    chars.forEach(function (c, i) {
+      var line = lines[boxes[i].k];
+      var f = line.r > line.l ? (boxes[i].x - line.l) / (line.r - line.l) : 1;
+      c.style.transitionDelay = Math.round(f * dur) + "ms";
     });
     el.classList.add("is-drawn");
   }
@@ -734,9 +747,16 @@
     var btsVf = document.querySelector(".bts-vf");
     var btsTc = document.querySelector(".bts-tc");
     var bubbles = document.querySelector(".bts-bubbles");
+    var btsKey = document.getElementById("bts-key");
+    if (btsKey && btsTyper && !reduce) btsKey.classList.add("is-waiting");
     onFirstIntersect(bubbles || btsVf, function () {
       if (btsVf) btsVf.classList.add("is-focused");
       if (bubbles) bubbles.classList.add("is-in");
+      // The key bubble writes itself and lands its dot, like the hero title.
+      if (btsKey && btsTyper) {
+        if (reduce) drawMark(btsKey.querySelector(".hl"));
+        else setTimeout(function () { btsKey.classList.remove("is-waiting"); btsTyper.type(); }, 900);
+      }
       if (btsTc && !reduce) {
         var t0 = Date.now();
         setInterval(function () {
@@ -826,7 +846,8 @@
     var sticky = pin.querySelector(".how-sticky");
     var viewport = pin.querySelector(".story-viewport");
     var cards = Array.prototype.slice.call(track.children);
-    var bars = Array.prototype.slice.call(pin.querySelectorAll(".story-bar i"));
+    var road = document.getElementById("story-road");
+    var stops = road ? Array.prototype.slice.call(road.querySelectorAll(".road-step")) : [];
     var count = document.getElementById("story-count");
     var n = cards.length;
     var current = -1;
@@ -834,6 +855,10 @@
       if (k === current) return;
       current = k;
       cards.forEach(function (c, i) { c.classList.toggle("is-active", i === k); });
+      stops.forEach(function (st, i) {
+        st.classList.toggle("is-current", i === k);
+        st.classList.toggle("is-done", i < k);
+      });
       if (count) count.textContent = k + 1;
     }
     if (reduce) {
@@ -842,7 +867,8 @@
       sticky.style.position = "static";
       sticky.style.height = "auto";
       cards.forEach(function (c) { c.classList.add("is-active"); });
-      bars.forEach(function (b) { b.style.setProperty("--f", 1); });
+      if (road) road.style.setProperty("--p", 1);
+      stops.forEach(function (st) { st.classList.add("is-done"); });
       return;
     }
     function update() {
@@ -857,7 +883,7 @@
       var pad = parseFloat(getComputedStyle(viewport).paddingLeft) || 0;
       var x = viewport.clientWidth / 2 - pad - (ca + (cb - ca) * f);
       track.style.transform = "translateX(" + x.toFixed(1) + "px)";
-      bars.forEach(function (bar, i) { bar.style.setProperty("--f", Math.min(1, Math.max(0, p * n - i)).toFixed(3)); });
+      if (road) road.style.setProperty("--p", p.toFixed(4));
       setActive(Math.round(t));
     }
     // Scroll events already arrive once per frame; update in place.
@@ -941,6 +967,7 @@
     if (heroTyper) heroTyper.refresh();
     if (contactTyper) contactTyper.refresh();
     if (howTyper) howTyper.refresh();
+    if (btsTyper) btsTyper.refresh();
     reels.forEach(function (R) { R.restartCaptions(); });
   });
 

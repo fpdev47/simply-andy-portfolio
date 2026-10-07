@@ -100,7 +100,7 @@ const I18N = {
     "brands.bts": "Behind the scenes",
     "brands.b1": "Local &amp; international brands",
     "brands.b2": "Spanish-speaking markets",
-    "brands.b3": "Global brands that want <b>authentic</b> Spanish content",
+    "brands.b3": "<span>Global brands that want </span><mark class=\"hl hl--pen hl--pen-key\">authentic</mark><span> Spanish content</span>",
     "brands.bubblesLabel": "Who I work with",
 
     "stats.title": "Reach & audience",
@@ -141,6 +141,11 @@ const I18N = {
     "how.step4.desc": "Number of hooks and versions",
     "how.step5.title": "Adjust tone and approach",
     "how.step5.desc": "Based on what the brand needs",
+    "how.step1.short": "Product",
+    "how.step2.short": "Guidelines",
+    "how.step3.short": "Formats",
+    "how.step4.short": "Volume",
+    "how.step5.short": "Tone",
 
     "contact.emailCta": "Let's work together",
     "contact.titleA": "If you have a product that could genuinely add to my routine, ",
@@ -250,7 +255,7 @@ const I18N = {
     "brands.bts": "Detrás de cámaras",
     "brands.b1": "Marcas locales e internacionales",
     "brands.b2": "Mercados de habla hispana",
-    "brands.b3": "Marcas globales que buscan contenido <b>auténtico</b> en español",
+    "brands.b3": "<span>Marcas globales que buscan contenido </span><mark class=\"hl hl--pen hl--pen-key\">auténtico</mark><span> en español</span>",
     "brands.bubblesLabel": "Con quién trabajo",
 
     "stats.title": "Alcance y audiencia",
@@ -291,6 +296,11 @@ const I18N = {
     "how.step4.desc": "Cantidad de hooks y versiones",
     "how.step5.title": "Ajusto tono y enfoque",
     "how.step5.desc": "Según lo que pida la marca",
+    "how.step1.short": "Producto",
+    "how.step2.short": "Lineamientos",
+    "how.step3.short": "Formatos",
+    "how.step4.short": "Volumen",
+    "how.step5.short": "Tono",
 
     "contact.emailCta": "Trabajemos juntos",
     "contact.titleA": "Si tienes un producto que de verdad puede sumar a mi rutina, ",

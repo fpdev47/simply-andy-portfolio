@@ -2620,3 +2620,249 @@ button.tt-avatar:hover .tt-plus { transform: scale(1.15); }
   .footer-inner { grid-template-columns: 1fr auto; }
   .footer-nav { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; }
 }
+
+/* ---------- v9 ---------- */
+
+/* Pen sweep runs at constant speed so the letter timing (motion.js) matches it. */
+.js .hl--pen { transition-timing-function: linear; }
+.js .hl--pen .ch { transition: color .12s linear; }
+.hl--pen-key { --hlx: var(--eggshell); --pen-ink: var(--terracota); }
+.hl--pen-key, .js .hl--pen-key.is-drawn { background-size: 100% 86%; background-position: 0 62%; padding: 0 .06em; }
+.js .hl--pen-key:not(.is-drawn) { background-size: 0% 86%; }
+
+/* Hero: the reel is pinned to the top of its column (title typing can't move
+   it) and everything, buttons included, fits in the first screen. */
+.hero { padding-top: calc(var(--header-h) + 40px); padding-bottom: clamp(32px, 5vh, 56px); }
+.hero-inner { align-items: start; }
+.hero-title { font-size: clamp(3.2rem, min(7.4vw, 12.4vh), 7rem); margin-bottom: 22px; }
+.hero-hello { margin-bottom: 18px; }
+.hero-lede { margin-bottom: 26px; }
+.hero-reel { align-self: start; width: min(100%, 360px, calc((100svh - var(--header-h) - 110px) * .5625)); margin-top: 4px; }
+
+/* Brands photo: no ghost-dragging. */
+.bts-photo img { -webkit-user-drag: none; user-select: none; }
+.bts-bubble--key { position: relative; }
+.bts-bubble--key .type-caret { background: var(--eggshell); }
+
+/* Reels head: die-cut platform stickers and a "sound on" pill. */
+.reels-head { align-items: end; }
+.reels-kicker { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; margin: 4px 0 0; }
+.reels-kicker-text { font-family: var(--display); font-weight: 800; font-size: 22px; color: var(--tinta); }
+.plat-stickers { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.plat {
+  --r: -4deg;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 6px;
+  border: 2px solid var(--tinta);
+  border-radius: 14px;
+  background: var(--white);
+  color: var(--tinta);
+  font-weight: 800;
+  font-size: 15px;
+  box-shadow: 3px 3px 0 var(--tinta);
+  transform: rotate(var(--r));
+  transition: transform .4s var(--ease-spring), box-shadow .3s;
+}
+.plat--ig { --r: 3deg; }
+.plat--yt { --r: -2deg; }
+.plat:hover { transform: rotate(0) translate(-2px, -3px); box-shadow: 5px 6px 0 var(--tinta); }
+.plat-logo { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; }
+.plat--tt .plat-logo { background: var(--eggshell); }
+.plat--tt .g0 { fill: var(--tinta); }
+.plat--tt .g1 { fill: var(--terracota); transform: translate(1.3px, 1.1px); }
+.plat--tt .g2 { fill: var(--indigo); transform: translate(-1.2px, -1px); }
+.plat--tt:hover .g1 { animation: glitch-a .5s steps(2) 2; }
+.plat--tt:hover .g2 { animation: glitch-b .5s steps(2) 2; }
+@keyframes glitch-a { 50% { transform: translate(2.6px, -.6px); } }
+@keyframes glitch-b { 50% { transform: translate(-2.4px, 1px); } }
+.plat--ig .plat-logo { color: var(--eggshell); background: linear-gradient(45deg, var(--cuero), var(--terracota) 45%, var(--bordo)); }
+.plat--yt .plat-logo { width: 38px; height: 28px; border-radius: 9px; color: var(--eggshell); background: var(--bordo); }
+.plat--ig:hover .plat-logo svg { animation: icon-pop .6s var(--ease-spring); }
+.plat--yt:hover .plat-logo svg { animation: yt-play .5s var(--ease-spring); }
+@keyframes yt-play { 50% { transform: translateX(3px) scale(1.2); } }
+
+.sound-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 10px 18px 10px 14px;
+  border-radius: var(--r-pill);
+  background: var(--tinta);
+  color: var(--eggshell);
+  font-size: 14.5px;
+  font-weight: 600;
+  transform: rotate(-1.5deg);
+  box-shadow: 0 14px 24px -16px rgba(42, 38, 32, .8);
+}
+.eq { display: inline-flex; align-items: flex-end; gap: 3px; height: 18px; }
+.eq i { width: 3px; height: 100%; border-radius: 2px; background: var(--terracota); transform-origin: bottom; animation: eq 1s ease-in-out infinite; }
+.eq i:nth-child(2) { animation-delay: -.6s; background: var(--eggshell); }
+.eq i:nth-child(3) { animation-delay: -.3s; }
+.eq i:nth-child(4) { animation-delay: -.8s; background: var(--eggshell); }
+.eq i:nth-child(5) { animation-delay: -.45s; }
+@keyframes eq { 0%, 100% { transform: scaleY(.25); } 50% { transform: scaleY(1); } }
+
+/* Filters ride along while browsing the grid: Tinta glass, so they don't
+   compete with the white main menu. */
+.filter-dock {
+  position: sticky;
+  top: calc(var(--header-h) + 34px);
+  z-index: 30;
+  display: flex;
+  justify-content: center;
+  margin: 0 0 28px;
+  pointer-events: none;
+}
+.filter-dock .filter-bar {
+  pointer-events: auto;
+  background: rgba(42, 38, 32, .66);
+  -webkit-backdrop-filter: blur(14px) saturate(1.5);
+  backdrop-filter: blur(14px) saturate(1.5);
+  border: 1px solid rgba(233, 226, 208, .2);
+  box-shadow: 0 18px 34px -20px rgba(42, 38, 32, .9);
+}
+.filter-dock .filter-btn { color: var(--eggshell); background: transparent; }
+.filter-dock .filter-btn:hover { background: rgba(233, 226, 208, .14); }
+.filter-dock .filter-btn.is-active { background: var(--terracota); color: var(--eggshell); }
+
+/* How I work: the bubble floats, the bulb sways and keeps glowing. */
+.how-bubble.is-in { animation: bubble-float 5.5s ease-in-out 1s infinite alternate; }
+@keyframes bubble-float {
+  from { translate: 0 0; rotate: 0deg; }
+  to { translate: 0 -12px; rotate: .8deg; }
+}
+.how-bubble-avatar { animation: bubble-float 4.2s ease-in-out infinite alternate-reverse; }
+.how-bubble-mark { transform-origin: 50% 0; }
+.how-bubble.is-in .how-bubble-mark svg { animation: bulb-sway 3.2s ease-in-out 1.4s infinite; transform-origin: 50% 10%; }
+.how-bubble-mark .bulb { fill: rgba(233, 226, 208, 0); transition: fill .3s; }
+.how-bubble.is-in .how-bubble-mark .bulb { animation: bulb-fill 3.2s ease-in-out 1.4s infinite; }
+.how-bubble.is-in .how-bubble-mark .rays { animation: bulb-on .9s steps(1) .55s forwards, ray-pulse 1.6s ease-in-out 1.5s infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes bulb-sway { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-10deg); } 75% { transform: rotate(10deg); } }
+@keyframes bulb-fill { 0%, 100% { fill: rgba(233, 226, 208, .05); } 50% { fill: rgba(233, 226, 208, .55); } }
+@keyframes ray-pulse { 0%, 100% { opacity: .4; transform: scale(.85); } 50% { opacity: 1; transform: scale(1.15); } }
+
+/* Timeline: a road with five stops; the dot rides the line to the current one. */
+.story-road { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin-top: 6px; }
+.road-line { position: absolute; top: 15px; left: 10%; right: 10%; height: 3px; border-radius: 2px; background: rgba(233, 226, 208, .18); }
+.road-fill { position: absolute; inset: 0 auto 0 0; width: calc(var(--p, 0) * 100%); border-radius: 2px; background: var(--eggshell); }
+.road-head {
+  position: absolute;
+  right: -7px;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  border-radius: 50%;
+  background: var(--terracota);
+  box-shadow: 0 0 0 3px var(--indigo), 0 0 16px 4px rgba(143, 63, 35, .7);
+}
+.road-step { position: relative; display: grid; justify-items: center; gap: 6px; }
+.road-step b {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid rgba(233, 226, 208, .35);
+  background: var(--indigo);
+  color: rgba(233, 226, 208, .7);
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 14px;
+  transition: transform .45s var(--ease-spring), background-color .3s, color .3s, border-color .3s;
+}
+.road-step em { font-style: normal; font-size: 13px; font-weight: 600; opacity: .55; transition: opacity .3s; text-align: center; }
+.road-step.is-done b { background: var(--eggshell); border-color: var(--eggshell); color: var(--indigo); }
+.road-step.is-current b { background: var(--terracota); border-color: var(--eggshell); color: var(--eggshell); transform: scale(1.22); }
+.road-step.is-current b::after {
+  content: "";
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--terracota);
+  animation: icon-ring 1.8s ease-out infinite;
+}
+.road-step.is-current em { opacity: 1; font-weight: 800; }
+.story-meta { margin-bottom: 4px; }
+
+/* Contact: steadier title, logo on top of the right column, live social tiles. */
+.contact-inner { align-items: center; }
+.contact-title { font-size: clamp(2.6rem, 5.4vw, 5rem); }
+.contact-logo { display: inline-flex; align-self: flex-start; margin-bottom: 6px; border-radius: var(--r-s); }
+.contact-logo .brand-logo { width: 220px; height: auto; }
+.contact-logo .logo-word, .contact-logo .logo-tag { fill: var(--eggshell); }
+.contact-logo .logo-dot { animation: dot-loop 3s var(--ease-spring) 1s infinite; }
+.contact-logo:hover .logo-dot { animation: dot-hop .6s var(--ease-spring); }
+@keyframes dot-loop {
+  0%, 62%, 100% { transform: none; }
+  70% { transform: translateY(-16px) scale(.9, 1.12); }
+  80% { transform: translateY(0) scale(1.3, .75); }
+  87% { transform: translateY(-5px) scale(.95, 1.05); }
+  93% { transform: none; }
+}
+.social-tile { position: relative; overflow: hidden; isolation: isolate; }
+.social-tile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 35%, rgba(233, 226, 208, .22) 50%, transparent 65%);
+  transform: translateX(-100%);
+  animation: tile-shine 4.5s ease-in-out infinite;
+}
+.social-tile--tt::before { animation-delay: 2.2s; }
+@keyframes tile-shine { 0%, 55% { transform: translateX(-100%); } 85%, 100% { transform: translateX(100%); } }
+.social-tile--ig .social-tile-icon svg { animation: ig-breathe 2.8s ease-in-out infinite; }
+.social-tile--tt .social-tile-icon svg { animation: tt-bop 1.6s ease-in-out infinite; }
+@keyframes ig-breathe { 0%, 100% { transform: scale(1) rotate(0); } 50% { transform: scale(1.14) rotate(-8deg); } }
+@keyframes tt-bop { 0%, 100% { transform: none; } 25% { transform: translateY(-3px) rotate(-8deg); } 50% { transform: none; } 75% { transform: translateY(-2px) rotate(6deg); } }
+.social-tile-handle::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: #7bd88f;
+  vertical-align: 1px;
+  animation: live-dot 1.6s ease-in-out infinite;
+}
+@keyframes live-dot { 50% { opacity: .3; } }
+.social-tile:hover .social-tile-icon svg { animation: icon-pop .6s var(--ease-spring); }
+
+/* Footer: just the line, the brand lives in the contact block now. */
+.site-footer { padding: 0 0 22px; }
+.footer-inner { display: block; padding-top: 0; border-top: 0; }
+.footer-copy { padding-top: 16px; border-top: 1px solid rgba(233, 226, 208, .14); font-size: 12.5px; text-align: center; opacity: .7; }
+
+@media (max-width: 900px) {
+  .hero-reel { width: min(100%, 340px); }
+  .filter-dock { top: calc(var(--header-h) + 22px); justify-content: flex-start; }
+  .contact-logo .brand-logo { width: 170px; }
+}
+@media (max-width: 560px) {
+  .road-step em { font-size: 10.5px; }
+  .road-step b { width: 26px; height: 26px; font-size: 12px; }
+  .road-line { top: 12px; }
+  .road-step.is-current b::after { width: 26px; height: 26px; }
+  .reels-kicker-text { font-size: 18px; }
+  .plat { font-size: 13px; padding: 4px 10px 4px 4px; }
+  .plat-logo { width: 26px; height: 26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .how-bubble.is-in, .how-bubble-avatar, .contact-logo .logo-dot, .social-tile::before,
+  .social-tile-icon svg, .eq i, .road-step.is-current b::after { animation: none !important; }
+}
+@media (max-width: 720px) {
+  .filter-dock .filter-bar { flex-wrap: nowrap; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .filter-dock .filter-btn { flex: none; }
+}
+.reel-card-preview iframe { filter: contrast(1.06) saturate(1.16); }
+@media (max-width: 900px) {
+  .how-bubble { margin-top: 28px; }
+  .how-bubble-body { padding-top: 36px; }
+}

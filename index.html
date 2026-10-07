@@ -54,7 +54,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@600;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/andreina-luna.webp" type="image/webp">
 <!-- Bump ?v= on every css/js change: GitHub Pages caches assets for 10 min and stale CSS breaks fresh HTML -->
-<link rel="stylesheet" href="css/styles.css?v=81">
+<link rel="stylesheet" href="css/styles.css?v=90">
 
 <script type="application/ld+json">
 {
@@ -254,7 +254,7 @@
   <section class="section brands-section" id="marcas" aria-labelledby="brands-title">
     <div class="wrap brands-inner">
       <figure class="bts-photo">
-        <img src="assets/andy-studio.webp" width="1100" height="1397" loading="lazy" decoding="async" alt="Andy in her home studio, filming a reel on her phone at the desk" data-i18n-attr="alt:brands.photoAlt">
+        <img src="assets/andy-studio.webp" width="1100" height="1397" draggable="false" loading="lazy" decoding="async" alt="Andy in her home studio, filming a reel on her phone at the desk" data-i18n-attr="alt:brands.photoAlt">
         <p class="bts-vf" aria-hidden="true">
           <span class="vf"><i></i><i></i><i></i><i></i></span>
           <span class="vf-rec"><span class="live-dot"></span>REC <span class="vf-tc bts-tc">00:00</span></span>
@@ -263,7 +263,7 @@
         <figcaption class="bts-bubbles" aria-label="Who I work with" data-i18n-attr="aria-label:brands.bubblesLabel">
           <span class="bts-bubble" data-i18n-html="brands.b1">Local &amp; international brands</span>
           <span class="bts-bubble" data-i18n-html="brands.b2">Spanish-speaking markets</span>
-          <span class="bts-bubble bts-bubble--key" data-i18n-html="brands.b3">Global brands that want <b>authentic</b> Spanish content</span>
+          <span class="bts-bubble bts-bubble--key type-title" id="bts-key"><span class="type-text" data-i18n-html="brands.b3"><span>Global brands that want </span><mark class="hl hl--pen hl--pen-key">authentic</mark><span> Spanish content</span></span><span class="type-caret" aria-hidden="true"></span></span>
         </figcaption>
       </figure>
       <div class="brands-copy">
@@ -350,14 +350,19 @@
       <div class="reels-head">
         <div>
           <h2 class="section-title" id="reels-title" data-i18n="portfolio.title">Reels</h2>
-          <p class="reels-kicker">
-            <span data-i18n="portfolio.kicker">Real videos on</span>
-            <span class="platform-chip platform-chip--tt"><svg width="15" height="15" fill="currentColor" aria-hidden="true"><use href="#icon-tiktok"/></svg>TikTok</span>
-            <span class="platform-chip platform-chip--ig"><svg width="15" height="15" fill="currentColor" aria-hidden="true"><use href="#icon-instagram"/></svg>Instagram</span>
-            <span class="platform-chip platform-chip--yt"><svg width="15" height="15" fill="currentColor" aria-hidden="true"><use href="#icon-youtube"/></svg>YouTube</span>
-          </p>
-          <p class="reels-tip"><span class="reels-tip-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></span><span data-i18n="portfolio.lede">Open any reel to watch it with sound.</span></p>
+          <div class="reels-kicker">
+            <span class="reels-kicker-text" data-i18n="portfolio.kicker">Real videos on</span>
+            <ul class="plat-stickers">
+              <li class="plat plat--tt"><span class="plat-logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24"><use href="#icon-tiktok" class="g1" width="24" height="24"/><use href="#icon-tiktok" class="g2" width="24" height="24"/><use href="#icon-tiktok" class="g0" width="24" height="24"/></svg></span>TikTok</li>
+              <li class="plat plat--ig"><span class="plat-logo" aria-hidden="true"><svg width="18" height="18" fill="currentColor"><use href="#icon-instagram"/></svg></span>Instagram</li>
+              <li class="plat plat--yt"><span class="plat-logo" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M5.5 3.6v8.8l7-4.4z" fill="currentColor"/></svg></span>YouTube</li>
+            </ul>
+          </div>
         </div>
+        <p class="sound-pill"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span data-i18n="portfolio.lede">Open any reel to watch it with sound.</span></p>
+      </div>
+
+      <div class="filter-dock">
         <div class="filter-bar" id="filter-bar" role="group" aria-label="Filter reels by pillar" data-i18n-attr="aria-label:a11y.filterLabel">
           <button class="filter-btn is-active" type="button" data-filter="all" aria-pressed="true" data-i18n="portfolio.filterAll">All</button>
           <button class="filter-btn" type="button" data-filter="lifestyle" aria-pressed="false" data-i18n="pillars.lifestyle.title">Lifestyle</button>
@@ -534,19 +539,20 @@
             </figure>
           </header>
           <div class="story-ui">
-            <div class="story-bars" aria-hidden="true">
-              <span class="story-bar"><i></i></span>
-              <span class="story-bar"><i></i></span>
-              <span class="story-bar"><i></i></span>
-              <span class="story-bar"><i></i></span>
-              <span class="story-bar"><i></i></span>
-            </div>
             <div class="story-meta" aria-hidden="true">
               <img src="assets/andreina-luna-avatar.webp" width="320" height="320" alt="">
               <span class="story-meta-name">__simplyandy</span>
               <span class="story-meta-sep"></span>
               <span class="story-meta-label" data-i18n="how.processTitle">My process with every brand</span>
               <span class="story-meta-count"><span id="story-count">1</span>/5</span>
+            </div>
+            <div class="story-road" id="story-road" aria-hidden="true">
+              <span class="road-line"><i class="road-fill"><b class="road-head"></b></i></span>
+              <span class="road-step"><b>01</b><em data-i18n="how.step1.short">Product</em></span>
+              <span class="road-step"><b>02</b><em data-i18n="how.step2.short">Guidelines</em></span>
+              <span class="road-step"><b>03</b><em data-i18n="how.step3.short">Formats</em></span>
+              <span class="road-step"><b>04</b><em data-i18n="how.step4.short">Volume</em></span>
+              <span class="road-step"><b>05</b><em data-i18n="how.step5.short">Tone</em></span>
             </div>
           </div>
           <h3 class="sr-only" data-i18n="how.processTitle">My process with every brand</h3>
@@ -669,6 +675,14 @@
     <div class="wrap contact-inner">
       <h2 class="contact-title type-title" id="contact-title" data-type-speed=".55"><span class="type-text"><span data-i18n="contact.titleA">If you have a product that could genuinely add to my routine, </span><mark class="hl hl--pen hl--pen-bordo" data-i18n="contact.titleMark">let's talk</mark></span><span class="type-caret" aria-hidden="true"></span></h2>
       <div class="contact-actions">
+        <a href="#top" class="contact-logo" aria-label="Simply Andy, UGC Creator">
+          <svg class="brand-logo brand-logo--light" viewBox="0 0 256 76" width="220" height="66" aria-hidden="true">
+            <text x="0" y="58" class="logo-word">andy</text>
+            <circle class="logo-dot" cx="177" cy="29" r="7.5"/>
+            <text x="188" y="25.5" class="logo-tag">UGC</text>
+            <text x="188" y="42" class="logo-tag">CREATOR</text>
+          </svg>
+        </a>
         <a class="btn btn-accent btn-lg" href="mailto:itssimplyandy1@gmail.com" data-contact-modal data-i18n="contact.emailCta">Let's work together</a>
         <div class="social-tiles">
           <a class="social-tile social-tile--ig" href="https://instagram.com/__simplyandy" target="_blank" rel="noopener">
@@ -690,24 +704,6 @@
 
 <footer class="site-footer">
   <div class="wrap footer-inner">
-    <a href="#top" class="footer-brand" aria-label="Simply Andy, UGC Creator">
-      <svg class="brand-logo brand-logo--light" viewBox="0 0 256 76" width="160" height="48" aria-hidden="true">
-        <text x="0" y="58" class="logo-word">andy</text>
-        <circle class="logo-dot" cx="177" cy="29" r="7.5"/>
-        <text x="188" y="25.5" class="logo-tag">UGC</text>
-        <text x="188" y="42" class="logo-tag">CREATOR</text>
-      </svg>
-    </a>
-    <nav class="footer-nav" aria-label="Footer">
-      <a href="#marcas" data-i18n="nav.brands">Brands</a>
-      <a href="#sobre-mi" data-i18n="nav.about">About</a>
-      <a href="#portfolio" data-i18n="nav.portfolio">Reels</a>
-      <a href="#como-trabajo" data-i18n="nav.how">How I work</a>
-    </nav>
-    <div class="footer-socials">
-      <a href="https://instagram.com/__simplyandy" target="_blank" rel="noopener" aria-label="Instagram @__simplyandy"><svg width="18" height="18" fill="currentColor" aria-hidden="true"><use href="#icon-instagram"/></svg></a>
-      <a href="https://tiktok.com/@__simplyandy" target="_blank" rel="noopener" aria-label="TikTok @__simplyandy"><svg width="18" height="18" fill="currentColor" aria-hidden="true"><use href="#icon-tiktok"/></svg></a>
-    </div>
     <p class="footer-copy">© <span id="year">2026</span> Simply Andy, @__simplyandy. <span data-i18n="footer.rights">All rights reserved.</span></p>
   </div>
 </footer>
@@ -832,8 +828,8 @@
   </div>
 </dialog>
 
-<script src="js/i18n.js?v=70"></script>
-<script src="js/main.js?v=70"></script>
-<script src="js/motion.js?v=72"></script>
+<script src="js/i18n.js?v=90"></script>
+<script src="js/main.js?v=90"></script>
+<script src="js/motion.js?v=90"></script>
 </body>
 </html>

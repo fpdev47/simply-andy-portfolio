@@ -215,7 +215,7 @@
   document.getElementById("year").textContent = new Date().getFullYear();
 
   /* ------------------------------------------------------------------------
-     Dot loader (~2s first visit, ~0.8s on return)
+     Dot loader (~3.2s first visit, ~1.4s on return)
      1. drop: the Cuero dot falls onto the center with gravity easing, squashes,
         rebounds once and settles.
      2. write: "a n d y" pop in while the mark slides from dot-centered to
@@ -289,7 +289,7 @@
       if (quick) {
         letters.concat(tags).forEach((el) => (el.style.opacity = "1"));
         dot.style.opacity = "1";
-        await Promise.race([pageLoaded, wait(500)]);
+        await Promise.all([pageLoaded, wait(900)]);
       } else {
         const start = performance.now();
         svg.style.transform = shift;
@@ -303,32 +303,32 @@
             { transform: "translateY(0) scale(1.12, .9)", offset: 0.86, easing: "ease-out" },
             { transform: "none" }
           ],
-          { duration: 620 }
+          { duration: 820 }
         ).finished;
 
         // 2. write the wordmark
-        svg.animate([{ transform: shift }, { transform: "none" }], { duration: 560, easing: out, fill: "forwards" });
+        svg.animate([{ transform: shift }, { transform: "none" }], { duration: 800, easing: out, fill: "forwards" });
         letters.forEach((el, i) => {
           el.animate(
             [
               { opacity: 0, transform: "translateY(22px) scale(.9)" },
               { opacity: 1, transform: "none" }
             ],
-            { duration: 420, delay: 40 + i * 55, easing: spring, fill: "forwards" }
+            { duration: 560, delay: 80 + i * 120, easing: spring, fill: "forwards" }
           );
         });
         tags.forEach((el, i) => {
           el.animate([{ opacity: 0, transform: "translateX(-6px)" }, { opacity: 1, transform: "none" }], {
-            duration: 260,
-            delay: 260 + i * 70,
+            duration: 420,
+            delay: 620 + i * 140,
             easing: out,
             fill: "forwards"
           });
         });
-        await wait(600);
+        await wait(1100);
 
-        // 3. hold only as long as needed (at least ~1.3s total, at most +700ms)
-        await Promise.race([Promise.all([pageLoaded, wait(Math.max(0, 1300 - (performance.now() - start)))]), wait(700)]);
+        // 3. hold the full logo so it can be read (at least ~3s total, at most +1.2s more)
+        await Promise.race([Promise.all([pageLoaded, wait(Math.max(900, 3000 - (performance.now() - start)))]), wait(2100)]);
       }
 
       // 4. swell into the hero
@@ -345,7 +345,7 @@
           { transform: "scale(.82)", fill: "#864C24", offset: 0.18 },
           { transform: "scale(" + scale + ")", fill: "#8F3F23" }
         ],
-        { duration: quick ? 420 : 520, easing: "cubic-bezier(.65, 0, .35, 1)", fill: "forwards" }
+        { duration: quick ? 520 : 680, easing: "cubic-bezier(.65, 0, .35, 1)", fill: "forwards" }
       ).finished;
 
       reveal();
