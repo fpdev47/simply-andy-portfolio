@@ -42,10 +42,6 @@
     if (saved === "en" || saved === "es") lang = saved;
   } catch (e) {}
   root.lang = lang;
-  // Returning visitors in the same tab get the short version of the dot loader.
-  try {
-    if (sessionStorage.getItem("sa-seen")) root.classList.add("loader-quick");
-  } catch (e) {}
 })();
 </script>
 
@@ -54,7 +50,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@600;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/andreina-luna.webp" type="image/webp">
 <!-- Bump ?v= on every css/js change: GitHub Pages caches assets for 10 min and stale CSS breaks fresh HTML -->
-<link rel="stylesheet" href="css/styles.css?v=90">
+<link rel="stylesheet" href="css/styles.css?v=100">
 
 <script type="application/ld+json">
 {
@@ -263,7 +259,7 @@
         <figcaption class="bts-bubbles" aria-label="Who I work with" data-i18n-attr="aria-label:brands.bubblesLabel">
           <span class="bts-bubble" data-i18n-html="brands.b1">Local &amp; international brands</span>
           <span class="bts-bubble" data-i18n-html="brands.b2">Spanish-speaking markets</span>
-          <span class="bts-bubble bts-bubble--key type-title" id="bts-key"><span class="type-text" data-i18n-html="brands.b3"><span>Global brands that want </span><mark class="hl hl--pen hl--pen-key">authentic</mark><span> Spanish content</span></span><span class="type-caret" aria-hidden="true"></span></span>
+          <span class="bts-bubble bts-bubble--key type-title" id="bts-key" data-type-speed=".5"><span class="type-text" data-i18n-html="brands.b3"><span>Global brands that want </span><mark class="hl hl--pen hl--pen-key">authentic</mark><span> Spanish content</span></span><span class="type-caret" aria-hidden="true"></span></span>
         </figcaption>
       </figure>
       <div class="brands-copy">
@@ -673,7 +669,7 @@
        the dot lands as the full stop. -->
   <section class="section contact-section" id="trabajemos" aria-labelledby="contact-title">
     <div class="wrap contact-inner">
-      <h2 class="contact-title type-title" id="contact-title" data-type-speed=".55"><span class="type-text"><span data-i18n="contact.titleA">If you have a product that could genuinely add to my routine, </span><mark class="hl hl--pen hl--pen-bordo" data-i18n="contact.titleMark">let's talk</mark></span><span class="type-caret" aria-hidden="true"></span></h2>
+      <h2 class="contact-title type-title" id="contact-title" data-type-speed=".32"><span class="type-text"><span data-i18n="contact.titleA">If you have a product that could genuinely add to my routine, </span><mark class="hl hl--pen hl--pen-bordo" data-i18n="contact.titleMark">let's talk</mark></span><span class="type-caret" aria-hidden="true"></span></h2>
       <div class="contact-actions">
         <a href="#top" class="contact-logo" aria-label="Simply Andy, UGC Creator">
           <svg class="brand-logo brand-logo--light" viewBox="0 0 256 76" width="220" height="66" aria-hidden="true">
@@ -683,7 +679,7 @@
             <text x="188" y="42" class="logo-tag">CREATOR</text>
           </svg>
         </a>
-        <a class="btn btn-accent btn-lg" href="mailto:itssimplyandy1@gmail.com" data-contact-modal data-i18n="contact.emailCta">Let's work together</a>
+        <a class="btn btn-accent btn-lg contact-cta" href="mailto:itssimplyandy1@gmail.com" data-contact-modal><span class="cta-dot" aria-hidden="true"></span><span data-i18n="contact.emailCta">Let's work together</span><svg class="cta-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         <div class="social-tiles">
           <a class="social-tile social-tile--ig" href="https://instagram.com/__simplyandy" target="_blank" rel="noopener">
             <span class="social-tile-icon"><svg width="22" height="22" fill="currentColor" aria-hidden="true"><use href="#icon-instagram"/></svg></span>
@@ -829,7 +825,7 @@
 </dialog>
 
 <script src="js/i18n.js?v=90"></script>
-<script src="js/main.js?v=90"></script>
-<script src="js/motion.js?v=90"></script>
+<script src="js/main.js?v=100"></script>
+<script src="js/motion.js?v=100"></script>
 </body>
 </html>

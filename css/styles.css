@@ -2866,3 +2866,74 @@ button.tt-avatar:hover .tt-plus { transform: scale(1.15); }
   .how-bubble { margin-top: 28px; }
   .how-bubble-body { padding-top: 36px; }
 }
+
+/* ---------- v10 ---------- */
+
+/* Hero: square edges at rest, the bottom corners round off once you scroll. */
+.hero { border-radius: 0; transition: border-radius .5s var(--ease-out); }
+html.is-scrolled .hero { border-radius: 0 0 var(--r-l) var(--r-l); }
+.hero-hello { margin-bottom: 36px; }
+
+/* Quote bubble sits inside the frame, leaving Índigo on its right. */
+.how-bubble { margin-right: clamp(24px, 5vw, 88px); }
+@media (max-width: 900px) { .how-bubble { margin-right: 0; } }
+
+/* Hashtags stamp in: the # spins in first, then the word rises. */
+.js .traits:not(.is-in) .trait-hash { opacity: 0; transform: scale(.2) rotate(-120deg); }
+.js .traits:not(.is-in) .trait-word { opacity: 0; transform: translateY(.4em); }
+.trait-hash, .trait-word { display: inline-block; }
+.js .traits .trait-hash { transition: opacity .3s, transform .6s var(--ease-spring); }
+.js .traits .trait-word { transition: opacity .4s .12s, transform .55s .12s var(--ease-out), background-size .7s .5s cubic-bezier(.65, 0, .35, 1); }
+.js .traits.is-in .trait:nth-child(2) .trait-hash { transition-delay: .18s; }
+.js .traits.is-in .trait:nth-child(2) .trait-word { transition-delay: .3s, .3s, .68s; }
+.js .traits.is-in .trait:nth-child(3) .trait-hash { transition-delay: .36s; }
+.js .traits.is-in .trait:nth-child(3) .trait-word { transition-delay: .48s, .48s, .86s; }
+.trait:hover .trait-hash { animation: hash-wiggle .5s var(--ease-spring); }
+@keyframes hash-wiggle { 40% { transform: rotate(18deg) scale(1.2); } }
+
+/* Contact CTA: alive. A shifting Cuero/Terracota field, a shine, a ring that
+   keeps calling, a pulsing dot and an arrow that nudges forward. */
+.social-tile-handle::before { content: none; }
+.contact-cta {
+  position: relative;
+  isolation: isolate;
+  gap: 12px;
+  overflow: visible;
+  background: linear-gradient(110deg, var(--cuero), var(--terracota) 45%, var(--cuero) 90%);
+  background-size: 220% 100%;
+  animation: cta-flow 5s ease-in-out infinite alternate, cta-breathe 2.8s ease-in-out infinite;
+  box-shadow: 0 16px 30px -16px rgba(0, 0, 0, .7);
+}
+.contact-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, .35) 50%, transparent 62%) no-repeat;
+  background-size: 250% 100%;
+  animation: cta-shine 3.2s ease-in-out infinite;
+}
+.contact-cta::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  z-index: -2;
+  border-radius: inherit;
+  border: 2px solid var(--terracota);
+  animation: cta-ring 2.2s ease-out infinite;
+}
+.cta-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--eggshell); animation: cta-dot 1.4s ease-in-out infinite; }
+.cta-arrow { animation: cta-nudge 1.4s ease-in-out infinite; }
+.contact-cta:hover { animation-play-state: paused; transform: scale(1.03) rotate(-1deg); }
+.contact-cta:hover .cta-arrow { animation: none; transform: translateX(6px) rotate(-30deg); transition: transform .35s var(--ease-spring); }
+@keyframes cta-flow { from { background-position: 0 0; } to { background-position: 100% 0; } }
+@keyframes cta-breathe { 0%, 100% { scale: 1; } 50% { scale: 1.025; } }
+@keyframes cta-shine { 0%, 40% { background-position: 150% 0; } 80%, 100% { background-position: -60% 0; } }
+@keyframes cta-ring { 0% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.08, 1.4); } }
+@keyframes cta-dot { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(233, 226, 208, .7); } 50% { transform: scale(.75); box-shadow: 0 0 0 7px rgba(233, 226, 208, 0); } }
+@keyframes cta-nudge { 0%, 100% { transform: none; } 50% { transform: translateX(5px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-cta, .contact-cta::before, .contact-cta::after, .cta-dot, .cta-arrow { animation: none !important; }
+}

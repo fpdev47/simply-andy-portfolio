@@ -658,8 +658,9 @@
         easing: "cubic-bezier(.12, .8, .2, 1)",
         fill: "forwards"
       }).onfinish = function () {
+        // Strips stay parked on the final digit: swapping in plain text here
+        // made the number jump at the very end.
         s.strip.style.transform = to;
-        if (i === strips.length - 1) settle();
       };
     });
   }

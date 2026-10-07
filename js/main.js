@@ -165,6 +165,7 @@
         ticking = true;
         requestAnimationFrame(() => {
           header.classList.toggle("is-scrolled", window.scrollY > 10);
+          document.documentElement.classList.toggle("is-scrolled", window.scrollY > 10);
           ticking = false;
         });
       },
