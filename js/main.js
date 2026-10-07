@@ -185,6 +185,12 @@
       if (value) el.textContent = value;
     });
 
+    // Strings with inline emphasis (<b>) are static, trusted copy from i18n.js.
+    document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+      const value = I18N[lang][el.getAttribute("data-i18n-html")];
+      if (value) el.innerHTML = value;
+    });
+
     document.querySelectorAll("[data-i18n-attr]").forEach((el) => {
       const [attr, key] = el.getAttribute("data-i18n-attr").split(":");
       const value = I18N[lang][key];

@@ -140,7 +140,8 @@
     var caret = el.querySelector(".type-caret");
     var timer = null;
     var prev = null;
-    var T = { el: el };
+    // ?fast in the URL types near-instantly (for screenshot checks only).
+    var T = { el: el, speed: (parseFloat(el.getAttribute("data-type-speed")) || 1) * (/[?&]fast\b/.test(location.search) ? 0.02 : 1) };
 
     // Each part (plain span + <mark>) is split in place so the wrapper survives.
     // Words stay in nowrap groups so a line never breaks mid-word.
@@ -205,6 +206,13 @@
       el.classList.remove("is-done", "is-landed");
       el.classList.add("is-typing");
       var i = 0;
+      if (T.speed < 0.05) {
+        chars.forEach(function (c) { c.classList.add("is-on"); });
+        el.classList.remove("is-typing");
+        el.classList.add("is-done");
+        T.land(done);
+        return;
+      }
       if (chars[0]) hop(chars[0], 0);
       function step() {
         if (i >= chars.length) {
@@ -217,7 +225,7 @@
         }
         var ch = chars[i++];
         var c = ch.textContent;
-        var delay = /[,!¡.?]/.test(c) ? 230 : 52 + Math.random() * 22;
+        var delay = /[,!¡.?]/.test(c) ? 230 * T.speed : (52 + Math.random() * 22) * T.speed;
         ch.classList.add("is-on");
         hop(ch, Math.min(delay + 30, 140));
         timer = setTimeout(step, delay);
@@ -228,10 +236,15 @@
     // Pen marks the phrase, then the dot drops in as the full stop with a burst.
     T.land = function (done) {
       drawMark(el.querySelector(".hl"));
+      // The full stop rides on the last letter, so it can never wrap onto its own line.
+      var chs = text.querySelectorAll(".ch");
+      var last = chs[chs.length - 1];
       setTimeout(function () {
+        if (last) last.classList.add("has-dot");
         el.classList.add("is-landed");
         setTimeout(function () {
-          burstAt(caret, { count: 10, dist: 30, size: 6, colors: ["#E9E2D0", "#2A2620", "#E9E2D0", "#8F3F23"] });
+          var r = last ? last.getBoundingClientRect() : caret.getBoundingClientRect();
+          burst(r.right + r.height * 0.18, r.bottom - r.height * 0.28, { count: 10, dist: 30, size: 6, colors: ["#E9E2D0", "#2A2620", "#E9E2D0", "#8F3F23"] });
         }, 260);
         if (done) done();
       }, 650);
@@ -384,8 +397,10 @@
       R.raf = requestAnimationFrame(tick);
       var beat = 0;
       R.heartTimer = setInterval(function () {
-        floatHeart();
-        if (Math.random() > 0.55) setTimeout(floatHeart, 220);
+        if (!fig.hasAttribute("data-no-float")) {
+          floatHeart();
+          if (Math.random() > 0.55) setTimeout(floatHeart, 220);
+        }
         beat++;
         if (beat % 5 === 2) doLike(true);
         if (beat % 9 === 4) bigHeart();
@@ -504,8 +519,16 @@
 
   /* ---------------- Marker highlight ---------------- */
 
+  // Pen marker: the stroke sweeps left to right and each letter switches color
+  // the moment the stroke reaches it.
   function drawMark(el) {
-    if (el) el.classList.add("is-drawn");
+    if (!el) return;
+    var chars = el.querySelectorAll(".ch");
+    var dur = 750;
+    Array.prototype.forEach.call(chars, function (c, i) {
+      c.style.transitionDelay = Math.round(((i + 0.6) / chars.length) * dur) + "ms";
+    });
+    el.classList.add("is-drawn");
   }
 
   /* ---------------- Cursor spotlight on cards ---------------- */
@@ -563,8 +586,9 @@
   function renderOdo(el, animate) {
     var target = parseInt(el.getAttribute("data-count"), 10);
     if (isNaN(target)) return;
+    var suffix = el.getAttribute("data-suffix") || "";
     var text = fmt(target);
-    el.setAttribute("aria-label", text);
+    el.setAttribute("aria-label", text + suffix);
     el.textContent = "";
     var strips = [];
     // Each window is as wide as its own final digit, so proportional figures
@@ -597,7 +621,14 @@
       el.appendChild(box);
       strips.push({ strip: strip, stop: 10 + parseInt(c, 10) });
     });
-    function settle() { el.textContent = text; }
+    if (suffix) {
+      var sx = document.createElement("span");
+      sx.className = "odo-sep odo-suffix";
+      sx.setAttribute("aria-hidden", "true");
+      sx.textContent = suffix;
+      el.appendChild(sx);
+    }
+    function settle() { el.textContent = text + suffix; }
     if (!animate || reduce) {
       if (reduce || el.hasAttribute("data-played")) { settle(); return; }
     }
@@ -699,14 +730,26 @@
       }
     }
 
-    // BTS photo: the brands line plays like a video caption, word by word.
-    renderBtsCaption(reduce);
-    var btsSub = document.getElementById("bts-sub");
-    onFirstIntersect(btsSub, function () {
-      Array.prototype.forEach.call(btsSub.querySelectorAll(".cap-word"), function (w, i) {
-        setTimeout(function () { w.classList.add("is-on"); }, 90 * i);
-      });
-    }, { threshold: 0.8 });
+    // BTS photo: the viewfinder starts recording and the bubbles pop in one by one.
+    var btsVf = document.querySelector(".bts-vf");
+    var btsTc = document.querySelector(".bts-tc");
+    var bubbles = document.querySelector(".bts-bubbles");
+    onFirstIntersect(bubbles || btsVf, function () {
+      if (btsVf) btsVf.classList.add("is-focused");
+      if (bubbles) bubbles.classList.add("is-in");
+      if (btsTc && !reduce) {
+        var t0 = Date.now();
+        setInterval(function () {
+          var sec = Math.floor((Date.now() - t0) / 1000);
+          btsTc.textContent = "00:" + (sec % 60 < 10 ? "0" : "") + (sec % 60);
+        }, 1000);
+      }
+    }, { threshold: 0.5 });
+
+    // About copy: the key phrases get their marker as the paragraphs come in.
+    document.querySelectorAll(".scan").forEach(function (p) {
+      onFirstIntersect(p, function () { p.classList.add("is-in"); }, { threshold: 0.5 });
+    });
 
     var traits = document.querySelector(".traits");
     onFirstIntersect(traits, function () { traits.classList.add("is-in"); }, { threshold: 0.6 });
@@ -728,22 +771,6 @@
         }, { threshold: 0.45 });
       }
     }
-  }
-
-  // Splits the BTS caption into words; the brand's key word gets the marker.
-  function renderBtsCaption(instant) {
-    var el = document.getElementById("bts-sub");
-    if (!el) return;
-    var words = el.textContent.trim().split(/\s+/);
-    el.textContent = "";
-    words.forEach(function (w, i) {
-      var span = document.createElement("span");
-      span.className = "cap-word" + (/^(authentic|auténtico)$/i.test(w.replace(/[.,]/g, "")) ? " is-key" : "");
-      if (instant) span.classList.add("is-on");
-      span.textContent = w;
-      el.appendChild(span);
-      if (i < words.length - 1) el.appendChild(document.createTextNode(" "));
-    });
   }
 
   /* ---------------- Eyebrow viewfinder: running REC timecode ---------------- */
@@ -914,7 +941,6 @@
     if (heroTyper) heroTyper.refresh();
     if (contactTyper) contactTyper.refresh();
     if (howTyper) howTyper.refresh();
-    renderBtsCaption(true);
     reels.forEach(function (R) { R.restartCaptions(); });
   });
 
