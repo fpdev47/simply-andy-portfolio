@@ -633,11 +633,12 @@
     }
     onFirstIntersect(card, function () {
       played = true;
+      card.classList.add("is-in");
       nums.forEach(function (el, i) {
         setTimeout(function () {
           el.setAttribute("data-played", "");
           renderOdo(el, true);
-          burstAt(el.closest(".stat"), { count: 6, dist: 34, size: 5, colors: ["#E9E2D0"] });
+          burstAt(el.closest(".fstat"), { count: 7, dist: 38, size: 5, colors: ["#8F3F23", "#1F2C44", "#51091B"] });
         }, i * 140);
       });
     });
@@ -654,18 +655,32 @@
   /* ---------------- Section moments ---------------- */
 
   function initSections() {
+    // Reels are dealt in like cards: each rises with a small tilt and comes
+    // into focus, staggered, the first time the grid is seen.
     var grid = document.getElementById("portfolio-grid");
-    if (grid && !reduce) {
+    if (grid && !reduce && canAnimate) {
       var cards = Array.prototype.slice.call(grid.querySelectorAll(".reel-card"));
       cards.forEach(function (c) { c.classList.add("is-pre"); });
       onFirstIntersect(grid, function () {
+        var cols = getComputedStyle(grid).gridTemplateColumns.split(" ").length || 4;
         cards.forEach(function (c, i) {
-          c.style.transition = "opacity .6s ease " + i * 55 + "ms, transform .7s cubic-bezier(.16,1,.3,1) " + i * 55 + "ms";
+          var tilt = (i % 2 ? 1 : -1) * (3 + (i % 3));
+          var delay = (Math.floor(i / cols) * 90) + (i % cols) * 70;
+          c.animate(
+            [
+              { opacity: 0, transform: "translateY(70px) rotate(" + tilt + "deg) scale(.88)", filter: "blur(8px)" },
+              { opacity: 1, transform: "translateY(-6px) rotate(" + tilt * -0.15 + "deg) scale(1.01)", filter: "blur(0)", offset: 0.7 },
+              { opacity: 1, transform: "none", filter: "blur(0)" }
+            ],
+            { duration: 820, delay: Math.min(delay, 900), easing: "cubic-bezier(.2, .8, .2, 1)", fill: "backwards" }
+          );
           c.classList.remove("is-pre");
-          setTimeout(function () { c.style.transition = ""; }, 800 + i * 55);
         });
-      }, { threshold: 0.15 });
+      }, { threshold: 0.08 });
     }
+
+    var traits = document.querySelector(".traits");
+    onFirstIntersect(traits, function () { traits.classList.add("is-in"); }, { threshold: 0.6 });
 
     // Brands photo settles from a slight zoom the first time it is seen.
     var bts = document.querySelector(".bts-photo");
@@ -728,34 +743,55 @@
     });
   }
 
-  /* ---------------- How I work: the step at the middle of the screen ----------------
-     Pure scroll: the step crossing the viewport's center band becomes current
-     (full color, Terracota marker, description open) and the sticky counter
-     rolls to its number. Click/Enter also selects a step. */
+  /* ---------------- How I work: Stories pinned to the scroll ----------------
+     While the section is pinned, page scroll maps to a position along the five
+     stories: the track slides so that position sits in the middle, the
+     progress bars fill, and the nearest story is the current one. */
   function initHow() {
-    var steps = Array.prototype.slice.call(document.querySelectorAll(".how-step"));
-    var strip = document.querySelector(".how-counter-strip");
-    var bar = document.getElementById("how-progress");
-    if (!steps.length) return;
+    var pin = document.getElementById("how-pin");
+    var track = document.getElementById("story-track");
+    if (!pin || !track) return;
+    var sticky = pin.querySelector(".how-sticky");
+    var viewport = pin.querySelector(".story-viewport");
+    var cards = Array.prototype.slice.call(track.children);
+    var bars = Array.prototype.slice.call(pin.querySelectorAll(".story-bar i"));
+    var count = document.getElementById("story-count");
+    var n = cards.length;
     var current = -1;
-    function select(i) {
-      if (i === current) return;
-      current = i;
-      steps.forEach(function (st, k) {
-        st.classList.toggle("is-active", k === i);
-        st.classList.toggle("is-past", k < i);
-      });
-      if (strip) strip.style.transform = "translateY(" + -i * 0.8 + "em)";
-      if (bar) bar.style.setProperty("--p", ((i + 1) / steps.length).toFixed(3));
+    function setActive(k) {
+      if (k === current) return;
+      current = k;
+      cards.forEach(function (c, i) { c.classList.toggle("is-active", i === k); });
+      if (count) count.textContent = k + 1;
     }
-    select(0);
-    if (!hasIO) return;
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) select(steps.indexOf(e.target));
-      });
-    }, { rootMargin: "-46% 0px -46% 0px" });
-    steps.forEach(function (st) { io.observe(st); });
+    if (reduce) {
+      pin.style.height = "auto";
+      sticky.classList.add("is-static");
+      sticky.style.position = "static";
+      sticky.style.height = "auto";
+      cards.forEach(function (c) { c.classList.add("is-active"); });
+      bars.forEach(function (b) { b.style.setProperty("--f", 1); });
+      return;
+    }
+    function update() {
+      var r = pin.getBoundingClientRect();
+      var span = r.height - window.innerHeight;
+      var p = span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 0;
+      var t = p * (n - 1);
+      var a = Math.floor(t), b = Math.min(n - 1, a + 1), f = t - a;
+      var ca = cards[a].offsetLeft + cards[a].offsetWidth / 2;
+      var cb = cards[b].offsetLeft + cards[b].offsetWidth / 2;
+      // Card centers are measured from the track; the track starts after the viewport's left padding.
+      var pad = parseFloat(getComputedStyle(viewport).paddingLeft) || 0;
+      var x = viewport.clientWidth / 2 - pad - (ca + (cb - ca) * f);
+      track.style.transform = "translateX(" + x.toFixed(1) + "px)";
+      bars.forEach(function (bar, i) { bar.style.setProperty("--f", Math.min(1, Math.max(0, p * n - i)).toFixed(3)); });
+      setActive(Math.round(t));
+    }
+    // Scroll events already arrive once per frame; update in place.
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    update();
   }
 
   /* ---------------- Quality standards: the checklist gets ticked ----------------
@@ -787,8 +823,12 @@
               setTimeout(function () {
                 sheet.classList.add("is-stamped");
                 var st = sheet.querySelector(".sheet-stamp");
-                setTimeout(function () { burstAt(st, { count: 12, dist: 60, size: 5, colors: ["#8F3F23", "#51091B"] }); }, 260);
-              }, 350);
+                // Impact at the bottom of the slam: the paper jolts and ink spatters.
+                setTimeout(function () {
+                  sheet.classList.add("is-slammed");
+                  burstAt(st, { count: 16, dist: 74, size: 6, colors: ["#51091B", "#51091B", "#8F3F23"] });
+                }, 290);
+              }, 450);
             }
             setTimeout(res, 160);
           });
